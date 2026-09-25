@@ -118,14 +118,7 @@
         msg.textContent = 'ファイルから読み込みました。';
       }, function () { msg.textContent = 'ファイルを読み取れませんでした。'; });
     });
-    if ($('data-clear')) {
-      $('data-clear').addEventListener('click', function () {
-        if (!window.confirm('この画面の入力を消して、この端末からも消します。よろしいですか？')) return;
-        store.remove(o.key);
-        if (o.afterClear) o.afterClear();
-        msg.textContent = 'この端末から消しました。';
-      });
-    }
+    // この画面の保存を消すのは、全ツール共通の「保存した内容をすべて消す」ボタン（../reset-storage.js）
   }
 
   // --- Service Worker（オフラインで開けるように。README 13: './sw.js' だけで登録。scope を指定しない） ---

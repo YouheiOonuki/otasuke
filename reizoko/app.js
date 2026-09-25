@@ -193,7 +193,6 @@
   O.backupSetup({
     key: KEY,
     afterImport: function () { apply(O.store.get(KEY) || {}); update(); },
-    afterClear: function () { apply({}); render(current()); },
   });
   O.registerSW('../sw.js');
 })();
