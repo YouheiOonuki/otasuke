@@ -255,6 +255,24 @@
     };
   }
 
+  // 脳トレプリント（notore/）。seed は問題番号（32bit の整数）。名前は保存するが共有リンクには入れない（画面側）
+  function normNotore(d) {
+    d = d && typeof d === 'object' ? d : {};
+    var pages = Math.round(Number(d.pages));
+    var seed = Number(d.seed);
+    return {
+      kind: pick(d.kind, ['calc', 'kanji', 'machigai', 'cross', 'nurie'], 'calc'),
+      level: pick(d.level, ['easy', 'normal', 'hard'], 'normal'),
+      pages: pages >= 1 && pages <= 10 ? pages : 1,
+      answers: bool(d.answers, true),
+      op: pick(d.op, ['mix', 'add', 'sub', 'mul', 'div'], 'mix'),
+      month: /^\d{4}-(0[1-9]|1[0-2])$/.test(String(d.month || '')) ? String(d.month) : '',
+      name: str(d.name, 12),
+      credit: bool(d.credit, true),
+      seed: seed >= 0 && seed <= 4294967295 && Math.floor(seed) === seed ? seed : null,
+    };
+  }
+
   // --- バックアップファイル（README「ツールを追加するとき」20。決定 D31） ---
   // 形式: { tool, version, exportedAt, data }。data はブラウザに保存しているものと同じ形
   var BACKUP_VERSION = 1;
@@ -299,7 +317,7 @@
     WEEK: WEEK, pad2: pad2, parseISO: parseISO, toISO: toISO, addDays: addDays, dayRows: dayRows, reiwaYear: reiwaYear,
     kanjiNum: kanjiNum, shakyoDate: shakyoDate, clockParts: clockParts, SHAKYO_SIZES: SHAKYO_SIZES, shakyoLayout: shakyoLayout, looksLikePassword: looksLikePassword,
     encodeShare: encodeShare, decodeShare: decodeShare,
-    normShakyo: normShakyo, normReizoko: normReizoko, normDaicho: normDaicho, normTejun: normTejun, normTokei: normTokei,
+    normShakyo: normShakyo, normReizoko: normReizoko, normDaicho: normDaicho, normTejun: normTejun, normTokei: normTokei, normNotore: normNotore,
     KYUKYU_FIELDS: KYUKYU_FIELDS, TIMINGS: TIMINGS, DAICHO_KINDS: DAICHO_KINDS,
     backupFileName: backupFileName, buildBackup: buildBackup, parseBackup: parseBackup,
   };

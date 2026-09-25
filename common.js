@@ -9,8 +9,8 @@
   // --- ブラウザへの保存（README「ツールを追加するとき」12） ---
   // キーは必ず "otasuke_" で始める。全ツールが同じオリジンで localStorage を共有しているため
   var PREFIX = 'otasuke_';
-  var KEYS = ['shakyo', 'reizoko', 'daicho', 'tejun', 'tokei'];
-  var NORM = { shakyo: Calc.normShakyo, reizoko: Calc.normReizoko, daicho: Calc.normDaicho, tejun: Calc.normTejun, tokei: Calc.normTokei };
+  var KEYS = ['shakyo', 'reizoko', 'daicho', 'tejun', 'tokei', 'notore'];
+  var NORM = { shakyo: Calc.normShakyo, reizoko: Calc.normReizoko, daicho: Calc.normDaicho, tejun: Calc.normTejun, tokei: Calc.normTokei, notore: Calc.normNotore };
   var store = {
     get: function (name) {
       try {
@@ -82,7 +82,7 @@
   function readShare() { return Calc.decodeShare(location.hash); }
 
   // --- ファイルへの書き出し・読み込み（README「ツールを追加するとき」20。決定 D31） ---
-  // このリポジトリの 5 つのページの保存をまとめて 1 つのファイルにする（data は保存と同じ形: { shakyo, reizoko, ... }）
+  // このリポジトリの各ページの保存をまとめて 1 つのファイルにする（data は保存と同じ形: { shakyo, reizoko, ... }）
   var TOOL = 'otasuke';
   function allData() {
     var d = {};
@@ -99,7 +99,7 @@
       a.download = Calc.backupFileName(TOOL);
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
-      msg.textContent = 'ファイルに書き出しました（このサイトの 5 つの道具の入力をまとめて）。機種変更のときは、このファイルを新しい端末に移して「ファイルから読み込む」を押してください。';
+      msg.textContent = 'ファイルに書き出しました（くらしのおたすけのすべての道具の入力をまとめて）。機種変更のときは、このファイルを新しい端末に移して「ファイルから読み込む」を押してください。';
     });
     $('backup-import').addEventListener('click', function () { $('backup-file').click(); });
     $('backup-file').addEventListener('change', function () {

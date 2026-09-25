@@ -89,6 +89,19 @@
       url: 'https://developer.mozilla.org/ja/docs/Web/API/Screen_Wake_Lock_API',
       checked: CHECKED,
     },
+    // --- 脳トレプリント「漢字の読み」の語と読み（notore/kanji-data.js は tools/notore/build-kanji.cjs がここから作る） ---
+    // 本表の例欄の語（両方の字の例欄に載る 2 字の熟語と、訓の語）と付表の語。読みは表の音訓・付表のとおり。
+    // つなぎ目の音の変わり方（促音・連濁）は表の「表の見方」11 のとおり表に全部は無いので、IPADIC（mecab-ipadic 2.7.0）の読みと合う語だけ採った。
+    // むずかしさの目安は学年別漢字配当表（小学校学習指導要領 平成29年告示の別表。tools/notore/grades.json）
+    joyoKanji: {
+      source: '常用漢字表（平成22年内閣告示第2号）本表・付表',
+      url: 'https://www.bunka.go.jp/kokugo_nihongo/sisaku/joho/joho/kijun/naikaku/pdf/joyokanjihyo_20101130.pdf',
+      page: 'https://www.bunka.go.jp/kokugo_nihongo/sisaku/joho/joho/kijun/naikaku/kanji/',
+      counts: { kanji: 2136, readings: 4388, fuhyo: 116 },
+      grades: '文部科学省「小学校学習指導要領（平成29年告示）」別表 学年別漢字配当表',
+      gradesUrl: 'https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm',
+      checked: CHECKED,
+    },
     // 令和の始まり（和暦の表示）
     reiwa: {
       start: '2019-05-01',
