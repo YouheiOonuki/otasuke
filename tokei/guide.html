@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日めくり大時計の使い方（古いタブレットを置き時計に）｜くらしのおたすけ</title>
+  <meta name="description" content="古いタブレットやスマホを、日付・曜日・午前午後が大きい置き時計にする方法。画面を消さない設定、対応する端末、オフラインでの動き。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/otasuke/tokei/guide.html">
+
+  <meta property="og:title" content="日めくり大時計の使い方（古いタブレットを置き時計に）｜くらしのおたすけ">
+  <meta property="og:description" content="古いタブレットやスマホを、日付・曜日・午前午後が大きい置き時計にする方法。画面を消さない設定、対応する端末、オフラインでの動き。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://yorozu-craft.com/otasuke/tokei/guide.html">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/otasuke/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- よくある質問（下の #faq と内容をそろえる） -->
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "古い iPad でも使えますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "表示の部分は古いブラウザでも動くよう書きましたが、古い実機では試していません。画面を消さない設定は iPadOS 16.4 以降が必要で、それより前は端末の自動ロックを「なし」にしてください。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "電波が無い部屋でも動きますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "一度開けば、次からは電波が無くても開けます（オフライン用の仕組み）。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "曜日が分からなくなる家族のために使えますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "曜日をいちばん目立つ色で大きく出しています。日付・午前午後も同じ画面に出ます。"
+      }
+    }
+  ]
+}
+  </script>
+
+  <!-- 高齢者向けのページなので広告のスクリプトは読み込まない（企画書 29・ROADMAP D118）。所有確認の meta だけ残す -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <h1>日めくり大時計の使い方</h1>
+    <p class="subtitle">使い方・出典・よくある質問・ご利用上の注意</p>
+  </header>
+
+  <main class="app-main">
+    <p class="noad">このページは広告なし・登録なし・入力は端末の外に出ません。</p>
+    <p class="card" style="text-align:center"><a href="./">▶ 日めくり大時計を使う</a></p>
+
+    <article class="card content" id="howto">
+      <h2>使い方</h2>
+      <ol><li>置く端末でこのページを開く。</li><li>表示を選び「時計をスタート」。</li><li>電源につないだまま置く。</li><li>画面が消えるときは、端末の自動ロックを「なし」にする。</li></ol>
+    </article>
+
+    <article class="card content" id="wakelock">
+      <h2>画面を消さない仕組みと対応する端末</h2>
+      <p>「時計をスタート」を押すと、ブラウザの Screen Wake Lock API で、このページを開いている間は画面を消さないようにします。対応は Chrome・Edge 84 以降、iPhone・iPad の Safari 16.4 以降（ホーム画面に追加したときは 18.4 以降）、Firefox 126 以降です（MDN の互換性データ）。</p><p>ほかのアプリに切り替えると外れるので、戻ったときに取り直します。使えない端末では設定の案内を出します。</p>
+    </article>
+    <article class="card content" id="display">
+      <h2>表示のきまり</h2>
+      <ul><li>12 時間表示では、正午からの 1 時間を「午後 0:30」のように出す</li><li>「年を令和で表示」は令和の年（2019-05-01 から）</li><li>時刻は端末の時計のまま（ずれていれば端末の日付と時刻の設定を直す）</li></ul>
+    </article>
+
+    <article class="card content" id="faq">
+      <h2>よくある質問</h2>
+      <dl class="faq"><dt>古い iPad でも使えますか？</dt><dd>表示の部分は古いブラウザでも動くよう書きましたが、古い実機では試していません。画面を消さない設定は iPadOS 16.4 以降が必要で、それより前は端末の自動ロックを「なし」にしてください。</dd><dt>電波が無い部屋でも動きますか？</dt><dd>一度開けば、次からは電波が無くても開けます（オフライン用の仕組み）。</dd><dt>曜日が分からなくなる家族のために使えますか？</dt><dd>曜日をいちばん目立つ色で大きく出しています。日付・午前午後も同じ画面に出ます。</dd></dl>
+    </article>
+
+    <article class="card content" id="notes">
+      <h2>ご利用上の注意・データの扱い</h2>
+      <ul><li><strong>保存されるデータ</strong>：表示の設定（12/24 時間・令和・秒・色）だけをこの端末のブラウザ（localStorage、キー <code>otasuke_tokei</code>）に保存します。</li><li><strong>ホーム画面に追加</strong>：追加すると、この時計が開きます。</li></ul>
+      <p>根拠: MDN browser-compat-data 8.1.3（Screen Wake Lock API）、元号を改める政令（平成 31 年政令第 143 号）。最終確認日 <time datetime="2026-09-25">2026-09-25</time>。</p>
+      <details><summary>出典の一覧（URL）</summary><ul class="src"><li><a href="https://developer.mozilla.org/ja/docs/Web/API/Screen_Wake_Lock_API" target="_blank" rel="noopener">MDN「Screen Wake Lock API」</a></li><li><a href="https://laws.e-gov.go.jp/law/431CO0000000143" target="_blank" rel="noopener">e-Gov 法令検索「元号を改める政令」</a></li></ul></details>
+      <p><a href="https://docs.google.com/forms/d/e/1FAIpQLSd8B90qh5lEIyr25iw1jOjdQjOyaPZ1_z2wMB4kH-EmEeJYWw/viewform?usp=pp_url&amp;entry.585564634=otasuke" target="_blank" rel="noopener">ご要望・不具合の報告（Google フォーム）</a>：いただいた内容をもとに直します。お返事はしていません。</p>
+      <p>サイト全体の運営者情報・免責事項は<a href="../../about.html">こちら</a>、プライバシーポリシーは<a href="../../privacy-policy.html">こちら</a>です（すべてのツールで共通）。</p>
+    </article>
+
+    <article class="card content" id="changelog">
+      <h2>更新履歴</h2>
+      <ul><li><time datetime="2026-09-25">2026-09-25</time> 公開</li></ul>
+    </article>
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">くらしのおたすけ</a></li>
+        <li><a href="./">日めくり大時計</a></li>
+        <li><a href="./guide.html" aria-current="page">使い方</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -1,0 +1,15 @@
+/* 写経用紙: 縦書きの列（右から左）。字は 1 字ずつマスの中央に置く（writing-mode に頼らない）
+   字形: 端末の教科書体 → 明朝体 → ゴシック体の順（Web フォントは読まない。README 9。企画書 29 の D129） */
+.sk {
+  position: absolute; color: #000;
+  font-family: "UD デジタル 教科書体 N-R", "UD Digi Kyokasho N-R", "UD デジタル 教科書体 NK-R", "UD Digi Kyokasho NK-R", "YuKyokasho", "Klee",
+    "Hiragino Mincho ProN", "ヒラギノ明朝 ProN", "Yu Mincho", "YuMincho", "游明朝", "Noto Serif CJK JP", "Noto Serif JP", "Source Han Serif JP", serif;
+}
+.sk-col { position: absolute; border-left: 0.25mm solid #666; }
+.sk-col.first { border-right: 0.25mm solid #666; }
+.sk-frame { position: absolute; border-top: 0.5mm solid #333; border-bottom: 0.5mm solid #333; }
+.sk-ch { position: absolute; left: 0; width: 100%; text-align: center; }
+.sk.trace-light .sk-ch { color: #c6c6c6; }
+.sk.trace-normal .sk-ch { color: #a9a9a9; }
+.sk.trace-dark .sk-ch { color: #8a8a8a; }
+.sk.model .sk-ch { color: #000; }

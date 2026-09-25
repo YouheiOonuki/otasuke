@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>写経用紙を印刷（般若心経・なぞり書き・大きい字）｜くらしのおたすけ</title>
+  <meta name="description" content="般若心経の写経用紙を無料で印刷。なぞり書きの薄い字・お手本・清書用、字の大きさ（A4 横 1 枚〜特大）と行間を選べます。広告なし・登録なし。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/otasuke/shakyo/">
+
+  <meta property="og:title" content="写経用紙を印刷（般若心経）｜くらしのおたすけ">
+  <meta property="og:description" content="なぞり書きの薄い字・字の大きさ・行間を選んで A4 に。広告なし・登録なし。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/otasuke/shakyo/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/otasuke/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#7a3a0c" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15120e" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "写経用紙を印刷（般若心経）",
+    "description": "般若心経の写経用紙（なぞり書き・お手本・清書用）を、字の大きさと行間を選んで A4 に印刷する。",
+    "url": "https://yorozu-craft.com/otasuke/shakyo/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja"
+  }
+  </script>
+
+  <!-- 高齢者向けのページなので広告のスクリプトは読み込まない（企画書 29・ROADMAP D118）。所有確認の meta だけ残す -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="./shakyo.css">
+</head>
+<body>
+
+  <div class="fixbar" id="fixbar" role="status" hidden>
+    <button type="button"><span id="fixbar-text"></span></button>
+  </div>
+
+  <header class="app-header">
+    <h1>写経用紙を印刷（般若心経）</h1>
+    <p class="subtitle">なぞり書きの薄い字・字の大きさ・行間を選んで A4 に。</p>
+  </header>
+
+  <main class="app-main">
+    <p class="noad">このページは広告なし・登録なし・入力は端末の外に出ません。</p>
+
+    <form id="form" autocomplete="off" onsubmit="return false">
+      <fieldset class="card req">
+        <legend>用紙</legend>
+        <div class="field">
+          <span class="label" id="l-kind">種類</span>
+          <div class="choices" role="radiogroup" aria-labelledby="l-kind">
+            <label><input type="radio" name="kind" value="trace" checked> なぞり書き（薄い字）</label>
+            <label><input type="radio" name="kind" value="model"> お手本（下に敷く濃い字）</label>
+            <label><input type="radio" name="kind" value="blank"> 清書用（線だけ）</label>
+          </div>
+        </div>
+        <div class="field">
+          <span class="label" id="l-size">字の大きさ</span>
+          <div class="choices" role="radiogroup" aria-labelledby="l-size">
+            <label><input type="radio" name="size" value="std" checked> 標準（A4 横）</label>
+            <label><input type="radio" name="size" value="large"> 大きい（A4 縦）</label>
+            <label><input type="radio" name="size" value="xl"> 特大（1 行 14 字）</label>
+          </div>
+        </div>
+        <div class="field">
+          <span class="label" id="l-spacing">行間</span>
+          <div class="choices" role="radiogroup" aria-labelledby="l-spacing">
+            <label><input type="radio" name="spacing" value="normal" checked> ふつう</label>
+            <label><input type="radio" name="spacing" value="wide"> ひろい</label>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="btn-row no-print">
+        <button type="button" id="print" class="btn btn-big">印刷する</button>
+        <span id="pages-note" aria-live="polite"></span>
+      </div>
+
+      <section class="print-host" aria-label="見本">
+        <p class="preview-cap">見本（このまま A4 に印刷されます）</p>
+        <div class="sheets-wrap" id="wrap"><div class="sheets" id="sheets"></div></div>
+      </section>
+
+      <details class="card opt" id="opt-more">
+        <summary>字の濃さ・題・願文・名前: <span class="opt-state"></span></summary>
+        <div class="field">
+          <span class="label" id="l-shade">なぞる字の濃さ</span>
+          <div class="choices" role="radiogroup" aria-labelledby="l-shade">
+            <label><input type="radio" name="shade" value="light"> うすい</label>
+            <label><input type="radio" name="shade" value="normal" checked> ふつう</label>
+            <label><input type="radio" name="shade" value="dark"> こい</label>
+          </div>
+          <p class="hint">見えにくいときは「こい」に。プリンターで濃さが変わります。</p>
+        </div>
+        <div class="field">
+          <span class="label" id="l-title">題</span>
+          <div class="choices" role="radiogroup" aria-labelledby="l-title">
+            <label><input type="radio" name="title" value="with" checked> 仏説摩訶般若波羅蜜多心経</label>
+            <label><input type="radio" name="title" value="without"> 摩訶般若波羅蜜多心経</label>
+          </div>
+          <p class="hint">「仏説」を付けるかは宗派で違います（<a href="./guide.html#text">経文について</a>）。</p>
+        </div>
+        <div class="field">
+          <label for="prayer">願文（「為」のあと）</label>
+          <p class="hint">空欄なら手で書く列を空けます。</p>
+          <input type="text" id="prayer" list="prayers" maxlength="12" placeholder="例：家内安全">
+          <datalist id="prayers"></datalist>
+        </div>
+        <div class="field">
+          <label for="name">名前（謹写の上）</label>
+          <input type="text" id="name" maxlength="12" placeholder="空欄なら手で書く">
+        </div>
+        <label class="check"><input type="checkbox" id="today"> 今日の日付を入れる（令和〇年〇月〇日）</label>
+        <label class="check"><input type="checkbox" id="credit"> 紙の端に「yorozu-craft.com で作成」を入れる</label>
+      </details>
+    </form>
+
+    <details class="card opt no-print" id="file-box">
+      <summary>入力の保存・書き出し</summary>
+      <p class="small">入力内容はこの端末のブラウザ（localStorage、キー <code>otasuke_shakyo</code>）にだけ保存され、外部には送信されません。書き出し・読み込みはこの画面のボタンから。</p>
+      <div class="btn-row">
+        <button type="button" id="share" class="btn btn-sub">同じ用紙を開くリンクをコピー</button>
+        <button type="button" id="backup-export" class="btn btn-sub">ファイルに書き出す</button>
+        <button type="button" id="backup-import" class="btn btn-sub">ファイルから読み込む</button>
+      </div>
+      <p class="small">リンクには名前と願文は入りません。</p>
+      <input type="file" id="backup-file" accept=".json,application/json" hidden>
+      <p id="backup-msg" class="small" aria-live="polite"></p>
+      <p id="share-msg" class="small" aria-live="polite"></p>
+    </details>
+
+    <p class="no-print"><a href="./guide.html">使い方・経文の出典・よくある質問</a> ／ <a href="../../print-help.html">スマホで印刷する</a></p>
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">くらしのおたすけ</a></li>
+        <li><a href="./" aria-current="page">写経用紙</a></li>
+        <li><a href="./guide.html">使い方</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="../constants.js"></script>
+  <script src="../calc.js"></script>
+  <script src="../screen.js"></script>
+  <script src="../common.js"></script>
+  <script src="./app.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

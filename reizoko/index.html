@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>救急情報シート・服薬カレンダー・血圧記録表を印刷（冷蔵庫に貼る紙）｜くらしのおたすけ</title>
+  <meta name="description" content="親の冷蔵庫に置く救急情報シート、服薬カレンダー、血圧記録表を A4 で印刷。名前を入れるだけで、ほかは手書きでも使えます。広告なし・登録なし・入力は端末の外に出ません。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/otasuke/reizoko/">
+
+  <meta property="og:title" content="冷蔵庫に貼る紙 3 枚（救急情報・服薬・血圧）｜くらしのおたすけ">
+  <meta property="og:description" content="救急情報シート・服薬カレンダー・血圧記録表を A4 で。広告なし・登録なし。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/otasuke/reizoko/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/otasuke/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#7a3a0c" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15120e" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "冷蔵庫に貼る紙 3 枚（救急情報シート・服薬カレンダー・血圧記録表）",
+    "description": "救急情報シート・服薬カレンダー・血圧記録表を A4 で印刷する。入力は端末の外に送らない。",
+    "url": "https://yorozu-craft.com/otasuke/reizoko/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja"
+  }
+  </script>
+
+  <!-- 高齢者向けのページなので広告のスクリプトは読み込まない（企画書 29・ROADMAP D118）。所有確認の meta だけ残す -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="./reizoko.css">
+</head>
+<body>
+
+  <div class="fixbar" id="fixbar" role="status" hidden>
+    <button type="button"><span id="fixbar-text"></span></button>
+  </div>
+
+  <header class="app-header">
+    <h1>冷蔵庫に貼る紙 3 枚</h1>
+    <p class="subtitle">救急情報シート・服薬カレンダー・血圧記録表を A4 で。</p>
+  </header>
+
+  <main class="app-main">
+    <p class="noad">このページは広告なし・登録なし・入力は端末の外に出ません。</p>
+
+    <form id="form" autocomplete="off" onsubmit="return false">
+      <fieldset class="card req">
+        <legend>作る紙</legend>
+        <div class="field">
+          <span class="label" id="l-kind">種類</span>
+          <div class="choices" role="radiogroup" aria-labelledby="l-kind">
+            <label><input type="radio" name="kind" value="kyukyu" checked> 救急情報シート</label>
+            <label><input type="radio" name="kind" value="fukuyaku"> 服薬カレンダー</label>
+            <label><input type="radio" name="kind" value="ketsuatsu"> 血圧記録表</label>
+          </div>
+        </div>
+        <div class="field">
+          <label for="name">名前</label>
+          <input type="text" id="name" maxlength="30" placeholder="例：山田 花子">
+          <p class="hint">空欄なら手で書く欄にします。</p>
+        </div>
+        <div class="field" data-for="fukuyaku ketsuatsu">
+          <label for="start">はじめの日</label>
+          <input type="date" id="start">
+          <p class="hint">空欄なら日付も手で書く欄にします。</p>
+        </div>
+        <div class="field" data-for="fukuyaku ketsuatsu">
+          <span class="label" id="l-days">日数</span>
+          <div class="choices" role="radiogroup" aria-labelledby="l-days">
+            <label data-for="fukuyaku"><input type="radio" name="days" value="7"> 1 週間（字が大きい）</label>
+            <label><input type="radio" name="days" value="14"> 2 週間</label>
+            <label><input type="radio" name="days" value="28"> 4 週間</label>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="btn-row no-print">
+        <button type="button" id="print" class="btn btn-big">印刷する</button>
+        <span id="pages-note" aria-live="polite"></span>
+      </div>
+
+      <section class="print-host" aria-label="見本">
+        <p class="preview-cap">見本（このまま A4 に印刷されます）</p>
+        <div class="sheets-wrap" id="wrap"><div class="sheets" id="sheets"></div></div>
+      </section>
+
+      <details class="card opt" id="opt-kyukyu" data-for="kyukyu">
+        <summary>くわしく書く（空欄は手書き用の線）: <span class="opt-state"></span></summary>
+        <p class="warn">病気や薬を入れたら、この画面のスクリーンショットや共有リンクを人に送らないでください（リンクには名前・病気・薬は入りません）。</p>
+        <p class="small">欄は自治体の「救急医療情報キット」の記入用紙（多摩市・西東京市）にある項目から選びました。</p>
+        <div class="field"><label for="k-kana">ふりがな</label><input type="text" id="k-kana" data-k="kana" maxlength="80"></div>
+        <div class="field"><label for="k-birth">生年月日</label><input type="text" id="k-birth" data-k="birth" maxlength="80" placeholder="例：昭和15年4月1日"></div>
+        <div class="field"><label for="k-sex">性別</label><input type="text" id="k-sex" data-k="sex" maxlength="80"></div>
+        <div class="field"><label for="k-blood">血液型</label><input type="text" id="k-blood" data-k="blood" maxlength="80" placeholder="例：A型 Rh＋・不明"></div>
+        <div class="field"><label for="k-address">住所</label><input type="text" id="k-address" data-k="address" maxlength="80"></div>
+        <div class="field"><label for="k-tel">電話</label><input type="tel" id="k-tel" data-k="tel" maxlength="80"></div>
+        <div class="field"><label for="k-c1name">緊急連絡先 ① 名前</label><input type="text" id="k-c1name" data-k="c1name" maxlength="80"></div>
+        <div class="field"><label for="k-c1rel">① 続柄</label><input type="text" id="k-c1rel" data-k="c1rel" maxlength="80" placeholder="例：長男"></div>
+        <div class="field"><label for="k-c1tel">① 電話</label><input type="tel" id="k-c1tel" data-k="c1tel" maxlength="80"></div>
+        <div class="field"><label for="k-c2name">緊急連絡先 ② 名前</label><input type="text" id="k-c2name" data-k="c2name" maxlength="80"></div>
+        <div class="field"><label for="k-c2rel">② 続柄</label><input type="text" id="k-c2rel" data-k="c2rel" maxlength="80"></div>
+        <div class="field"><label for="k-c2tel">② 電話</label><input type="tel" id="k-c2tel" data-k="c2tel" maxlength="80"></div>
+        <div class="field"><label for="k-h1name">かかりつけ ① 病院・医院</label><input type="text" id="k-h1name" data-k="h1name" maxlength="80"></div>
+        <div class="field"><label for="k-h1dept">① 科・先生</label><input type="text" id="k-h1dept" data-k="h1dept" maxlength="80"></div>
+        <div class="field"><label for="k-h1tel">① 電話</label><input type="tel" id="k-h1tel" data-k="h1tel" maxlength="80"></div>
+        <div class="field"><label for="k-h2name">かかりつけ ② 病院・医院</label><input type="text" id="k-h2name" data-k="h2name" maxlength="80"></div>
+        <div class="field"><label for="k-h2dept">② 科・先生</label><input type="text" id="k-h2dept" data-k="h2dept" maxlength="80"></div>
+        <div class="field"><label for="k-h2tel">② 電話</label><input type="tel" id="k-h2tel" data-k="h2tel" maxlength="80"></div>
+        <div class="field"><label for="k-illness">持病・これまでの病気</label><textarea id="k-illness" data-k="illness" maxlength="300"></textarea></div>
+        <div class="field"><label for="k-allergy">アレルギー</label><input type="text" id="k-allergy" data-k="allergy" maxlength="80"></div>
+        <div class="field"><label for="k-medicine">飲んでいる薬</label><textarea id="k-medicine" data-k="medicine" maxlength="300" placeholder="お薬手帳のコピーを一緒に入れるなら「お薬手帳のコピーあり」でも"></textarea></div>
+        <div class="field"><label for="k-special">人工透析・ペースメーカー・酸素・インスリンなど</label><input type="text" id="k-special" data-k="special" maxlength="300"></div>
+        <div class="field"><label for="k-message">救急隊に伝えたいこと</label><textarea id="k-message" data-k="message" maxlength="300" placeholder="例：右耳が聞こえにくい"></textarea></div>
+        <label class="check"><input type="checkbox" id="signCard" checked> 「救急情報は冷蔵庫にあります」の貼り紙も刷る（玄関ドアの内側と冷蔵庫の扉に）</label>
+      </details>
+
+      <details class="card opt" id="opt-fukuyaku" data-for="fukuyaku">
+        <summary>飲む時・メモ: <span class="opt-state"></span></summary>
+        <div class="field">
+          <span class="label" id="l-times">飲む時</span>
+          <div class="choices" role="group" aria-labelledby="l-times">
+            <label><input type="checkbox" name="times" value="wake"> 起きたとき</label>
+            <label><input type="checkbox" name="times" value="morning" checked> 朝</label>
+            <label><input type="checkbox" name="times" value="noon" checked> 昼</label>
+            <label><input type="checkbox" name="times" value="evening" checked> 夕</label>
+            <label><input type="checkbox" name="times" value="bed" checked> 寝る前</label>
+          </div>
+        </div>
+        <div class="field"><label for="f-memo">上に書くメモ</label><input type="text" id="f-memo" maxlength="60" placeholder="例：飲んだら ○ をつける"></div>
+      </details>
+
+      <details class="card opt" id="opt-ketsuatsu" data-for="ketsuatsu">
+        <summary>はかる回数: <span class="opt-state"></span></summary>
+        <label class="check"><input type="checkbox" id="twice"> 朝・晩それぞれ 2 回分の欄にする</label>
+        <p class="hint">日本高血圧学会のパンフレットは「1 機会原則 2 回測定し、その平均」としています。回数はかかりつけ医の指示に合わせてください。</p>
+      </details>
+
+      <details class="card opt" id="opt-print">
+        <summary>印刷の設定: <span class="opt-state"></span></summary>
+        <label class="check"><input type="checkbox" id="credit" checked> 紙の端に「yorozu-craft.com で作成」を入れる</label>
+      </details>
+    </form>
+
+    <details class="card opt no-print" id="file-box">
+      <summary>入力の保存・書き出し・消す</summary>
+      <p class="small">入力内容はこの端末のブラウザ（localStorage、キー <code>otasuke_reizoko</code>）にだけ保存され、外部には送信されません。書き出し・読み込みはこの画面のボタンから。</p>
+      <div class="btn-row">
+        <button type="button" id="share" class="btn btn-sub">同じ形の紙を開くリンクをコピー</button>
+        <button type="button" id="backup-export" class="btn btn-sub">ファイルに書き出す</button>
+        <button type="button" id="backup-import" class="btn btn-sub">ファイルから読み込む</button>
+        <button type="button" id="data-clear" class="btn btn-sub">この画面の入力を消す</button>
+      </div>
+      <p class="small">リンクに入るのは紙の種類と日数などの形だけです（名前・病気・薬・電話は入りません）。家族の共用の端末では、印刷のあと「入力を消す」を押してください。</p>
+      <input type="file" id="backup-file" accept=".json,application/json" hidden>
+      <p id="backup-msg" class="small" aria-live="polite"></p>
+      <p id="share-msg" class="small" aria-live="polite"></p>
+    </details>
+
+    <p class="no-print"><a href="./guide.html">使い方・項目の出典・よくある質問</a> ／ <a href="../../print-help.html">スマホで印刷する</a></p>
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">くらしのおたすけ</a></li>
+        <li><a href="./" aria-current="page">冷蔵庫に貼る紙</a></li>
+        <li><a href="./guide.html">使い方</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="../constants.js"></script>
+  <script src="../calc.js"></script>
+  <script src="../screen.js"></script>
+  <script src="../common.js"></script>
+  <script src="./app.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
