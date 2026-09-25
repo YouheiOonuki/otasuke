@@ -1,0 +1,59 @@
+/* 脳トレプリント: A4 縦（210×297mm）・白黒・字は 14pt 以上（問題の字は 16〜24pt） */
+.nt-sheet { font-family: "Noto Sans JP", "Noto Sans CJK JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "BIZ UDPGothic", Meiryo, sans-serif; }
+.nt-in { position: absolute; left: 14mm; right: 14mm; top: 11mm; bottom: 11mm; display: flex; flex-direction: column; }
+.nt-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 3mm; border-bottom: 0.6mm solid #000; padding-bottom: 1.5mm; }
+.nt-title { font-size: 19pt; font-weight: 700; line-height: 1.25; }
+.nt-meta { font-size: 14pt; white-space: nowrap; text-align: right; line-height: 1.25; }
+.nt-meta span { display: block; }
+.nt-name { display: flex; justify-content: space-between; font-size: 16pt; margin: 3mm 0 1mm; }
+.nt-namebox { display: inline-block; min-width: 62mm; border-bottom: 0.4mm solid #000; padding: 0 2mm; }
+.nt-lead { font-size: 16pt; margin: 2mm 0 3mm; min-height: 1em; }
+.nt-lead b { font-size: 18pt; }
+
+/* 計算・漢字の読み: 2 列 × 10 行 */
+.nt-grid2 { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 20.5mm; column-gap: 8mm; }
+.nt-q { display: flex; align-items: center; gap: 2.5mm; border-bottom: 0.25mm dotted #777; }
+.nt-no { font-size: 14pt; min-width: 9mm; text-align: right; }
+.nt-expr { font-size: 22pt; white-space: nowrap; letter-spacing: 0.02em; }
+.nt-box { display: inline-flex; align-items: center; justify-content: center; height: 13mm; min-width: 26mm; border: 0.5mm solid #000; border-radius: 1.5mm; font-size: 22pt; font-weight: 700; margin-left: auto; }
+.nt-kanji { font-size: 24pt; white-space: nowrap; font-family: "UD デジタル 教科書体 N-R", "UD Digi Kyokasho N-R", "BIZ UDPMincho", "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", "Noto Serif CJK JP", "Noto Serif JP", serif; }
+.nt-yomi { min-width: 44mm; font-size: 16pt; flex-direction: column; line-height: 1.15; }
+.nt-yomi small { font-size: 14pt; font-weight: 400; }
+.nt-score { margin-top: auto; text-align: right; font-size: 16pt; }
+.nt-scorebox { display: inline-block; width: 20mm; border-bottom: 0.4mm solid #000; }
+
+/* 間違い探し */
+.nt-cap { font-size: 14pt; font-weight: 700; margin: 1mm 0 0.5mm; }
+.nt-panel { display: block; }
+.nt-difflist { font-size: 14pt; margin: 3mm 0 0 7mm; }
+.nt-difflist li + li { margin-top: 1mm; }
+
+/* かなクロスワード */
+.nt-crosswrap { display: flex; justify-content: center; margin: 1mm 0 3mm; }
+.nt-cross { display: block; }
+.nt-cluecols { column-count: 2; column-gap: 6mm; font-size: 14pt; line-height: 1.35; }   /* ヨコとタテを続けて 2 段に流す（語の数が偏っても段の高さがそろう） */
+.nt-cluehead { font-weight: 700; border-bottom: 0.4mm solid #000; margin-bottom: 1mm; break-after: avoid; }
+.nt-clues ol { list-style: none; padding: 0; margin: 0; }
+.nt-clues li { margin-bottom: 1mm; break-inside: avoid; }
+.nt-clues + .nt-clues .nt-cluehead { margin-top: 2mm; }
+.nt-cans { font-weight: 700; margin-left: 2mm; }
+.nt-cans::before { content: "→ "; font-weight: 400; }
+
+/* 塗り絵カレンダー */
+.nt-month { display: flex; align-items: baseline; gap: 3mm; margin: 2mm 0 1mm; }
+.nt-mnum { font-size: 44pt; font-weight: 700; line-height: 1; }
+.nt-my { font-size: 18pt; }
+.nt-mwrap { display: flex; justify-content: center; margin-bottom: 3mm; }
+.nt-mandala { display: block; }
+.nt-cal { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.nt-cal th { font-size: 14pt; border: 0.4mm solid #000; padding: 0.5mm; }
+.nt-cal td { font-size: 18pt; height: 14mm; vertical-align: top; padding: 0.5mm 1.5mm; border: 0.4mm solid #000; }
+.nt-cal .sun { font-weight: 700; }
+.nt-cal th.sun, .nt-cal th.sat { text-decoration: underline; }
+
+/* 見本: 画面では 1 枚めだけ。「すべての見本を見る」で残りも。印刷ではすべて */
+.sheets-wrap:not(.all) .nt-more { display: none; }
+.hidden-kind { display: none !important; }
+@media print {
+  .nt-more { display: block !important; }
+}

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>脳トレプリント（大人向け・大きな字・無料）計算・漢字の読み・間違い探し・クロスワード｜くらしのおたすけ</title>
+  <meta name="description" content="大人・高齢の方向けの脳トレプリントを無料で印刷。計算・漢字の読み・間違い探し・かなクロスワード・塗り絵カレンダー。大きな字・白黒・答えつき、毎回ちがう問題。広告なし・登録なし。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/otasuke/notore/">
+
+  <meta property="og:title" content="脳トレプリント（大人向け・大きな字）｜くらしのおたすけ">
+  <meta property="og:description" content="計算・漢字の読み・間違い探し・かなクロスワード・塗り絵カレンダーを A4 に。答えつき・広告なし。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/otasuke/notore/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/otasuke/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#7a3a0c" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15120e" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "脳トレプリント（大人向け・大きな字）",
+    "description": "計算・漢字の読み・間違い探し・かなクロスワード・塗り絵カレンダーを、むずかしさを選んで A4 に印刷する。答えつき。",
+    "url": "https://yorozu-craft.com/otasuke/notore/",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja"
+  }
+  </script>
+
+  <!-- 高齢者向けのページなので広告のスクリプトは読み込まない（企画書 29・36、ROADMAP D118）。所有確認の meta だけ残す -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="./notore.css">
+</head>
+<body>
+
+  <div class="fixbar" id="fixbar" role="status" hidden>
+    <button type="button"><span id="fixbar-text"></span></button>
+  </div>
+
+  <header class="app-header">
+    <h1>脳トレプリント（大人向け・大きな字）</h1>
+    <p class="subtitle">計算・漢字の読み・間違い探し・クロスワードを A4 に。答えつき。</p>
+  </header>
+
+  <main class="app-main">
+    <p class="noad">このページは広告なし・登録なし・入力は端末の外に出ません。</p>
+
+    <form id="form" autocomplete="off" onsubmit="return false">
+      <fieldset class="card req">
+        <legend>プリント</legend>
+        <div class="field">
+          <span class="label" id="l-kind">種類</span>
+          <div class="choices" role="radiogroup" aria-labelledby="l-kind">
+            <label><input type="radio" name="kind" value="calc" checked> 計算</label>
+            <label><input type="radio" name="kind" value="kanji"> 漢字の読み</label>
+            <label><input type="radio" name="kind" value="machigai"> 間違い探し</label>
+            <label><input type="radio" name="kind" value="cross"> かなクロスワード</label>
+            <label><input type="radio" name="kind" value="nurie"> 塗り絵カレンダー</label>
+          </div>
+        </div>
+        <div class="field">
+          <span class="label" id="l-level">むずかしさ</span>
+          <div class="choices" role="radiogroup" aria-labelledby="l-level">
+            <label><input type="radio" name="level" value="easy"> やさしい</label>
+            <label><input type="radio" name="level" value="normal" checked> ふつう</label>
+            <label><input type="radio" name="level" value="hard"> むずかしい</label>
+          </div>
+          <p class="hint" id="level-hint"></p>
+        </div>
+        <div class="field">
+          <label for="pages">枚数</label>
+          <select id="pages">
+            <option value="1">1 枚</option><option value="2">2 枚</option><option value="3">3 枚</option><option value="4">4 枚</option><option value="5">5 枚</option>
+            <option value="6">6 枚</option><option value="7">7 枚</option><option value="8">8 枚</option><option value="9">9 枚</option><option value="10">10 枚</option>
+          </select>
+        </div>
+        <label class="check" id="answers-row"><input type="checkbox" id="answers" checked> 答えのページもつける（問題のあとにまとめて）</label>
+      </fieldset>
+
+      <div class="btn-row no-print">
+        <button type="button" id="print" class="btn btn-big">印刷する</button>
+        <button type="button" id="reroll" class="btn btn-sub">べつの問題にする</button>
+        <span id="pages-note" aria-live="polite"></span>
+      </div>
+
+      <section class="print-host" aria-label="見本">
+        <p class="preview-cap">見本（1 枚め。このまま A4 に印刷されます）</p>
+        <div class="sheets-wrap" id="wrap"><div class="sheets" id="sheets"></div></div>
+        <p class="no-print"><button type="button" id="show-all" class="btn btn-sub" aria-expanded="false">すべての見本と答えを見る</button></p>
+      </section>
+
+      <details class="card opt" id="opt-more">
+        <summary>くわしい設定: <span class="opt-state"></span></summary>
+        <div class="field" id="op-field">
+          <span class="label" id="l-op">計算の種類</span>
+          <div class="choices" role="radiogroup" aria-labelledby="l-op">
+            <label><input type="radio" name="op" value="mix" checked> まぜる</label>
+            <label><input type="radio" name="op" value="add"> たし算</label>
+            <label><input type="radio" name="op" value="sub"> ひき算</label>
+            <label><input type="radio" name="op" value="mul"> かけ算</label>
+            <label><input type="radio" name="op" value="div"> わり算</label>
+          </div>
+        </div>
+        <div class="field" id="month-field">
+          <label for="month">カレンダーの月（1 枚めの月。2 枚め以降は翌月から順に）</label>
+          <input type="month" id="month">
+        </div>
+        <div class="field">
+          <label for="name">お名前（空欄なら手で書く線）</label>
+          <input type="text" id="name" maxlength="12">
+        </div>
+        <div class="field">
+          <label for="seed-in">問題番号（前に刷ったプリントをもう一度）</label>
+          <p class="hint">種類・むずかしさ・枚数も同じにすると、同じ問題になります。</p>
+          <div class="btn-row">
+            <input type="text" id="seed-in" inputmode="numeric" maxlength="14" placeholder="12345-67890">
+            <button type="button" id="seed-go" class="btn btn-sub">この番号で作る</button>
+          </div>
+          <p id="seed-msg" class="small" aria-live="polite"></p>
+        </div>
+        <label class="check"><input type="checkbox" id="credit" checked> 紙の端に「yorozu-craft.com で作成」を入れる</label>
+      </details>
+    </form>
+
+    <details class="card opt no-print" id="file-box">
+      <summary>入力の保存・書き出し</summary>
+      <p class="small">入力内容はこの端末のブラウザ（localStorage、キー <code>otasuke_notore</code>）にだけ保存され、外部には送信されません。書き出し・読み込みはこの画面のボタンから。</p>
+      <div class="btn-row">
+        <button type="button" id="share" class="btn btn-sub">同じプリントを開くリンクをコピー</button>
+        <button type="button" id="backup-export" class="btn btn-sub">ファイルに書き出す</button>
+        <button type="button" id="backup-import" class="btn btn-sub">ファイルから読み込む</button>
+      </div>
+      <p class="small">リンクには名前は入りません。</p>
+      <input type="file" id="backup-file" accept=".json,application/json" hidden>
+      <p id="backup-msg" class="small" aria-live="polite"></p>
+      <p id="share-msg" class="small" aria-live="polite"></p>
+    </details>
+
+    <p class="no-print"><a href="./guide.html">使い方・漢字の出典・よくある質問</a> ／ <a href="../../print-help.html">スマホで印刷する</a></p>
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">くらしのおたすけ</a></li>
+        <li><a href="./" aria-current="page">脳トレプリント</a></li>
+        <li><a href="./guide.html">使い方</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="../constants.js"></script>
+  <script src="../calc.js"></script>
+  <script src="../screen.js"></script>
+  <script src="../common.js"></script>
+  <script src="./kanji-data.js"></script>
+  <script src="./kana-data.js"></script>
+  <script src="./gen.js"></script>
+  <script src="./app.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
