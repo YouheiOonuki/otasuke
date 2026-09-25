@@ -1,0 +1,19 @@
+/* このメール・SMS は本物？ */
+#text { font-size: 1rem; min-height: 8rem; word-break: break-all; }
+.result .always { margin-bottom: 0.8rem; padding: 0.6rem 0.8rem; border: 2px solid var(--accent); border-radius: 8px; background: var(--accent-soft); }
+.result .summary { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
+.result .rh { font-size: 1.05rem; color: var(--accent); border-bottom: 1px solid var(--border); margin: 1rem 0 0.5rem; padding-bottom: 0.2rem; }
+.items { list-style: none; display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.8rem; }
+.item { min-width: 0; overflow-wrap: anywhere; border: 2px solid var(--border); border-radius: 8px; padding: 0.7rem 0.8rem; }
+.item.has-points { border-color: var(--warn); }
+.item .host { font-size: 1.05rem; word-break: break-all; line-height: 1.5; }
+.item .host .sub { color: var(--muted); }
+.item .host .reg { font-weight: 700; font-size: 1.15rem; }
+.item .owner { font-size: 0.98rem; margin-top: 0.2rem; word-break: break-all; }
+.points, .infos, .notes, .plain { padding-left: 1.3rem; margin-top: 0.4rem; }
+.points li { color: var(--warn); font-weight: 700; margin-top: 0.3rem; }
+.points li::marker { content: '！ '; }
+.infos li { margin-top: 0.3rem; font-size: 0.98rem; }
+.notes li, .plain li { margin-top: 0.4rem; font-size: 0.98rem; }
+.phones { font-size: 1.1rem; font-weight: 700; }
+.notes a { font-size: 0.85rem; word-break: break-all; }

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>フィッシングメール・詐欺 SMS の見分け方とリンク先ドメインの読み方｜このメール・SMS は本物？｜くらしのおたすけ</title>
+  <meta name="description" content="「このメール・SMS は本物？」の使い方。リンク先の持ち主の単位（登録ドメイン）の読み方、似せた綴りと punycode、確かめ方（警察庁・消費者庁・フィッシング対策協議会）、よくある質問。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/otasuke/honmono/guide.html">
+
+  <meta property="og:title" content="フィッシングメール・詐欺 SMS の見分け方とリンク先の読み方｜くらしのおたすけ">
+  <meta property="og:description" content="リンク先の持ち主の単位（登録ドメイン）の読み方と、公的機関がすすめる確かめ方。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://yorozu-craft.com/otasuke/honmono/guide.html">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/otasuke/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- よくある質問（下の #faq と内容をそろえる） -->
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "確認すべき点が 0 なら、そのメールは本物ですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "いいえ。この画面は文字の並びを読むだけで、送り主やサイトが本物かどうかは分かりません。送信元の名前やアドレスは簡単に偽装できます。いつもの公式アプリや、前から知っている電話番号で確かめてください。" }
+    },
+    {
+      "@type": "Question",
+      "name": "貼った文はどこかに送られますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "送られません。読み解きはこの端末のブラウザの中だけで行い、文を保存もしません。リンクを開くこともしません。" }
+    },
+    {
+      "@type": "Question",
+      "name": "電話番号の確認を求める SMS は詐欺ですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "この画面では決められません。SMS の中の番号やリンクは使わず、そのサービスの公式アプリや、自分で調べた公式の窓口に確かめてください。" }
+    }
+  ]
+}
+  </script>
+
+  <!-- 高齢者向けのページなので広告のスクリプトは読み込まない（企画書 29・42、ROADMAP D118）。所有確認の meta だけ残す -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <h1>このメール・SMS は本物？の使い方</h1>
+    <p class="subtitle">使い方・リンク先の読み方・確かめ方・よくある質問</p>
+  </header>
+
+  <main class="app-main">
+    <p class="noad">このページは広告なし・登録なし・入力は端末の外に出ません。</p>
+    <p class="card" style="text-align:center"><a href="./">▶ 届いた文を貼って確かめる</a></p>
+
+    <article class="card content" id="howto">
+      <h2>使い方</h2>
+      <ol><li>メールや SMS のリンクを長押しして「リンクをコピー」。開かない。</li><li>この画面の欄に貼る。文ごと貼ってもよい。</li><li>「持ち主の単位」と「確認すべき点」を読む。</li><li>どんな結果でも、いつもの公式アプリか、知っている電話番号で確かめる。</li></ol>
+    </article>
+
+    <article class="card content" id="domain">
+      <h2>リンク先の持ち主の単位（登録ドメイン）の読み方</h2>
+      <p>ドメインは右から読みます。「.co.jp」「.com」のような終わりの部分のすぐ左までが、持ち主の単位です。それより左は、持ち主が自由に付けられます。</p>
+      <ul>
+        <li>kuronekoyamato.co.jp.redelivery.example.com の持ち主の単位は example.com。</li>
+        <li>終わりの部分は、Public Suffix List（公開サフィックス一覧）で決めています。</li>
+        <li>xn-- で始まる部分は、日本語やほかの国の文字を英数字に直したもの（punycode）。元の字に戻して見せ、a〜z に似たキリル文字などが混ざると知らせます。</li>
+        <li>知らせる会社は、公式サイトのドメインを確かめた 20 社・機関だけです。</li>
+      </ul>
+    </article>
+
+    <article class="card content" id="advice">
+      <h2>公的機関がすすめる確かめ方</h2>
+      <ul>
+        <li>フィッシングサイトは本物そっくりで、見分けるのはとても難しい。鍵マークがあっても偽物のことがある（フィッシング対策協議会）。</li>
+        <li>「いつもの」公式アプリとブックマークから開く習慣をつける（フィッシング対策協議会・国民生活センター）。</li>
+        <li>事業者や公的機関が、SMS やメールでいきなりカード番号の入力を求めることはない（消費者庁）。</li>
+        <li>送信元の名前やアドレスは簡単に偽装できる（警察庁）。</li>
+      </ul>
+    </article>
+
+    <article class="card content" id="faq">
+      <h2>よくある質問</h2>
+      <dl class="faq"><dt>確認すべき点が 0 なら、そのメールは本物ですか？</dt><dd>いいえ。この画面は文字の並びを読むだけで、送り主やサイトが本物かどうかは分かりません。送信元の名前やアドレスは簡単に偽装できます。いつもの公式アプリや、前から知っている電話番号で確かめてください。</dd><dt>貼った文はどこかに送られますか？</dt><dd>送られません。読み解きはこの端末のブラウザの中だけで行い、文を保存もしません。リンクを開くこともしません。</dd><dt>電話番号の確認を求める SMS は詐欺ですか？</dt><dd>この画面では決められません。SMS の中の番号やリンクは使わず、そのサービスの公式アプリや、自分で調べた公式の窓口に確かめてください。</dd></dl>
+    </article>
+
+    <article class="card content" id="notes">
+      <h2>ご利用上の注意・データの扱い</h2>
+      <ul><li><strong>判定はしない</strong>：出すのは確認すべき点だけで、本物・偽物は決めません。</li><li><strong>保存・送信しない</strong>：貼った文はこの端末の中で読むだけで、保存も送信もしません。</li><li><strong>一覧に無い会社</strong>：公式のドメインを確かめていない会社は、似せた綴りを知らせられません。</li></ul>
+      <p>根拠: 警察庁・消費者庁・フィッシング対策協議会・国民生活センターの注意喚起、各社の公式サイト、Public Suffix List（MPL 2.0）。最終確認日 <time datetime="2026-09-25">2026-09-25</time>。</p>
+      <details><summary>出典の一覧（URL）と、確かめた公式のドメイン</summary>
+        <ul class="src">
+          <li><a href="https://www.npa.go.jp/bureau/cyber/countermeasures/phishing.html" target="_blank" rel="noopener">警察庁「フィッシング対策」</a></li>
+          <li><a href="https://www.caa.go.jp/policies/policy/consumer_policy/caution/caution_039" target="_blank" rel="noopener">消費者庁「クレジットカードの不正利用にご注意ください!」</a></li>
+          <li><a href="https://www.antiphishing.jp/consumer/abt_phishing.html" target="_blank" rel="noopener">フィッシング対策協議会「フィッシングとは」</a></li>
+          <li><a href="https://www.kokusen.go.jp/news/data/n-20221221_2.html" target="_blank" rel="noopener">国民生活センター「通販サイト、カード会社、宅配便事業者などをかたる偽SMS・メールに警戒を！」（2022-12-21）</a></li>
+          <li><a href="https://www.e-tax.nta.go.jp/topics/2022/topics_20220815.htm" target="_blank" rel="noopener">e-Tax「不審なショートメッセージやメールにご注意ください」（文面のリンクの表示と行き先がちがう事例）</a></li>
+          <li><a href="https://publicsuffix.org/" target="_blank" rel="noopener">Public Suffix List</a>（Mozilla Public License 2.0。版は <span id="psl-version">2026-09-24_13-26-36_UTC</span>）</li>
+          <li id="brand-list">公式サイトを開いて確かめたドメイン: nta.go.jp（国税庁・e-Tax）、nenkin.go.jp、myna.go.jp、japanpost.jp（日本郵便・ゆうちょ銀行）、kuronekoyamato.co.jp、sagawa-exp.co.jp、mufg.jp（三菱UFJ銀行）、smbc.co.jp、amazon.co.jp・amazon.com、rakuten.co.jp、docomo.ne.jp、au.com・kddi.com、softbank.jp・ymobile.jp、jcb.co.jp、saisoncard.co.jp、paypay.ne.jp、mercari.com、apple.com、line.me、yahoo.co.jp</li>
+          <li>各社の注意喚起: <a href="https://www.nta.go.jp/information/attention/attention.htm" target="_blank" rel="noopener">国税庁</a>、<a href="https://www.post.japanpost.jp/notification/notice/fraud-mail.html" target="_blank" rel="noopener">日本郵便</a>、<a href="https://faq.kuronekoyamato.co.jp/app/answers/detail/a_id/2507" target="_blank" rel="noopener">ヤマト運輸</a>、<a href="https://www2.sagawa-exp.co.jp/whatsnew/detail/721/" target="_blank" rel="noopener">佐川急便</a>、<a href="https://corp.rakuten.co.jp/security/anti-fraud/" target="_blank" rel="noopener">楽天グループ</a></li>
+        </ul>
+      </details>
+      <p><a href="https://docs.google.com/forms/d/e/1FAIpQLSd8B90qh5lEIyr25iw1jOjdQjOyaPZ1_z2wMB4kH-EmEeJYWw/viewform?usp=pp_url&amp;entry.585564634=otasuke" target="_blank" rel="noopener">ご要望・不具合の報告（Google フォーム）</a>：いただいた内容をもとに直します。お返事はしていません。届いたメールの文は送らないでください。</p>
+      <p>サイト全体の運営者情報・免責事項は<a href="../../about.html">こちら</a>、プライバシーポリシーは<a href="../../privacy-policy.html">こちら</a>です（すべてのツールで共通）。</p>
+    </article>
+
+    <article class="card content" id="changelog">
+      <h2>更新履歴</h2>
+      <ul><li><time datetime="2026-09-25">2026-09-25</time> 公開</li></ul>
+    </article>
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">くらしのおたすけ</a></li>
+        <li><a href="./">このメール・SMS は本物？</a></li>
+        <li><a href="./guide.html" aria-current="page">使い方</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
