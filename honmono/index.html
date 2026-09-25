@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>このメール・SMS は本物？ リンク先のドメインをその場で確認（詐欺・フィッシングの見分け方）｜くらしのおたすけ</title>
+  <meta name="description" content="届いたメールや SMS を貼ると、リンク先の本当の持ち主（ドメイン）、似せた綴り、punycode、短縮 URL をその場で読み解きます。文は送信せず、リンクも開きません。広告なし・登録なし。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/otasuke/honmono/">
+
+  <meta property="og:title" content="このメール・SMS は本物？ リンク先の確認｜くらしのおたすけ">
+  <meta property="og:description" content="貼った文のリンク先の持ち主と、似せた綴りをその場で読み解く。送信しない・開かない・広告なし。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/otasuke/honmono/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/otasuke/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#7a3a0c" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15120e" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "このメール・SMS は本物？（リンク先の確認）",
+    "description": "届いたメールや SMS の文を貼ると、リンク先の登録ドメイン・似せた綴り・punycode・短縮 URL を端末の中で読み解く。送信しない。",
+    "url": "https://yorozu-craft.com/otasuke/honmono/",
+    "applicationCategory": "SecurityApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja"
+  }
+  </script>
+
+  <!-- 高齢者向けのページなので広告のスクリプトは読み込まない（企画書 29・42、ROADMAP D118）。所有確認の meta だけ残す -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="./honmono.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <h1>このメール・SMS は本物？</h1>
+    <p class="subtitle">貼った文のリンク先の持ち主を、その場で読み解きます。</p>
+  </header>
+
+  <main class="app-main">
+    <p class="noad">このページは広告なし・登録なし・入力は端末の外に出ません。</p>
+
+    <form id="form" autocomplete="off" onsubmit="return false">
+      <fieldset class="card req">
+        <legend>届いた文を貼る</legend>
+        <div class="field">
+          <label for="text">メールや SMS の文（リンクだけでも）</label>
+          <p class="hint">リンクは開かずに、長押しして「リンクをコピー」。</p>
+          <textarea id="text" rows="5" spellcheck="false" autocapitalize="off"></textarea>
+        </div>
+        <div class="btn-row">
+          <button type="button" id="paste" class="btn btn-sub">貼り付ける</button>
+          <button type="button" id="clear" class="btn btn-sub">消す</button>
+          <button type="button" id="sample" class="btn btn-sub">例を入れる</button>
+        </div>
+      </fieldset>
+    </form>
+
+    <section class="card result" id="result" aria-live="polite">
+      <p class="always"><strong>どんな結果でも、リンクは開かず</strong>、いつもの公式アプリ・ブックマーク・前から知っている電話番号で確かめてください。</p>
+      <div id="out"><p class="small">文を貼ると、ここに確認すべき点が出ます。この画面は「安全」とは判定しません。</p></div>
+    </section>
+
+    <details class="card opt" id="more">
+      <summary>この画面で分かること・分からないこと</summary>
+      <ul class="plain">
+        <li>分かること: リンクの本当の持ち主の単位（登録ドメイン）、似せた綴り、ほかの国の文字、短縮 URL、「@」の飾り。</li>
+        <li>分からないこと: そのサイトが偽物かどうか、送り主が本物かどうか。送信元の名前やアドレスは簡単に偽装できます（警察庁）。</li>
+        <li>メールでは、見えている URL と、押したときの行き先がちがうことがあります（国税庁の事例）。貼るのは「リンクをコピー」で取ったものに。</li>
+        <li>貼った文は、この端末の中で読むだけです。保存も送信もしません。リンクも開きません。</li>
+      </ul>
+    </details>
+
+    <details class="card opt" id="help">
+      <summary>入力してしまった・困ったとき</summary>
+      <ul class="plain">
+        <li>ID やパスワードを入れたら、同じものを使っているすべてのサービスで、すぐ変える（警察庁）。</li>
+        <li>カード番号を入れたら、カード会社へ連絡する（国民生活センター）。</li>
+        <li>相談は、消費者ホットライン「188」（最寄りの消費生活センターにつながる）、または最寄りの警察署。</li>
+      </ul>
+    </details>
+
+    <p class="no-print"><a href="./guide.html">使い方・しくみ・よくある質問</a></p>
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">くらしのおたすけ</a></li>
+        <li><a href="./" aria-current="page">このメール・SMS は本物？</a></li>
+        <li><a href="./guide.html">使い方</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="../constants.js"></script>
+  <script src="./psl-data.js"></script>
+  <script src="./check.js"></script>
+  <script src="./app.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

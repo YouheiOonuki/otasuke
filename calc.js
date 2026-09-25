@@ -273,6 +273,18 @@
     };
   }
 
+  // 季語カレンダー（kigo/）。印刷する季節・形・読みがな・字の大きさ。個人の情報は無い
+  function normKigo(d) {
+    d = d && typeof d === 'object' ? d : {};
+    return {
+      season: pick(d.season, ['now', '春', '夏', '秋', '冬', '新年', 'all'], 'now'),
+      form: pick(d.form, ['table', 'words'], 'table'),
+      yomi: bool(d.yomi, true),
+      size: pick(d.size, ['normal', 'large'], 'normal'),
+      credit: bool(d.credit, true),
+    };
+  }
+
   // --- バックアップファイル（README「ツールを追加するとき」20。決定 D31） ---
   // 形式: { tool, version, exportedAt, data }。data はブラウザに保存しているものと同じ形
   var BACKUP_VERSION = 1;
@@ -317,7 +329,7 @@
     WEEK: WEEK, pad2: pad2, parseISO: parseISO, toISO: toISO, addDays: addDays, dayRows: dayRows, reiwaYear: reiwaYear,
     kanjiNum: kanjiNum, shakyoDate: shakyoDate, clockParts: clockParts, SHAKYO_SIZES: SHAKYO_SIZES, shakyoLayout: shakyoLayout, looksLikePassword: looksLikePassword,
     encodeShare: encodeShare, decodeShare: decodeShare,
-    normShakyo: normShakyo, normReizoko: normReizoko, normDaicho: normDaicho, normTejun: normTejun, normTokei: normTokei, normNotore: normNotore,
+    normShakyo: normShakyo, normReizoko: normReizoko, normDaicho: normDaicho, normTejun: normTejun, normTokei: normTokei, normNotore: normNotore, normKigo: normKigo,
     KYUKYU_FIELDS: KYUKYU_FIELDS, TIMINGS: TIMINGS, DAICHO_KINDS: DAICHO_KINDS,
     backupFileName: backupFileName, buildBackup: buildBackup, parseBackup: parseBackup,
   };

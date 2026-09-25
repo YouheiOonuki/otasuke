@@ -9,8 +9,8 @@
   // --- ブラウザへの保存（README「ツールを追加するとき」12） ---
   // キーは必ず "otasuke_" で始める。全ツールが同じオリジンで localStorage を共有しているため
   var PREFIX = 'otasuke_';
-  var KEYS = ['shakyo', 'reizoko', 'daicho', 'tejun', 'tokei', 'notore'];
-  var NORM = { shakyo: Calc.normShakyo, reizoko: Calc.normReizoko, daicho: Calc.normDaicho, tejun: Calc.normTejun, tokei: Calc.normTokei, notore: Calc.normNotore };
+  var KEYS = ['shakyo', 'reizoko', 'daicho', 'tejun', 'tokei', 'notore', 'kigo'];
+  var NORM = { shakyo: Calc.normShakyo, reizoko: Calc.normReizoko, daicho: Calc.normDaicho, tejun: Calc.normTejun, tokei: Calc.normTokei, notore: Calc.normNotore, kigo: Calc.normKigo };
   var store = {
     get: function (name) {
       try {

@@ -102,6 +102,82 @@
       gradesUrl: 'https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm',
       checked: CHECKED,
     },
+    // --- 季語カレンダー（kigo/） ---
+    // 季語の季節: 語ごとにデジタル大辞泉・精選版 日本国語大辞典（コトバンク）の季語の印で確かめた（tools/kigo/build-kigo.py・verified.json）。
+    // 説明文は自作で、辞書・歳時記の文と例句は載せない
+    kigo: {
+      source: 'コトバンク「デジタル大辞泉」「精選版 日本国語大辞典」（小学館）の各項目の季語の印（《季 春》など）',
+      url: 'https://kotobank.jp/',
+      checked: CHECKED,
+    },
+    // 二十四節気（国立天文台 暦要項の日本時間。季節の区切りは立春・立夏・立秋・立冬の日）。表に無い年は kigo/sekki.js で計算する
+    sekki: {
+      table: {
+        2026: { 小寒: '2026-01-05 17:23', 大寒: '2026-01-20 10:45', 立春: '2026-02-04 05:02', 雨水: '2026-02-19 00:52', 啓蟄: '2026-03-05 22:59', 春分: '2026-03-20 23:46',
+          清明: '2026-04-05 03:40', 穀雨: '2026-04-20 10:39', 立夏: '2026-05-05 20:49', 小満: '2026-05-21 09:37', 芒種: '2026-06-06 00:48', 夏至: '2026-06-21 17:25',
+          小暑: '2026-07-07 10:57', 大暑: '2026-07-23 04:13', 立秋: '2026-08-07 20:43', 処暑: '2026-08-23 11:19', 白露: '2026-09-07 23:41', 秋分: '2026-09-23 09:05',
+          寒露: '2026-10-08 15:29', 霜降: '2026-10-23 18:38', 立冬: '2026-11-07 18:52', 小雪: '2026-11-22 16:23', 大雪: '2026-12-07 11:53', 冬至: '2026-12-22 05:50' },
+        2027: { 小寒: '2027-01-05 23:10', 大寒: '2027-01-20 16:30', 立春: '2027-02-04 10:46', 雨水: '2027-02-19 06:33', 啓蟄: '2027-03-06 04:40', 春分: '2027-03-21 05:25',
+          清明: '2027-04-05 09:17', 穀雨: '2027-04-20 16:18', 立夏: '2027-05-06 02:25', 小満: '2027-05-21 15:18', 芒種: '2027-06-06 06:26', 夏至: '2027-06-21 23:11',
+          小暑: '2027-07-07 16:37', 大暑: '2027-07-23 10:05', 立秋: '2027-08-08 02:27', 処暑: '2027-08-23 17:14', 白露: '2027-09-08 05:28', 秋分: '2027-09-23 15:02',
+          寒露: '2027-10-08 21:17', 霜降: '2027-10-24 00:33', 立冬: '2027-11-08 00:39', 小雪: '2027-11-22 22:16', 大雪: '2027-12-07 17:38', 冬至: '2027-12-22 11:42' },
+      },
+      source: '国立天文台 暦計算室「暦要項」令和 8 年（2026）・令和 9 年（2027）の二十四節気および雑節',
+      url: 'https://eco.mtk.nao.ac.jp/koyomi/yoko/2026/rekiyou262.html',
+      url2: 'https://eco.mtk.nao.ac.jp/koyomi/yoko/2027/rekiyou272.html',
+      checked: CHECKED,
+    },
+
+    // --- 「このメール・SMS は本物？」（honmono/） ---
+    // 公式のドメインは、各社・各機関の公式サイトをその日に開いて、そのドメインで本人のサイトが出ることを確かめたもの。
+    // note は公式の注意喚起のページに書いてあること（書いてある社だけ）。ここに無い会社は「確かめたドメインの一覧に無い」とだけ出す
+    // words: 文に出てくる名前（大文字と小文字は区別しない。wordsRe は語の区切りつきで探す短い名前）
+    honmono: {
+      brands: [
+        { id: 'nta', name: '国税庁（e-Tax）', domains: ['nta.go.jp'], words: ['国税庁', '税務署', 'e-Tax', 'eTax', 'イータックス'], tokens: ['nta', 'etax', 'e-tax', 'kokuzei'],
+          note: '国税庁は、URL を書いた案内を SMS で送ることはなく、税金の納付の求めや差押えについて SMS・メール・LINE を送ることもないと案内しています。e-Tax のメールは、原則として本文に URL を書いていないとしています。',
+          src: '国税庁「不審なメールや電話にご注意ください」・e-Tax「『税務署からのお知らせ』等のメールが届いた方へ」', url: 'https://www.nta.go.jp/information/attention/attention.htm', url2: 'https://www.e-tax.nta.go.jp/topics/topics_oshirase_mail.htm' },
+        { id: 'nenkin', name: '日本年金機構', domains: ['nenkin.go.jp'], words: ['日本年金機構', '年金機構'], tokens: ['nenkin'] },
+        { id: 'myna', name: 'マイナポータル', domains: ['myna.go.jp'], words: ['マイナポータル'], tokens: ['myna', 'mynaportal'] },
+        { id: 'japanpost', name: '日本郵便・ゆうちょ銀行', domains: ['japanpost.jp'], words: ['日本郵便', '郵便局', 'ゆうパック', 'ゆうちょ', 'JP POST', 'Japan Post'], tokens: ['japanpost', 'jppost', 'japan-post', 'jp-post', 'yubin', 'yuubin', 'yucho', 'yuucho', 'jpbank', 'jp-bank'],
+          note: '日本郵便は、Web サイトなどで使う URL に「.net」と「.top」は使っていないと案内しています。',
+          src: '日本郵便「日本郵便を装った不審メール及び架空Webサイトにご注意ください。」', url: 'https://www.post.japanpost.jp/notification/notice/fraud-mail.html' },
+        { id: 'yamato', name: 'ヤマト運輸', domains: ['kuronekoyamato.co.jp'], words: ['ヤマト運輸', 'クロネコ', 'ヤマト'], tokens: ['yamato', 'kuroneko', 'kuronekoyamato'],
+          note: 'ヤマト運輸は、SMS（ショートメール）での連絡はしていないと案内しています。メールは kuronekoyamato.co.jp（と楽天市場の一部の荷物の shop.rakuten.co.jp）から送るとしています。',
+          src: 'ヤマト運輸 よくあるご質問「ヤマト運輸からのメールや SMS が『迷惑（詐欺）メール』かを見分ける方法はありますか？」', url: 'https://faq.kuronekoyamato.co.jp/app/answers/detail/a_id/2507' },
+        { id: 'sagawa', name: '佐川急便', domains: ['sagawa-exp.co.jp'], words: ['佐川'], tokens: ['sagawa'],
+          note: '佐川急便は、荷物の集配について SMS（ショートメール）での案内はしていないと案内しています。',
+          src: '佐川急便「佐川急便を装った迷惑メールにご注意ください」', url: 'https://www2.sagawa-exp.co.jp/whatsnew/detail/721/' },
+        { id: 'mufg', name: '三菱UFJ銀行', domains: ['mufg.jp'], words: ['三菱UFJ', '三菱ＵＦＪ', 'MUFG'], tokens: ['mufg'] },
+        { id: 'smbc', name: '三井住友銀行', domains: ['smbc.co.jp'], words: ['三井住友銀行', 'SMBC'], tokens: ['smbc'] },
+        { id: 'amazon', name: 'Amazon', domains: ['amazon.co.jp', 'amazon.com'], words: ['Amazon', 'アマゾン'], tokens: ['amazon', 'amazom', 'amzn'] },
+        { id: 'rakuten', name: '楽天', domains: ['rakuten.co.jp'], words: ['楽天', 'Rakuten'], tokens: ['rakuten'],
+          note: '楽天グループは、サービスによっていろいろなドメインからメールを送っていると案内しています（公式でも rakuten.co.jp ではないことがあります）。',
+          src: '楽天グループ「楽天グループにおけるなりすまし・フィッシングメール対策について」', url: 'https://corp.rakuten.co.jp/security/anti-fraud/' },
+        { id: 'docomo', name: 'NTTドコモ', domains: ['docomo.ne.jp'], words: ['ドコモ', 'docomo'], tokens: ['docomo', 'nttdocomo'] },
+        { id: 'au', name: 'au（KDDI）', domains: ['au.com', 'kddi.com'], words: ['KDDI'], wordsRe: ['au'], tokens: ['kddi', 'aupay', 'au-pay'] },
+        { id: 'softbank', name: 'ソフトバンク・ワイモバイル', domains: ['softbank.jp', 'ymobile.jp'], words: ['ソフトバンク', 'SoftBank', 'ワイモバイル', 'Y!mobile'], tokens: ['softbank', 'ymobile'] },
+        { id: 'jcb', name: 'JCB', domains: ['jcb.co.jp'], words: [], wordsRe: ['JCB'], tokens: ['jcb'] },
+        { id: 'saison', name: 'セゾンカード', domains: ['saisoncard.co.jp'], words: ['セゾン'], tokens: ['saison', 'saisoncard'] },
+        { id: 'paypay', name: 'PayPay', domains: ['paypay.ne.jp'], words: ['PayPay', 'ペイペイ'], tokens: ['paypay'] },
+        { id: 'mercari', name: 'メルカリ', domains: ['mercari.com'], words: ['メルカリ', 'mercari'], tokens: ['mercari'] },
+        { id: 'apple', name: 'Apple', domains: ['apple.com'], words: ['Apple', 'アップル'], tokens: ['apple', 'appleid', 'apple-id'] },
+        { id: 'line', name: 'LINE', domains: ['line.me'], words: [], wordsRe: ['LINE'], tokens: [] },
+        { id: 'yahoo', name: 'Yahoo! JAPAN', domains: ['yahoo.co.jp'], words: ['Yahoo', 'ヤフー'], tokens: ['yahoo'] },
+      ],
+      source: '各社・各機関の公式サイト（nta.go.jp・e-tax.nta.go.jp・nenkin.go.jp・myna.go.jp・post.japanpost.jp・jp-bank.japanpost.jp・kuronekoyamato.co.jp・sagawa-exp.co.jp・bk.mufg.jp・smbc.co.jp・amazon.co.jp・amazon.com・rakuten.co.jp・docomo.ne.jp・au.com・kddi.com・softbank.jp・ymobile.jp・jcb.co.jp・saisoncard.co.jp・paypay.ne.jp・jp.mercari.com・apple.com・line.me・yahoo.co.jp）を開いて確かめた',
+      url: 'https://www.npa.go.jp/bureau/cyber/countermeasures/phishing.html',
+      checked: CHECKED,
+      // 画面の「確かめ方」の根拠（言い換えて 1 文ずつ使う）
+      advice: {
+        npa: { name: '警察庁「フィッシング対策」', url: 'https://www.npa.go.jp/bureau/cyber/countermeasures/phishing.html' },   // 送信元の名前・アドレスは簡単に偽装できる／フィッシング 110 番・警察へ
+        caa: { name: '消費者庁「クレジットカードの不正利用にご注意ください!」', url: 'https://www.caa.go.jp/policies/policy/consumer_policy/caution/caution_039' },   // SMS やメールでいきなりカード番号を求めることはない
+        antiphishing: { name: 'フィッシング対策協議会「フィッシングとは」', url: 'https://www.antiphishing.jp/consumer/abt_phishing.html' },   // 見破れない・鍵マークでも偽物がある・いつもの公式アプリとブックマークから
+        kokusen: { name: '国民生活センター「通販サイト、カード会社、宅配便事業者などをかたる偽SMS・メールに警戒を！」（2022-12-21）', url: 'https://www.kokusen.go.jp/news/data/n-20221221_2.html' },   // 消費者ホットライン 188
+        etax: { name: 'e-Tax「不審なショートメッセージやメールにご注意ください」', url: 'https://www.e-tax.nta.go.jp/topics/2022/topics_20220815.htm' },   // 文面のリンクの表示と行き先がちがう事例
+      },
+    },
+
     // 令和の始まり（和暦の表示）
     reiwa: {
       start: '2019-05-01',

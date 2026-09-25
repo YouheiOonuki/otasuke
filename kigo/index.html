@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>季語カレンダー｜今日の季語と俳句の季語一覧（春夏秋冬・新年）印刷できる表・小学生にも｜くらしのおたすけ</title>
+  <meta name="description" content="今日の季語と、俳句の季語の一覧を季節ごとに。読みがなと短い説明つきで A4 に印刷できます。季節の区切りは二十四節気（国立天文台の暦要項）。季語の季節は国語辞典で確かめました。広告なし。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/otasuke/kigo/">
+
+  <meta property="og:title" content="季語カレンダー（今日の季語・季語一覧の印刷）｜くらしのおたすけ">
+  <meta property="og:description" content="今日の季語と、春夏秋冬・新年の季語一覧を A4 に。読みがなと短い説明つき。広告なし。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/otasuke/kigo/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/otasuke/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#7a3a0c" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15120e" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "季語カレンダー（今日の季語・季語一覧）",
+    "description": "今日の季語と、春・夏・秋・冬・新年の季語一覧を、読みがなと短い説明つきで A4 に印刷する。",
+    "url": "https://yorozu-craft.com/otasuke/kigo/",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja"
+  }
+  </script>
+
+  <!-- 高齢者向けのページなので広告のスクリプトは読み込まない（企画書 29・42、ROADMAP D118）。所有確認の meta だけ残す -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="./kigo.css">
+</head>
+<body>
+
+  <div class="fixbar" id="fixbar" role="status" hidden>
+    <button type="button"><span id="fixbar-text"></span></button>
+  </div>
+
+  <header class="app-header">
+    <h1>季語カレンダー</h1>
+    <p class="subtitle">今日の季語と、季語の一覧（A4 で印刷）。</p>
+  </header>
+
+  <main class="app-main">
+    <p class="noad">このページは広告なし・登録なし・入力は端末の外に出ません。</p>
+
+    <section class="card today" id="today" aria-live="polite"></section>
+
+    <form id="form" autocomplete="off" onsubmit="return false">
+      <fieldset class="card req">
+        <legend>印刷する一覧</legend>
+        <div class="field">
+          <span class="label" id="l-season">季節</span>
+          <div class="choices" role="radiogroup" aria-labelledby="l-season">
+            <label><input type="radio" name="season" value="now" checked> <span id="now-label">今の季節</span></label>
+            <label><input type="radio" name="season" value="春"> 春</label>
+            <label><input type="radio" name="season" value="夏"> 夏</label>
+            <label><input type="radio" name="season" value="秋"> 秋</label>
+            <label><input type="radio" name="season" value="冬"> 冬</label>
+            <label><input type="radio" name="season" value="新年"> 新年</label>
+            <label><input type="radio" name="season" value="all"> 全部</label>
+          </div>
+        </div>
+        <div class="field">
+          <span class="label" id="l-form">形</span>
+          <div class="choices" role="radiogroup" aria-labelledby="l-form">
+            <label><input type="radio" name="form" value="table" checked> 説明つきの表</label>
+            <label><input type="radio" name="form" value="words"> 季語だけ（1 枚）</label>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="btn-row no-print">
+        <button type="button" id="print" class="btn btn-big">印刷する</button>
+        <span id="pages-note" aria-live="polite"></span>
+      </div>
+
+      <section class="print-host" aria-label="見本">
+        <p class="preview-cap">見本（1 枚め。このまま A4 に印刷されます）</p>
+        <div class="sheets-wrap" id="wrap"><div class="sheets" id="sheets"></div></div>
+        <p class="no-print"><button type="button" id="show-all" class="btn btn-sub" aria-expanded="false">すべての見本を見る</button></p>
+      </section>
+
+      <details class="card opt" id="opt-more">
+        <summary>くわしい設定: <span class="opt-state"></span></summary>
+        <label class="check"><input type="checkbox" id="yomi" checked> 読みがなをつける</label>
+        <div class="field">
+          <span class="label" id="l-size">字の大きさ</span>
+          <div class="choices" role="radiogroup" aria-labelledby="l-size">
+            <label><input type="radio" name="size" value="normal" checked> ふつう</label>
+            <label><input type="radio" name="size" value="large"> 大きい</label>
+          </div>
+        </div>
+        <label class="check"><input type="checkbox" id="credit" checked> 紙の端に「yorozu-craft.com で作成」を入れる</label>
+      </details>
+    </form>
+
+    <section class="card no-print today-more" id="today-more" aria-label="今の季節"></section>
+
+    <details class="card opt no-print" id="sekki-box">
+      <summary>今年の二十四節気の日付</summary>
+      <div id="sekki"></div>
+    </details>
+
+    <details class="card opt no-print" id="file-box">
+      <summary>入力の保存・書き出し</summary>
+      <p class="small">入力内容はこの端末のブラウザ（localStorage、キー <code>otasuke_kigo</code>）にだけ保存され、外部には送信されません。書き出し・読み込みはこの画面のボタンから。</p>
+      <div class="btn-row">
+        <button type="button" id="share" class="btn btn-sub">同じ一覧を開くリンクをコピー</button>
+        <button type="button" id="backup-export" class="btn btn-sub">ファイルに書き出す</button>
+        <button type="button" id="backup-import" class="btn btn-sub">ファイルから読み込む</button>
+      </div>
+      <input type="file" id="backup-file" accept=".json,application/json" hidden>
+      <p id="backup-msg" class="small" aria-live="polite"></p>
+      <p id="share-msg" class="small" aria-live="polite"></p>
+    </details>
+
+    <p class="no-print">川柳のお題は <a href="../../web-roulette/odai/">お題の一覧（ルーレットで回せます）</a>へ。</p>
+    <p class="no-print"><a href="./guide.html">使い方・季節の決め方・よくある質問</a> ／ <a href="../../print-help.html">スマホで印刷する</a></p>
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">くらしのおたすけ</a></li>
+        <li><a href="./" aria-current="page">季語カレンダー</a></li>
+        <li><a href="./guide.html">使い方</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="../constants.js"></script>
+  <script src="../calc.js"></script>
+  <script src="../screen.js"></script>
+  <script src="../common.js"></script>
+  <script src="./kigo-data.js"></script>
+  <script src="./sekki.js"></script>
+  <script src="./sheet.js"></script>
+  <script src="./app.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

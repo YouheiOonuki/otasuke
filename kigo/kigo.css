@@ -1,0 +1,45 @@
+/* 季語カレンダー: 画面の「今日の季語」と、A4 縦（210×297mm）・白黒の一覧 */
+.today .t-date { font-size: 1.05rem; }
+.today .t-date strong { font-size: 1.3rem; color: var(--accent); }
+.today { padding-top: 0.5rem; padding-bottom: 0.5rem; margin-bottom: 0.6rem; }
+.today .t-word { font-size: 1.7rem; font-weight: 700; line-height: 1.2; }
+.today .t-yomi { font-size: 1rem; font-weight: 400; color: var(--muted); margin-left: 0.6rem; }
+.today .t-expl { font-size: 0.95rem; line-height: 1.45; }
+.today .t-date { line-height: 1.35; }
+table.sekki { border-collapse: collapse; width: 100%; max-width: 22rem; }
+table.sekki th, table.sekki td { border-bottom: 1px solid var(--border); padding: 0.25rem 0.4rem; text-align: left; font-size: 1rem; }
+table.sekki tr.risshun th, table.sekki tr.risshun td { font-weight: 700; color: var(--accent); }
+
+.kg-in { position: absolute; left: 15mm; right: 15mm; top: 12mm; bottom: 12mm; display: flex; flex-direction: column; }
+.kg-head { border-bottom: 0.6mm solid #000; padding-bottom: 2mm; margin-bottom: 3mm; }
+.kg-title { font-size: 24pt; font-weight: 700; line-height: 1.2; }
+.kg-sub { font-size: 12pt; margin-top: 1mm; }
+.kg-foot { margin-top: auto; font-size: 9pt; color: #333; border-top: 0.3mm solid #666; padding-top: 1.5mm; }
+
+.kg-table { width: 100%; border-collapse: collapse; }
+.kg-table th, .kg-table td { border-bottom: 0.3mm solid #777; vertical-align: middle; text-align: left; }
+.kg-table th { width: 50mm; padding: 1.5mm 2mm 1.5mm 0; }
+.kg-table td { padding: 1.5mm 0; }
+.kg-normal .kg-table tr { height: 13mm; }
+.kg-normal .kg-table .kg-w { font-size: 17pt; line-height: 1.1; }
+.kg-normal .kg-table .kg-y { font-size: 10pt; line-height: 1.15; }
+.kg-normal .kg-table th, .kg-normal .kg-table td { padding-top: 0.8mm; padding-bottom: 0.8mm; }
+.kg-normal .kg-table td { font-size: 12.5pt; }
+.kg-large .kg-table tr { height: 18mm; }
+.kg-large .kg-table .kg-w { font-size: 24pt; }
+.kg-large .kg-table td { font-size: 16pt; }
+.kg-w { display: block; font-weight: 700; line-height: 1.2; font-family: "UD デジタル 教科書体 N-R", "UD Digi Kyokasho N-R", "BIZ UDPMincho", "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", "Noto Serif CJK JP", "Noto Serif JP", serif; }
+.kg-y { display: block; font-size: 11pt; line-height: 1.2; }
+
+.kg-grid { list-style: none; display: grid; column-gap: 4mm; }
+.kg-grid.cols3 { grid-template-columns: repeat(3, 1fr); grid-auto-rows: 17.5mm; }
+.kg-grid.cols2 { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 19mm; }
+.kg-grid li { border-bottom: 0.3mm solid #777; display: flex; flex-direction: column; justify-content: center; }
+.kg-normal .kg-grid .kg-w { font-size: 20pt; }
+.kg-large .kg-grid .kg-w { font-size: 26pt; }
+.kg-large .kg-grid .kg-y { font-size: 13pt; }
+
+.sheets-wrap:not(.all) .kg-more { display: none; }
+@media print {
+  .kg-more { display: block !important; }
+}

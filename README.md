@@ -2,7 +2,7 @@
 
 公開 URL: **https://yorozu-craft.com/otasuke/**
 
-離れて暮らす親のために、子（40〜50 代）が作って印刷・設置する道具。企画は yorozu-plans の `docs/29_くらしのおたすけ.md`（ROADMAP K109・K113・K114・K116・K121）と `docs/36_脳トレプリント.md`（K107）。
+離れて暮らす親のために、子（40〜50 代）が作って印刷・設置する道具。企画は yorozu-plans の `docs/29_くらしのおたすけ.md`（ROADMAP K109・K113・K114・K116・K121）と `docs/36_脳トレプリント.md`（K107）、`docs/42_本物チェックと季語.md`（K117・K118）。
 yorozu-craft のツールの 1 つです（共通ルールは [youheioonuki.github.io の README](https://github.com/YouheiOonuki/youheioonuki.github.io) を参照）。
 
 ## このリポジトリだけの決まり
@@ -10,7 +10,7 @@ yorozu-craft のツールの 1 つです（共通ルールは [youheioonuki.gith
 - **広告のスクリプトを読み込まない**（ROADMAP D118。高齢者向けのページ）。全ページとも AdSense は所有確認の `<meta name="google-adsense-account">` だけ（404 は無し）。`tests/pages.test.js` が、`adsbygoogle`・`pagead2` がどのページにも無いことと、meta がちょうど 1 個であることを確かめる。サイト横断チェック（check-site）では `/otasuke/` 以下を meta だけの扱いにする
 - 各ページの `<main>` の最初の段落は定型文「このページは広告なし・登録なし・入力は端末の外に出ません。」（WRITING 2 章。テストあり）
 - 字は 18px 基準、ボタンは高さ 48px 以上。印刷物は白黒・A4 縦（横長の用紙は、印刷のときに縦の紙へ 90 度回す）
-- 保存のキーは `otasuke_`（`shakyo`・`reizoko`・`daicho`・`tejun`・`tokei`・`notore`）。書き出しはすべてをまとめて 1 ファイル（`otasuke-backup-YYYYMMDD.json`）
+- 保存のキーは `otasuke_`（`shakyo`・`reizoko`・`daicho`・`tejun`・`tokei`・`notore`・`kigo`）。`honmono/` は貼った文を保存しない（テストあり）。書き出しはすべてをまとめて 1 ファイル（`otasuke-backup-YYYYMMDD.json`）
 - 共有リンク（`#s=`）に名前・病気・薬・電話・写真・ID は入れない
 
 ## 機能
@@ -24,6 +24,8 @@ yorozu-craft のツールの 1 つです（共通ルールは [youheioonuki.gith
 | `daicho/` 紙のアカウント台帳 | 種類・サービス名・ID・支払い・解約先・パスワードの控えの場所（パスワードの欄は無い）。ロック解除の番号を隠す名刺大のカード |
 | `shakyo/` 写経用紙（般若心経） | なぞり書き（濃さ 3 段階）・お手本・清書用、標準（A4 横 1 枚・17 字）・大きい（A4 縦 2 枚）・特大（1 行 14 字・3 枚）、行間、題の「仏説」、願文・名前・日付 |
 | `notore/` 脳トレプリント（大人向け） | 計算・漢字の読み（常用漢字表から）・間違い探し（図形を生成）・かなクロスワード（語とカギは自作）・塗り絵カレンダー（模様を生成）。3 段階・1〜10 枚・答えのページ・問題番号（seed）で同じプリントを刷り直せる。字は 14pt 以上・白黒 |
+| `honmono/` このメール・SMS は本物？ | 貼った文から URL・メールアドレス・電話番号を拾い、持ち主の単位（登録ドメイン。Public Suffix List）、似せた綴り（数字・キリル文字・1〜2 字ちがい・名前を含む）、punycode、短縮 URL、「@」の飾りを端末の中で読み解く。送信しない・開かない・保存しない。「安全」とは言わず「確認すべき点」だけ出す（テストあり）。公式のドメインは 20 社・機関（`constants.js` の `honmono.brands`） |
+| `kigo/` 季語カレンダー | 今日の季語・季節ごとの季語 139 語（読みと自作の 1 行の説明）・A4 の一覧（説明つきの表／季語だけ）。季節は立春・立夏・立秋・立冬で区切る（国立天文台 暦要項。表の無い年は `kigo/sekki.js` で計算）。川柳のお題は web-roulette の `/odai/` へ |
 | `print/` | 印刷物のクレジットの着地ページ（noindex・sitemap に載せない） |
 
 ## 値と出典
@@ -45,11 +47,28 @@ node --test tests/*.test.js
 
 `tools/notore/grades.json` は学年別漢字配当表（小学校学習指導要領 平成29年告示の別表、1,026 字。gakushu-print の `constants.js` と同じもの）。
 
+## Public Suffix List を新しくする（honmono）
+
+`honmono/psl-data.js` は手で直さない。年に 1 回（または新しい gTLD で持ち主の単位がおかしいと報告があったら）作り直す。リストは Mozilla Public License 2.0（出力の先頭に告知と版を残す）。
+
+```sh
+mkdir -p tools/honmono/work
+curl -o tools/honmono/work/public_suffix_list.dat https://publicsuffix.org/list/public_suffix_list.dat
+node tools/honmono/build-psl.cjs tools/honmono/work/public_suffix_list.dat
+```
+
+版を上げたら `honmono/guide.html` の版の表示も直す（テストが照合する）。
+
+## 季語の一覧を直す（kigo）
+
+`kigo/kigo-data.js` は手で直さない。`tools/kigo/kigo.tsv`（季節|季語|読み|自作の説明|コトバンクで引く見出し）を直して、`python3 tools/kigo/build-kigo.py` を走らせる。語ごとにコトバンクの「デジタル大辞泉」「精選版 日本国語大辞典」の季語の印を読み、どちらかの最初の印が季節と同じでなければ止まる。確認の記録は `tools/kigo/verified.json`。説明は自分で書く（辞書・歳時記の文と例句は写さない）。
+
 ## 保守
 
 | 時期 | 確認すること | 直す場所 |
 |------|------------|---------|
-| 確認日から 12 か月まで（check-site のメモが出たら） | 救急医療情報キットの用紙（多摩市・西東京市）の項目、LINE・Apple の手順の画面、Wake Lock の対応（MDN）、Apple・Google の死後の設定の名前 | `constants.js`（`CHECKED`）、`tejun/` のひな形、各 `guide.html` の確認日と更新履歴 |
+| 確認日から 12 か月まで（check-site のメモが出たら） | 救急医療情報キットの用紙（多摩市・西東京市）の項目、LINE・Apple の手順の画面、Wake Lock の対応（MDN）、Apple・Google の死後の設定の名前、本物チェックの公式のドメインと各社の注意喚起の文（`honmono.brands`）、Public Suffix List の版 | `constants.js`（`CHECKED`）、`tejun/` のひな形、`honmono/psl-data.js`、各 `guide.html` の確認日と更新履歴 |
+| 毎年 2 月（国立天文台が翌年の暦要項を出したら） | 翌年の二十四節気を `constants.js` の `sekki.table` に足す（無くても計算で出るが、表の値を優先する） | `constants.js`（`sekki`） |
 
 直したら、そのページの `guide.html` の「更新履歴」に日付と内容を 1 行足す。
 
@@ -64,6 +83,9 @@ node --test tests/*.test.js
 | `notore/gen.js` | 脳トレプリントの問題の生成（seed つきの乱数）と用紙の HTML |
 | `notore/kanji-data.js`・`notore/kana-data.js` | 漢字の読みの語（作ったもの）・クロスワードの語とカギ（自作） |
 | `tools/notore/` | 漢字の語を常用漢字表から作るスクリプト |
+| `honmono/check.js`・`honmono/psl-data.js` | 本物チェックの読み解き（punycode・PSL・似せた綴り）と Public Suffix List |
+| `kigo/sekki.js`・`kigo/sheet.js`・`kigo/kigo-data.js` | 二十四節気の計算・今日の季語と印刷する紙・季語の一覧 |
+| `tools/honmono/`・`tools/kigo/` | PSL と季語の一覧を作り直すスクリプト（季語は辞書での確認の記録 `verified.json` つき） |
 | `constants.js` | 出典のある値（経文・ひな形・出典と確認日） |
 | `common.js` | 各ページ共通（保存・見本の縮小・印刷・共有・書き出し） |
 | `screen.js` | 折りたたみの状態表示（yorozu-template） |
@@ -74,4 +96,4 @@ node --test tests/*.test.js
 
 ## ライセンス
 
-MIT License（`LICENSE`）。般若心経の経文は古典で著作権の対象外。
+MIT License（`LICENSE`）。般若心経の経文は古典で著作権の対象外。`honmono/psl-data.js` は Public Suffix List（Mozilla Public License 2.0。https://publicsuffix.org/）から作ったもので、MPL 2.0 に従う。
