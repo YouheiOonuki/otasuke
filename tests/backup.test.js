@@ -4,8 +4,8 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { backupFileName, buildBackup, parseBackup } = require('../calc.js');
 
-const TOOL = '__REPO__';
-const DATA = { draft: { amount: '1234' } };
+const TOOL = 'otasuke';
+const DATA = { draft: { name: '山田 花子' } };
 const REQUIRED = ['draft'];
 
 test('backupFileName: <ツール名>-backup-YYYYMMDD.json（端末の日付）', () => {

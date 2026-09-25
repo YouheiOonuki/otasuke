@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>日めくり大時計（古いタブレットを大きな置き時計に）｜くらしのおたすけ</title>
+  <meta name="description" content="古いタブレットやスマホを、日付・曜日・午前午後・時刻を大きく出す置き時計に。画面を消さない設定つき。オフラインでも動きます。広告なし・登録なし。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/otasuke/tokei/">
+
+  <meta property="og:title" content="日めくり大時計（古いタブレットを置き時計に）｜くらしのおたすけ">
+  <meta property="og:description" content="日付・曜日・午前午後・時刻を大きく。画面を消さない設定つき。広告なし・登録なし。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/otasuke/tokei/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/otasuke/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "日めくり大時計",
+    "description": "日付・曜日・午前午後・時刻を大きく出す置き時計。画面を消さない設定つき。",
+    "url": "https://yorozu-craft.com/otasuke/tokei/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja"
+  }
+  </script>
+
+  <!-- 高齢者向けのページなので広告のスクリプトは読み込まない（企画書 29・ROADMAP D118）。所有確認の meta だけ残す -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <!-- ホーム画面に置くと、この時計が開く（manifest の id は /otasuke/。README 13） -->
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="stylesheet" href="./tokei.css">
+</head>
+<body class="dark">
+  <main>
+    <!-- 設置する人（子）向けの画面。はじめて開いたときと、右下の「設定」で出る -->
+    <section id="setup" class="setup" aria-labelledby="h1">
+      <div class="setup-in">
+        <p class="noad">このページは広告なし・登録なし・入力は端末の外に出ません。</p>
+        <h1 id="h1">日めくり大時計</h1>
+        <p>古いタブレットやスマホを、日付・曜日・午前午後が大きく見える置き時計にします。</p>
+        <fieldset>
+          <legend>表示</legend>
+          <label class="check"><input type="checkbox" id="h24"> 24 時間で表示（午前・午後を出さない）</label>
+          <label class="check"><input type="checkbox" id="wareki"> 年を令和で表示</label>
+          <label class="check"><input type="checkbox" id="seconds"> 秒も出す</label>
+          <div class="choices" role="radiogroup" aria-label="色">
+            <label><input type="radio" name="theme" value="dark" checked> 黒地に白い字</label>
+            <label><input type="radio" name="theme" value="light"> 白地に黒い字</label>
+          </div>
+        </fieldset>
+        <div class="btns">
+          <button type="button" id="start" class="btn">時計をスタート</button>
+          <button type="button" id="fs" class="btn sub">画面いっぱいにする</button>
+        </div>
+        <p id="wl-status" class="status" aria-live="polite"></p>
+        <details>
+          <summary>置き時計にするときの設定</summary>
+          <ul>
+            <li>電源につないだまま置く。</li>
+            <li>「時計をスタート」を押すと、このページを開いている間は画面を消さないようにします（対応: <span id="wl-note"></span>）。</li>
+            <li>それでも消えるときは、端末の設定で自動ロック（画面が消えるまでの時間）を「なし」にする。</li>
+            <li>一度開けば、電波が無くても動きます。時刻は端末の時計のままです。</li>
+          </ul>
+        </details>
+        <p class="links"><a href="./guide.html">使い方・よくある質問</a> ／ <a href="../">くらしのおたすけ</a> ／ <a href="../../">yorozu-craft トップ</a> ／ <a href="../../about.html">運営者情報</a> ／ <a href="../../privacy-policy.html">プライバシーポリシー</a></p>
+      </div>
+    </section>
+
+    <!-- 時計（本体）。字の大きさは clock.js が画面に合わせる -->
+    <div id="clock" class="clock" aria-live="off">
+      <div id="c-date" class="c-date"></div>
+      <div id="c-week" class="c-week"></div>
+      <div id="c-timeline" class="c-timeline"><span id="c-ampm" class="c-ampm"></span><span id="c-time" class="c-time"></span><span id="c-sec" class="c-sec"></span></div>
+    </div>
+    <button type="button" id="open-setup" class="gear" aria-label="設定">設定</button>
+  </main>
+
+  <script src="../constants.js"></script>
+  <script src="../calc.js"></script>
+  <script src="./clock.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -1,0 +1,54 @@
+/* 日めくり大時計: 全画面。古い Safari でも崩れないよう flex の gap・inset・aspect-ratio は使わない */
+html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+body {
+  font-family: "Noto Sans JP", "Noto Sans CJK JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+body.dark { background: #000; color: #fff; }
+body.light { background: #fff; color: #000; }
+[hidden] { display: none !important; }
+
+.clock {
+  position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+  display: -webkit-box; display: -webkit-flex; display: flex;
+  -webkit-box-orient: vertical; -webkit-flex-direction: column; flex-direction: column;
+  -webkit-box-pack: center; -webkit-justify-content: center; justify-content: center;
+  -webkit-box-align: center; -webkit-align-items: center; align-items: center;
+  text-align: center; font-weight: 700; line-height: 1.1; white-space: nowrap;
+}
+.c-date { margin-bottom: 0.15em; }
+.c-week { margin-bottom: 0.1em; }
+body.dark .c-week { color: #ffe066; }       /* 曜日は目立つ色（黒地で 15:1 以上） */
+body.light .c-week { color: #7a1f00; }
+.c-ampm { font-size: 0.42em; margin-right: 0.2em; vertical-align: 0.15em; }
+.narrow .c-ampm { display: block; font-size: 0.4em; margin: 0.1em 0 0; }
+.c-time { font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+.c-sec { font-size: 0.3em; margin-left: 0.2em; }
+
+.gear {
+  position: absolute; right: 12px; bottom: 12px; min-width: 64px; min-height: 48px; padding: 0 14px;
+  font: inherit; font-size: 18px; border-radius: 10px; border: 2px solid currentColor; background: transparent; color: inherit; opacity: 0.35;
+}
+.gear:focus, .gear:hover { opacity: 1; }
+
+.setup {
+  position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; z-index: 5;
+  background: #f0ebe0; color: #221b12; font-size: 18px; line-height: 1.7;
+}
+.setup-in { max-width: 640px; margin: 0 auto; padding: 16px; box-sizing: border-box; }
+.setup h1 { font-size: 28px; color: #7a3a0c; margin: 8px 0; }
+.setup .noad { font-weight: 700; padding: 8px 12px; border-left: 5px solid #7a3a0c; background: #fffdf8; margin: 0 0 12px; }
+.setup fieldset { border: 1px solid #b9a887; border-radius: 8px; padding: 8px 14px 14px; margin: 12px 0; background: #fffdf8; }
+.setup legend { font-weight: 700; color: #7a3a0c; padding: 0 4px; }
+.setup .check { display: block; padding: 10px 0 10px 32px; text-indent: -32px; line-height: 1.5; }
+.setup input[type=checkbox], .setup input[type=radio] { width: 22px; height: 22px; vertical-align: middle; margin-right: 8px; }
+.setup .choices label { display: inline-block; min-height: 44px; line-height: 44px; margin: 6px 10px 0 0; padding: 0 12px; border: 2px solid #b9a887; border-radius: 8px; }
+.setup .btns { margin: 16px 0 8px; }
+.setup .btn { font: inherit; font-size: 22px; font-weight: 700; min-height: 60px; padding: 0 24px; margin: 0 10px 10px 0; border-radius: 10px; border: 2px solid #7a3a0c; background: #7a3a0c; color: #fffdf8; }
+.setup .btn.sub { background: #fffdf8; color: #7a3a0c; font-size: 18px; min-height: 52px; }
+.setup .status { font-weight: 700; min-height: 1.7em; }
+.setup details { margin: 8px 0; }
+.setup summary { min-height: 48px; line-height: 48px; cursor: pointer; color: #7a3a0c; font-weight: 700; }
+.setup ul { padding-left: 1.3em; margin: 0; }
+.setup a { color: #7a3a0c; }
+.setup .links { font-size: 16px; margin-top: 16px; }

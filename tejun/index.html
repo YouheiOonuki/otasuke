@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>親のスマホ手順カードを作って印刷（大きな字で 1 行 1 手順）｜くらしのおたすけ</title>
+  <meta name="description" content="親にスマホの使い方を教えるときの手順カード。大きな字で 1 行 1 手順、画面の写真、困ったときの電話番号を入れて A4 に印刷。LINE で写真を送る・QR コードを読むのひな形つき。広告なし・登録なし・入力は端末の外に出ません。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/otasuke/tejun/">
+
+  <meta property="og:title" content="親のスマホ手順カード（大きな字で 1 行 1 手順）｜くらしのおたすけ">
+  <meta property="og:description" content="手順・画面の写真・困ったときの電話番号を入れて印刷。広告なし・登録なし。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/otasuke/tejun/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/otasuke/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#7a3a0c" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15120e" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "親のスマホ手順カード",
+    "description": "大きな字で 1 行 1 手順のカードに、画面の写真と困ったときの電話番号を入れて A4 で印刷する。",
+    "url": "https://yorozu-craft.com/otasuke/tejun/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja"
+  }
+  </script>
+
+  <!-- 高齢者向けのページなので広告のスクリプトは読み込まない（企画書 29・ROADMAP D118）。所有確認の meta だけ残す -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="./tejun.css">
+</head>
+<body>
+
+  <div class="fixbar" id="fixbar" role="status" hidden>
+    <button type="button"><span id="fixbar-text"></span></button>
+  </div>
+
+  <header class="app-header">
+    <h1>親のスマホ手順カード</h1>
+    <p class="subtitle">大きな字で 1 行 1 手順。写真と電話番号も入れて印刷。</p>
+  </header>
+
+  <main class="app-main">
+    <p class="noad">このページは広告なし・登録なし・入力は端末の外に出ません。</p>
+
+    <form id="form" autocomplete="off" onsubmit="return false">
+      <fieldset class="card req">
+        <legend>カード</legend>
+        <div class="field">
+          <label for="tpl">ひな形</label>
+          <select id="tpl">
+            <option value="">（選ぶと下の欄が入れ替わります）</option>
+            <option value="line">LINE で写真を送る</option>
+            <option value="qr">iPhone で QR コードを読む</option>
+            <option value="call">電話に出る（手順は書き込む）</option>
+            <option value="blank">白紙</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="title">題</label>
+          <input type="text" id="title" maxlength="30" placeholder="例：LINE で写真を送る">
+        </div>
+        <div class="field">
+          <label for="steps">手順（1 行に 1 つ。6 行まで）</label>
+          <p class="hint">「そこ」ではなく、ボタンの字や色で書くと伝わります。</p>
+          <textarea id="steps" rows="6" placeholder="例：「LINE」を押す"></textarea>
+          <p class="small" id="steps-note" aria-live="polite"></p>
+        </div>
+        <div class="field">
+          <label for="helpName">困ったら電話する人</label>
+          <input type="text" id="helpName" maxlength="20" placeholder="例：ひろし">
+          <label for="helpTel" class="small">電話番号</label>
+          <input type="tel" id="helpTel" maxlength="20" placeholder="例：090-0000-0000">
+        </div>
+      </fieldset>
+
+      <div class="btn-row no-print">
+        <button type="button" id="print" class="btn btn-big">印刷する</button>
+        <span id="pages-note" aria-live="polite"></span>
+      </div>
+
+      <section class="print-host" aria-label="見本">
+        <p class="preview-cap">見本（このまま A4 に印刷されます）</p>
+        <div class="sheets-wrap" id="wrap"><div class="sheets" id="sheets"></div></div>
+      </section>
+
+      <details class="card opt" id="opt-photo">
+        <summary>画面の写真を入れる: <span class="opt-state"></span></summary>
+        <p class="small">親のスマホの画面を撮った写真（スクリーンショット）を手順ごとに。写真は小さくしてこの端末にだけ保存します。</p>
+        <div id="photos"></div>
+      </details>
+
+      <details class="card opt" id="opt-print">
+        <summary>印刷の設定: <span class="opt-state"></span></summary>
+        <div class="field">
+          <span class="label" id="l-layout">大きさ</span>
+          <div class="choices" role="radiogroup" aria-labelledby="l-layout">
+            <label><input type="radio" name="layout" value="a4" checked> A4 に 1 枚（字が大きい）</label>
+            <label><input type="radio" name="layout" value="a5"> A4 に同じカード 2 枚（切って使う）</label>
+          </div>
+        </div>
+        <label class="check"><input type="checkbox" id="credit" checked> 紙の端に「yorozu-craft.com で作成」を入れる</label>
+      </details>
+    </form>
+
+    <details class="card opt no-print" id="file-box">
+      <summary>入力の保存・書き出し・共有</summary>
+      <p class="small">入力内容はこの端末のブラウザ（localStorage、キー <code>otasuke_tejun</code>）にだけ保存され、外部には送信されません。書き出し・読み込みはこの画面のボタンから。</p>
+      <div class="btn-row">
+        <button type="button" id="share" class="btn btn-sub">題と手順を開くリンクをコピー</button>
+        <button type="button" id="backup-export" class="btn btn-sub">ファイルに書き出す</button>
+        <button type="button" id="backup-import" class="btn btn-sub">ファイルから読み込む</button>
+        <button type="button" id="data-clear" class="btn btn-sub">この画面の入力を消す</button>
+      </div>
+      <p class="small">リンクには題と手順の文だけが入ります（電話番号と写真は入りません）。兄弟で同じカードを作るときに。</p>
+      <input type="file" id="backup-file" accept=".json,application/json" hidden>
+      <p id="backup-msg" class="small" aria-live="polite"></p>
+      <p id="share-msg" class="small" aria-live="polite"></p>
+    </details>
+
+    <p class="no-print"><a href="./guide.html">使い方・ひな形の出典・よくある質問</a> ／ <a href="../../print-help.html">スマホで印刷する</a></p>
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">くらしのおたすけ</a></li>
+        <li><a href="./" aria-current="page">スマホ手順カード</a></li>
+        <li><a href="./guide.html">使い方</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="../constants.js"></script>
+  <script src="../calc.js"></script>
+  <script src="../screen.js"></script>
+  <script src="../common.js"></script>
+  <script src="./app.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

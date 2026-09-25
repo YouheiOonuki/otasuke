@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>紙のアカウント台帳を印刷（デジタル遺品・サブスク解約の準備）｜くらしのおたすけ</title>
+  <meta name="description" content="親のスマホ・ネット銀行・サブスクの一覧を紙に。サービス名・ID・支払い・解約先と「パスワードの控えの場所」だけを書き、パスワードは書かない台帳を A4 で印刷。広告なし・登録なし・入力は端末の外に出ません。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/otasuke/daicho/">
+
+  <meta property="og:title" content="紙のアカウント台帳（デジタル遺品の準備）｜くらしのおたすけ">
+  <meta property="og:description" content="サービス名・ID・解約先と、パスワードの控えの場所だけを書く台帳。広告なし・登録なし。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/otasuke/daicho/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/otasuke/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#7a3a0c" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15120e" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "紙のアカウント台帳（デジタル遺品の準備）",
+    "description": "スマホ・ネット銀行・サブスクなどのサービス名・ID・支払い・解約先と、パスワードの控えの場所を書く台帳を A4 で印刷する。",
+    "url": "https://yorozu-craft.com/otasuke/daicho/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja"
+  }
+  </script>
+
+  <!-- 高齢者向けのページなので広告のスクリプトは読み込まない（企画書 29・ROADMAP D118）。所有確認の meta だけ残す -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="./daicho.css">
+</head>
+<body>
+
+  <div class="fixbar" id="fixbar" role="status" hidden>
+    <button type="button"><span id="fixbar-text"></span></button>
+  </div>
+
+  <header class="app-header">
+    <h1>紙のアカウント台帳</h1>
+    <p class="subtitle">パスワードは書かず、控えの場所だけを書く一覧。</p>
+  </header>
+
+  <main class="app-main">
+    <p class="noad">このページは広告なし・登録なし・入力は端末の外に出ません。</p>
+
+    <form id="form" autocomplete="off" onsubmit="return false">
+      <fieldset class="card req">
+        <legend>台帳</legend>
+        <div class="field">
+          <label for="owner">だれの台帳か（名前）</label>
+          <input type="text" id="owner" maxlength="30" placeholder="空欄なら手で書く">
+        </div>
+        <div class="field">
+          <span class="label" id="l-blank">手で書く空きの行</span>
+          <div class="choices" role="radiogroup" aria-labelledby="l-blank">
+            <label><input type="radio" name="blankRows" value="4"> 4 行</label>
+            <label><input type="radio" name="blankRows" value="8" checked> 8 行</label>
+            <label><input type="radio" name="blankRows" value="12"> 12 行</label>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button type="button" id="preset" class="btn btn-sub">よくある項目を行に入れる</button>
+        </div>
+      </fieldset>
+
+      <div class="btn-row no-print">
+        <button type="button" id="print" class="btn btn-big">印刷する</button>
+        <span id="pages-note" aria-live="polite"></span>
+      </div>
+
+      <section class="print-host" aria-label="見本">
+        <p class="preview-cap">見本（このまま A4 に印刷されます）</p>
+        <div class="sheets-wrap" id="wrap"><div class="sheets" id="sheets"></div></div>
+      </section>
+
+      <details class="card opt" id="opt-rows">
+        <summary>行を書く: <span class="opt-state"></span></summary>
+        <p class="warn">パスワードは書かないでください。書くのは「控えの場所」（例: 青い手帳・金庫の封筒）だけ。</p>
+        <div id="rows"></div>
+        <div class="btn-row"><button type="button" id="add" class="btn btn-sub">＋ 行を足す</button></div>
+      </details>
+
+      <details class="card opt" id="opt-print">
+        <summary>印刷の設定: <span class="opt-state"></span></summary>
+        <label class="check"><input type="checkbox" id="card" checked> ロック解除の番号を書いて隠すカード（名刺大）も刷る</label>
+        <label class="check"><input type="checkbox" id="credit" checked> 紙の端に「yorozu-craft.com で作成」を入れる</label>
+      </details>
+    </form>
+
+    <details class="card opt no-print" id="file-box">
+      <summary>入力の保存・書き出し・消す</summary>
+      <p class="small">入力内容はこの端末のブラウザ（localStorage、キー <code>otasuke_daicho</code>）にだけ保存され、外部には送信されません。書き出し・読み込みはこの画面のボタンから。</p>
+      <div class="btn-row">
+        <button type="button" id="backup-export" class="btn btn-sub">ファイルに書き出す</button>
+        <button type="button" id="backup-import" class="btn btn-sub">ファイルから読み込む</button>
+        <button type="button" id="data-clear" class="btn btn-sub">この画面の入力を消す</button>
+      </div>
+      <p class="small">書き出したファイルには ID や契約先が入ります。紙と同じように、しまう場所に気をつけてください。共有リンクはありません。</p>
+      <input type="file" id="backup-file" accept=".json,application/json" hidden>
+      <p id="backup-msg" class="small" aria-live="polite"></p>
+    </details>
+
+    <p class="no-print"><a href="./guide.html">使い方・出典・よくある質問</a> ／ <a href="../../print-help.html">スマホで印刷する</a></p>
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">くらしのおたすけ</a></li>
+        <li><a href="./" aria-current="page">アカウント台帳</a></li>
+        <li><a href="./guide.html">使い方</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="../constants.js"></script>
+  <script src="../calc.js"></script>
+  <script src="../screen.js"></script>
+  <script src="../common.js"></script>
+  <script src="./app.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
