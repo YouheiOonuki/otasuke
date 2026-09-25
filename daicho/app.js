@@ -150,7 +150,6 @@
   O.backupSetup({
     key: KEY,
     afterImport: function () { data = Calc.normDaicho(O.store.get(KEY) || {}); toForm(); render(); },
-    afterClear: function () { data = Calc.normDaicho({}); toForm(); render(); },
   });
   O.registerSW('../sw.js');
 })();

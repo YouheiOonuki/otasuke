@@ -142,7 +142,6 @@
     key: KEY,
     beforeExport: function () { save(); },
     afterImport: function () { data = Calc.normTejun(O.store.get(KEY) || {}); toForm(); render(); },
-    afterClear: function () { data = Calc.normTejun({}); toForm(); render(); },
   });
   O.registerSW('../sw.js');
 })();
