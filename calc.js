@@ -285,6 +285,56 @@
     };
   }
 
+  // 健診結果の経年グラフ（kenshin/）。家族の分（people）と、人ごとの健診の回（records）
+  // 範囲は打ち間違いを止めるためのもの（健診の判定の値ではない。判定の値は kenshin/kenshin-values.js）。範囲の外の値は捨てる
+  var KENSHIN_RANGE = {
+    height: [50, 250], weight: [10, 300], waist: [30, 200], sbp: [50, 300], dbp: [20, 200], fbs: [20, 1000], hba1c: [3, 20],
+    ldl: [10, 500], hdl: [5, 200], tg: [10, 5000], ast: [1, 5000], alt: [1, 5000], ggt: [1, 5000], egfr: [1, 200], ua: [0.5, 20],
+  };
+  var KENSHIN_KEYS = Object.keys(KENSHIN_RANGE);
+  var KENSHIN_MAX_PEOPLE = 10, KENSHIN_MAX_RECORDS = 60;
+  /** 健診の回の「いつ」: 'YYYY' か 'YYYY-MM'（日はグラフに要らないので持たない） */
+  function kenshinWhen(s) {
+    var m = /^(\d{4})(?:-(\d{2}))?$/.exec(String(s == null ? '' : s));
+    if (!m) return '';
+    var y = Number(m[1]), mo = m[2] ? Number(m[2]) : 0;
+    if (y < 1950 || y > 2100 || (m[2] && (mo < 1 || mo > 12))) return '';
+    return m[1] + (m[2] ? '-' + m[2] : '');
+  }
+  /** 範囲の中の数なら数（小数 1 桁まで）、外か数でなければ null */
+  function kenshinNum(key, v) {
+    var r = KENSHIN_RANGE[key];
+    var n = typeof v === 'number' ? v : (typeof v === 'string' && v.trim() !== '' ? Number(v) : NaN);
+    if (!r || !isFinite(n) || n < r[0] || n > r[1]) return null;
+    return Math.round(n * 10) / 10;
+  }
+  function normKenshinRecord(r) {
+    r = r && typeof r === 'object' ? r : {};
+    var when = kenshinWhen(r.when);
+    if (!when) return null;
+    var v = {}, src = r.v && typeof r.v === 'object' ? r.v : {};
+    KENSHIN_KEYS.forEach(function (k) { var n = kenshinNum(k, src[k]); if (n !== null) v[k] = n; });
+    return { when: when, random: bool(r.random, false), v: v };
+  }
+  function normKenshin(d) {
+    d = d && typeof d === 'object' ? d : {};
+    var people = (Array.isArray(d.people) ? d.people : []).slice(0, KENSHIN_MAX_PEOPLE).map(function (p) {
+      p = p && typeof p === 'object' ? p : {};
+      var seen = {}, recs = [];
+      (Array.isArray(p.records) ? p.records : []).forEach(function (r) {
+        var n = normKenshinRecord(r);
+        if (!n) return;
+        if (seen[n.when] !== undefined) recs[seen[n.when]] = n;   // 同じ回（年月）が 2 つあれば後のほう
+        else { seen[n.when] = recs.length; recs.push(n); }
+      });
+      recs.sort(function (a, b) { return a.when < b.when ? -1 : a.when > b.when ? 1 : 0; });
+      return { name: str(p.name, 20), sex: pick(p.sex, ['m', 'f', ''], ''), records: recs.slice(-KENSHIN_MAX_RECORDS) };
+    });
+    if (!people.length) people.push({ name: '', sex: '', records: [] });
+    var cur = Math.floor(Number(d.cur));
+    return { people: people, cur: cur >= 0 && cur < people.length ? cur : 0 };
+  }
+
   // --- バックアップファイル（README「ツールを追加するとき」20。決定 D31） ---
   // 形式: { tool, version, exportedAt, data }。data はブラウザに保存しているものと同じ形
   var BACKUP_VERSION = 1;
@@ -330,6 +380,8 @@
     kanjiNum: kanjiNum, shakyoDate: shakyoDate, clockParts: clockParts, SHAKYO_SIZES: SHAKYO_SIZES, shakyoLayout: shakyoLayout, looksLikePassword: looksLikePassword,
     encodeShare: encodeShare, decodeShare: decodeShare,
     normShakyo: normShakyo, normReizoko: normReizoko, normDaicho: normDaicho, normTejun: normTejun, normTokei: normTokei, normNotore: normNotore, normKigo: normKigo,
+    normKenshin: normKenshin, normKenshinRecord: normKenshinRecord, kenshinWhen: kenshinWhen, kenshinNum: kenshinNum,
+    KENSHIN_RANGE: KENSHIN_RANGE, KENSHIN_KEYS: KENSHIN_KEYS, KENSHIN_MAX_PEOPLE: KENSHIN_MAX_PEOPLE, KENSHIN_MAX_RECORDS: KENSHIN_MAX_RECORDS,
     KYUKYU_FIELDS: KYUKYU_FIELDS, TIMINGS: TIMINGS, DAICHO_KINDS: DAICHO_KINDS,
     backupFileName: backupFileName, buildBackup: buildBackup, parseBackup: parseBackup,
   };

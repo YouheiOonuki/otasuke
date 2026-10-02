@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>健診結果の経年グラフの使い方（保健指導判定値・受診勧奨判定値の線）｜くらしのおたすけ</title>
+  <meta name="description" content="健康診断の結果を年ごとの折れ線にする道具の使い方。グラフの線は厚生労働省「標準的な健診・保健指導プログラム」の保健指導判定値と受診勧奨判定値。HbA1c の JDS 値、CSV、印刷。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/otasuke/kenshin/guide.html">
+
+  <meta property="og:title" content="健診結果の経年グラフの使い方｜くらしのおたすけ">
+  <meta property="og:description" content="グラフの線は厚生労働省の保健指導判定値と受診勧奨判定値。HbA1c の JDS 値、CSV、印刷。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://yorozu-craft.com/otasuke/kenshin/guide.html">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/otasuke/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- よくある質問（下の #faq と内容をそろえる） -->
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "2012 年度より前の HbA1c は、そのまま入れていいですか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "資料によると、HbA1c は平成25年度（2013 年度）から NGSP 値で書かれ、それより前は JDS 値です。資料の換算式は「NGSP値（%）＝1.02×JDS値（%）＋0.25%」です。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "点が線より上なら病気ですか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "このグラフは、病気かどうかを決めるものではありません。結果票の判定と説明を読み、気になるときは健診を受けた所か、かかりつけの医師に聞いてください。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Excel で続きを書けますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "「CSV に書き出す」で 1 行 1 回の表になります。Excel で行を足して保存し、「CSV から読み込む」で戻せます（同じ名前の人の同じ年月は置き換え）。"
+      }
+    }
+  ]
+}
+  </script>
+
+  <!-- 高齢者向けのページなので広告のスクリプトは読み込まない（企画書 29・52、ROADMAP D118）。所有確認の meta だけ残す -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="./kenshin.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <h1>健診結果の経年グラフの使い方</h1>
+    <p class="subtitle">使い方・線の値と出典・よくある質問・ご利用上の注意</p>
+  </header>
+
+  <main class="app-main">
+    <p class="noad">このページは広告なし・登録なし・入力は端末の外に出ません。</p>
+    <p class="bodynote">これは健診の結果を並べて見る道具で、医療の検査ではありません。気になるときは、健診を受けた所か、かかりつけの医師へ。</p>
+    <p class="card" style="text-align:center"><a href="./">▶ 健診結果の経年グラフを使う</a></p>
+
+    <article class="card content" id="howto">
+      <h2>使い方</h2>
+      <ol><li>「結果を 1 回分入れる」に、受けた年と結果票の数字を入れる。</li><li>「この回を保存する」。年を変えて、ほかの年も入れる。</li><li>家族の分は「人を足す」で、人ごとに分けて入れる。</li><li>「A4 1 枚に印刷する」で 16 のグラフを 1 枚に。</li></ol>
+    </article>
+
+    <article class="card content" id="lines">
+      <h2>グラフの線（保健指導判定値・受診勧奨判定値）</h2>
+      <p>線は、特定健診・特定保健指導のための厚生労働省の資料「標準的な健診・保健指導プログラム（令和6年度版）」の表の値です。名前も資料のまま、保健指導判定値（点線）と受診勧奨判定値（実線）を引きます。</p>
+      <p>腹囲と BMI は表に無いため、同じ資料の「内臓脂肪蓄積のリスク判定」（特定保健指導の対象を選ぶ手順のステップ1）の値を引きます。身長・体重・尿酸は資料に値が無く、線はありません。中性脂肪は空腹時と随時で値が違うので、採血が随時だった回は白抜きの点にしています。</p>
+      <details><summary>線の値の一覧</summary>
+        <div class="table-wrap"><table class="rec" id="value-table"></table></div>
+        <p class="small">≧ は以上、＜ は未満（資料の記号のまま）。eGFR の ＊ は資料の表のまま（表の中に ＊ の説明はありません）。随時血糖の値は空腹時血糖と同じです。</p>
+      </details>
+    </article>
+
+    <article class="card content" id="faq">
+      <h2>よくある質問</h2>
+      <dl class="faq"><dt>2012 年度より前の HbA1c は、そのまま入れていいですか？</dt><dd>資料によると、HbA1c は平成25年度（2013 年度）から NGSP 値で書かれ、それより前は JDS 値です。資料の換算式は「NGSP値（%）＝1.02×JDS値（%）＋0.25%」です。</dd><dt>点が線より上なら病気ですか？</dt><dd>このグラフは、病気かどうかを決めるものではありません。結果票の判定と説明を読み、気になるときは健診を受けた所か、かかりつけの医師に聞いてください。</dd><dt>Excel で続きを書けますか？</dt><dd>「CSV に書き出す」で 1 行 1 回の表になります。Excel で行を足して保存し、「CSV から読み込む」で戻せます（同じ名前の人の同じ年月は置き換え）。</dd></dl>
+    </article>
+
+    <article class="card content" id="notes">
+      <h2>ご利用上の注意・データの扱い</h2>
+      <ul><li><strong>保存されるデータ</strong>：入力内容はこの端末のブラウザ（localStorage、キー <code>otasuke_kenshin</code>）にだけ保存され、外部には送信されません。書き出し・読み込み・消去はこの画面のボタンから。</li><li><strong>書き出したファイル</strong>：CSV とバックアップのファイルには健診の結果と名前が入ります。紙の結果票と同じように扱ってください。</li><li><strong>BMI</strong>：その回の身長と体重から計算します（体重 ÷ 身長〔m〕の 2 乗、小数 1 桁）。</li></ul>
+      <p>根拠: 厚生労働省「標準的な健診・保健指導プログラム（令和6年度版）」第2編 別紙5・第2編第3章。最終確認日 <time datetime="2026-10-02">2026-10-02</time>。</p>
+      <details><summary>出典の一覧（URL）</summary><ul class="src"><li><a href="https://www.mhlw.go.jp/content/10900000/001231392.pdf" target="_blank" rel="noopener">第2編 別紙5「健診検査項目の保健指導判定値及び受診勧奨判定値」（p.125）</a></li><li><a href="https://www.mhlw.go.jp/content/10900000/001081570.pdf" target="_blank" rel="noopener">第2編 第3章「具体的な階層化の方法」ステップ1（p.57。腹囲・BMI、HbA1c の JDS 値と NGSP 値）</a></li><li><a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000194155_00004.html" target="_blank" rel="noopener">標準的な健診・保健指導プログラム（令和6年度版）の一覧</a></li></ul></details>
+      <p><a href="https://docs.google.com/forms/d/e/1FAIpQLSd8B90qh5lEIyr25iw1jOjdQjOyaPZ1_z2wMB4kH-EmEeJYWw/viewform?usp=pp_url&amp;entry.585564634=otasuke" target="_blank" rel="noopener">ご要望・不具合の報告（Google フォーム）</a>：いただいた内容をもとに直します。お返事はしていません。</p>
+      <p>サイト全体の運営者情報・免責事項は<a href="../../about.html">こちら</a>、プライバシーポリシーは<a href="../../privacy-policy.html">こちら</a>です（すべてのツールで共通）。</p>
+    </article>
+
+    <article class="card content" id="changelog">
+      <h2>更新履歴</h2>
+      <ul><li><time datetime="2026-10-02">2026-10-02</time> 公開</li></ul>
+    </article>
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">くらしのおたすけ</a></li>
+        <li><a href="./">健診結果の経年グラフ</a></li>
+        <li><a href="./guide.html" aria-current="page">使い方</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="./kenshin-values.js"></script>
+  <script>
+    // 線の値の一覧は kenshin-values.js から作る（値を 2 か所に書かない）
+    (function () {
+      var V = window.KenshinValues;
+      function e(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+      var rows = V.ITEMS.map(function (it) {
+        function col(kind) {
+          var ls = it.lines.filter(function (l) { return l.kind === kind; });
+          return ls.length ? ls.map(function (l) { return l.op + l.v + (l.star ? '＊' : '') + (l.sex ? '（' + V.SEX[l.sex] + '）' : '') + (l.when ? '（' + V.WHEN[l.when] + '）' : ''); }).join('<br>') : '—';
+        }
+        return '<tr><td>' + e(it.name) + '</td><td>' + col('guide') + '</td><td>' + col('refer') + '</td><td>' + col('strat') + '</td><td>' + e(it.unit) + '</td></tr>';
+      }).join('');
+      document.getElementById('value-table').innerHTML = '<thead><tr><th>項目</th><th>' + V.KINDS.guide + '</th><th>' + V.KINDS.refer + '</th><th>' + V.KINDS.strat + '</th><th>単位</th></tr></thead><tbody>' + rows + '</tbody>';
+    })();
+  </script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
