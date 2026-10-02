@@ -10,7 +10,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'otasuke-';
-const CACHE_NAME   = `${CACHE_PREFIX}v4`; // キャッシュする中身の構成を変えたら上げる
+const CACHE_NAME   = `${CACHE_PREFIX}v5`; // キャッシュする中身の構成を変えたら上げる
 
 /** 初回インストール時に取得しておくファイル */
 const PRECACHE_URLS = [
@@ -58,6 +58,11 @@ const PRECACHE_URLS = [
   './honmono/psl-data.js',
   './honmono/check.js',
   './honmono/app.js',
+  './kenshin/',
+  './kenshin/kenshin.css',
+  './kenshin/kenshin-values.js',
+  './kenshin/kenshin-calc.js',
+  './kenshin/app.js',
 ];
 
 /** この時間ネットワークが応答しなければ、キャッシュがあればそちらを返す */

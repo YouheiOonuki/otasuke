@@ -24,7 +24,7 @@ test('ページが揃っている（ハブ・8 つの道具と使い方・着地
   const names = FILES.map(rel).sort();
   for (const n of ['index.html', '404.html', 'print/index.html', 'shakyo/index.html', 'shakyo/guide.html', 'reizoko/index.html', 'reizoko/guide.html',
     'daicho/index.html', 'daicho/guide.html', 'tokei/index.html', 'tokei/guide.html', 'tejun/index.html', 'tejun/guide.html',
-    'notore/index.html', 'notore/guide.html', 'kigo/index.html', 'kigo/guide.html', 'honmono/index.html', 'honmono/guide.html']) {
+    'notore/index.html', 'notore/guide.html', 'kigo/index.html', 'kigo/guide.html', 'honmono/index.html', 'honmono/guide.html', 'kenshin/index.html', 'kenshin/guide.html']) {
     assert.ok(names.includes(n), n + ' が無い');
   }
 });
@@ -38,7 +38,8 @@ test('広告のスクリプト（adsbygoogle.js・pagead2）をどのページ�
   // JS から差し込むこともしない
   for (const f of ['common.js', 'calc.js', 'screen.js', 'constants.js', 'shakyo/app.js', 'reizoko/app.js', 'daicho/app.js', 'tejun/app.js', 'tokei/clock.js',
     'notore/app.js', 'notore/gen.js', 'notore/kanji-data.js', 'notore/kana-data.js',
-    'kigo/app.js', 'kigo/sheet.js', 'kigo/sekki.js', 'kigo/kigo-data.js', 'honmono/app.js', 'honmono/check.js', 'honmono/psl-data.js']) {
+    'kigo/app.js', 'kigo/sheet.js', 'kigo/sekki.js', 'kigo/kigo-data.js', 'honmono/app.js', 'honmono/check.js', 'honmono/psl-data.js',
+    'kenshin/app.js', 'kenshin/kenshin-calc.js', 'kenshin/kenshin-values.js']) {
     assert.doesNotMatch(fs.readFileSync(path.join(ROOT, f), 'utf8'), /pagead2|adsbygoogle/i, f);
   }
 });

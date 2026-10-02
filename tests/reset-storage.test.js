@@ -16,6 +16,9 @@ const PAGE_PREFIXES = {
   "kigo/index.html": [
     "otasuke_kigo"
   ],
+  "kenshin/index.html": [
+    "otasuke_kenshin"
+  ],
   "notore/index.html": [
     "otasuke_notore"
   ],

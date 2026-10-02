@@ -1,0 +1,89 @@
+/* 健診結果の経年グラフ（../style.css のトークンだけで色を決める。印刷する紙は白黒） */
+
+/* 体を測る道具の定型文（WRITING 2 章）。結果より前に置く */
+.bodynote { font-size: 0.98rem; margin: 0 0 0.9rem; padding: 0.5rem 0.8rem; border: 1px solid var(--border); border-radius: 6px; background: var(--card); }
+
+.person .person-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.7rem; }
+.person .person-row label { font-weight: 700; }
+.person .person-row select { width: auto; flex: 1 1 10rem; max-width: 18rem; }
+.person details.opt { margin-top: 0.6rem; }
+.person details.opt > summary { cursor: pointer; min-height: 48px; padding: 0.6rem 0; color: var(--accent); font-weight: 700; }
+.person .field { margin-top: 0.6rem; }
+
+.result-sum { font-weight: 700; font-size: 1.05rem; }
+.charts { display: grid; grid-template-columns: 1fr; gap: 0.9rem; margin: 0.6rem 0; }
+@media (min-width: 640px) { .charts { grid-template-columns: 1fr 1fr; } }
+.kfig { margin: 0; padding: 0.4rem 0 0.2rem; border-top: 1px solid var(--border); min-width: 0; }
+.ktitle { font-weight: 700; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 0.4rem; }
+.ktitle .klast { margin-left: auto; font-weight: normal; font-size: 0.92rem; color: var(--muted); }
+.ktitle .klast b { color: var(--text); font-size: 1.1rem; }
+.unit { font-size: 0.85rem; color: var(--muted); font-weight: normal; }
+.kchart { display: block; width: 100%; height: auto; }
+.kcap { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+.legend { line-height: 1.9; }
+
+/* グラフ（画面） */
+.kchart text { font-family: inherit; }
+.k-grid { stroke: var(--border); stroke-width: 0.6; opacity: 0.6; }
+.k-frame { fill: none; stroke: var(--border); stroke-width: 1; }
+.k-muted, .k-linelabel { fill: var(--muted); }
+.k-line { stroke: var(--muted); stroke-width: 1.6; }
+.k-refer { stroke: var(--text); stroke-width: 2.2; }
+.k-strat { stroke-width: 2.4; stroke-linecap: round; }
+.k-data { fill: none; stroke: var(--accent); stroke-width: 2.6; stroke-linejoin: round; }
+.k-pt { fill: var(--accent); }
+.k-pt.k-random { fill: var(--card); stroke: var(--accent); stroke-width: 2; }
+.k-val { fill: var(--text); font-weight: 700; }
+
+/* 線の見本（凡例） */
+.sw { display: inline-block; width: 1.8em; height: 0; vertical-align: middle; margin-right: 0.3em; border-top: 2px dashed var(--muted); }
+.sw-refer { border-top: 3px solid var(--text); }
+.sw-strat { border-top: 3px dotted var(--muted); }
+
+/* 入力 */
+.when-row { display: flex; flex-wrap: wrap; gap: 0 0.8rem; }
+.when-row .field { flex: 1 1 8rem; }
+#entry .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 0.7rem; }
+@media (min-width: 640px) { #entry .grid { grid-template-columns: 1fr 1fr 1fr; } }
+#entry .grid .field { margin-bottom: 0.7rem; min-width: 0; }
+#entry .grid .field > label, #entry .grid .field > .label { font-size: 0.95rem; }
+#entry .grid input { max-width: none; }
+.bmi-out { display: block; min-height: 48px; padding: 0.5rem 0.2rem; font-size: 1.05rem; font-weight: 700; }
+
+/* 一覧 */
+.table-wrap { overflow-x: auto; }
+table.rec { border-collapse: collapse; font-size: 0.92rem; width: 100%; }
+table.rec th, table.rec td { border-bottom: 1px solid var(--border); padding: 0.35rem 0.4rem; text-align: right; white-space: nowrap; }
+table.rec th:first-child, table.rec td:first-child { text-align: left; }
+.btn-s { min-height: 44px; padding: 0.3rem 0.7rem; font-size: 0.95rem; }
+
+/* 印刷する紙（A4 縦 1 枚。見本は common.js が幅に合わせて縮める） */
+.kenshin-sheet .pin { position: absolute; left: 9mm; right: 9mm; top: 8mm; bottom: 9mm; display: flex; flex-direction: column; }
+.kenshin-sheet h2 { font-size: 15pt; margin: 0 0 1mm; display: flex; align-items: baseline; gap: 4mm; }
+.kenshin-sheet h2 small { font-size: 10pt; font-weight: normal; }
+.kenshin-sheet .pnote { font-size: 8.5pt; margin: 0 0 1mm; }
+.kenshin-sheet .plegend { font-size: 8pt; margin: 0 0 2mm; }
+.kenshin-sheet .pgrid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 1fr; gap: 2.5mm 3mm; flex: 1; min-height: 0; }
+.kenshin-sheet .pcell { border-top: 0.3mm solid #999; padding-top: 0.8mm; min-width: 0; overflow: hidden; }
+.kenshin-sheet .ptitle { font-size: 8.5pt; font-weight: 700; }
+.kenshin-sheet .ptitle span { font-weight: normal; font-size: 7pt; }
+.kenshin-sheet .kchart { width: 100%; height: auto; }
+.kenshin-sheet .pcap { font-size: 6.3pt; line-height: 1.35; color: #222; }
+.kenshin-sheet .psrc { font-size: 6.8pt; margin-top: 1.5mm; color: #222; word-break: break-all; }
+.kenshin-sheet .sw { border-top-color: #555; }
+.kenshin-sheet .sw-refer { border-top-color: #111; }
+/* 紙の中のグラフは白黒（画面がダークモードでも） */
+.kenshin-sheet .k-grid { stroke: #bbb; opacity: 1; }
+.kenshin-sheet .k-frame { stroke: #888; }
+.kenshin-sheet .k-muted, .kenshin-sheet .k-linelabel { fill: #333; }
+.kenshin-sheet .k-line { stroke: #555; }
+.kenshin-sheet .k-refer { stroke: #111; }
+.kenshin-sheet .k-data { stroke: #000; }
+.kenshin-sheet .k-pt { fill: #000; }
+.kenshin-sheet .k-pt.k-random { fill: #fff; stroke: #000; }
+.kenshin-sheet .k-val { fill: #000; }
+
+.print-host .preview-cap { margin-top: 0.5rem; }
+@media print {
+  .print-host[hidden] { display: none !important; }
+}

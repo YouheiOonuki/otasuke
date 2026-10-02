@@ -2,7 +2,7 @@
 
 公開 URL: **https://yorozu-craft.com/otasuke/**
 
-離れて暮らす親のために、子（40〜50 代）が作って印刷・設置する道具。企画は yorozu-plans の `docs/29_くらしのおたすけ.md`（ROADMAP K109・K113・K114・K116・K121）と `docs/36_脳トレプリント.md`（K107）、`docs/42_本物チェックと季語.md`（K117・K118）。
+離れて暮らす親のために、子（40〜50 代）が作って印刷・設置する道具。企画は yorozu-plans の `docs/29_くらしのおたすけ.md`（ROADMAP K109・K113・K114・K116・K121）と `docs/36_脳トレプリント.md`（K107）、`docs/42_本物チェックと季語.md`（K117・K118）、`docs/52_健診結果の経年グラフ.md`（K19）。
 yorozu-craft のツールの 1 つです（共通ルールは [youheioonuki.github.io の README](https://github.com/YouheiOonuki/youheioonuki.github.io) を参照）。
 
 ## このリポジトリだけの決まり
@@ -10,7 +10,7 @@ yorozu-craft のツールの 1 つです（共通ルールは [youheioonuki.gith
 - **広告のスクリプトを読み込まない**（ROADMAP D118。高齢者向けのページ）。全ページとも AdSense は所有確認の `<meta name="google-adsense-account">` だけ（404 は無し）。`tests/pages.test.js` が、`adsbygoogle`・`pagead2` がどのページにも無いことと、meta がちょうど 1 個であることを確かめる。サイト横断チェック（check-site）では `/otasuke/` 以下を meta だけの扱いにする
 - 各ページの `<main>` の最初の段落は定型文「このページは広告なし・登録なし・入力は端末の外に出ません。」（WRITING 2 章。テストあり）
 - 字は 18px 基準、ボタンは高さ 48px 以上。印刷物は白黒・A4 縦（横長の用紙は、印刷のときに縦の紙へ 90 度回す）
-- 保存のキーは `otasuke_`（`shakyo`・`reizoko`・`daicho`・`tejun`・`tokei`・`notore`・`kigo`）。`honmono/` は貼った文を保存しない（テストあり）。書き出しはすべてをまとめて 1 ファイル（`otasuke-backup-YYYYMMDD.json`）
+- 保存のキーは `otasuke_`（`shakyo`・`reizoko`・`daicho`・`tejun`・`tokei`・`notore`・`kigo`・`kenshin`）。`honmono/` は貼った文を保存しない（テストあり）。書き出しはすべてをまとめて 1 ファイル（`otasuke-backup-YYYYMMDD.json`）
 - 共有リンク（`#s=`）に名前・病気・薬・電話・写真・ID は入れない
 
 ## 機能
@@ -26,11 +26,12 @@ yorozu-craft のツールの 1 つです（共通ルールは [youheioonuki.gith
 | `notore/` 脳トレプリント（大人向け） | 計算・漢字の読み（常用漢字表から）・間違い探し（図形を生成）・かなクロスワード（語とカギは自作）・塗り絵カレンダー（模様を生成）。3 段階・1〜10 枚・答えのページ・問題番号（seed）で同じプリントを刷り直せる。字は 14pt 以上・白黒 |
 | `honmono/` このメール・SMS は本物？ | 貼った文から URL・メールアドレス・電話番号を拾い、持ち主の単位（登録ドメイン。Public Suffix List）、似せた綴り（数字・キリル文字・1〜2 字ちがい・名前を含む）、punycode、短縮 URL、「@」の飾りを端末の中で読み解く。送信しない・開かない・保存しない。「安全」とは言わず「確認すべき点」だけ出す（テストあり）。公式のドメインは 20 社・機関（`constants.js` の `honmono.brands`） |
 | `kigo/` 季語カレンダー | 今日の季語・季節ごとの季語 139 語（読みと自作の 1 行の説明）・A4 の一覧（説明つきの表／季語だけ）。季節は立春・立夏・立秋・立冬で区切る（国立天文台 暦要項。表の無い年は `kigo/sekki.js` で計算）。川柳のお題は web-roulette の `/odai/` へ |
+| `kenshin/` 健診結果の経年グラフ | 15 項目（身長・体重・BMI・腹囲・収縮期／拡張期血圧・空腹時血糖・HbA1c・LDL・HDL・中性脂肪・AST・ALT・γ-GT・eGFR・尿酸）を年ごとの折れ線に（SVG を自前で描く。ライブラリなし）。線は厚生労働省「標準的な健診・保健指導プログラム（令和6年度版）」の保健指導判定値・受診勧奨判定値と、腹囲・BMI は同資料の階層化ステップ1（内臓脂肪蓄積のリスク判定）。名前は資料のまま、「異常」「正常」と言わない・判定の文を出さない（テストあり）。家族 10 人まで、1 人 60 回まで。CSV の書き出し・読み込み（UTF-8 の BOM つき。読むときは Shift_JIS も）。A4 縦 1 枚に 16 のグラフ |
 | `print/` | 印刷物のクレジットの着地ページ（noindex・sitemap に載せない） |
 
 ## 値と出典
 
-`constants.js` に出典・URL・確認日（`CHECKED`）をまとめてある。般若心経の本文 262 字は、文化デジタルライブラリー（天台宗・真言宗豊山派の経文）と Wikisource（真言宗聖典）の写しを `tests/shakyo.test.js` に置いて照合している。
+`constants.js` に出典・URL・確認日（`CHECKED`）をまとめてある。健診の線の値だけは `kenshin/kenshin-values.js`（別の `CHECKED`）に置き、PDF の表と 1 つずつ照らした期待値を `tests/kenshin.test.js` に持つ。般若心経の本文 262 字は、文化デジタルライブラリー（天台宗・真言宗豊山派の経文）と Wikisource（真言宗聖典）の写しを `tests/shakyo.test.js` に置いて照合している。
 
 ## 脳トレプリントの漢字の語を作り直す
 
@@ -67,7 +68,7 @@ node tools/honmono/build-psl.cjs tools/honmono/work/public_suffix_list.dat
 
 | 時期 | 確認すること | 直す場所 |
 |------|------------|---------|
-| 確認日から 12 か月まで（check-site のメモが出たら） | 救急医療情報キットの用紙（多摩市・西東京市）の項目、LINE・Apple の手順の画面、Wake Lock の対応（MDN）、Apple・Google の死後の設定の名前、本物チェックの公式のドメインと各社の注意喚起の文（`honmono.brands`）、Public Suffix List の版 | `constants.js`（`CHECKED`）、`tejun/` のひな形、`honmono/psl-data.js`、各 `guide.html` の確認日と更新履歴 |
+| 確認日から 12 か月まで（check-site のメモが出たら） | 救急医療情報キットの用紙（多摩市・西東京市）の項目、LINE・Apple の手順の画面、Wake Lock の対応（MDN）、Apple・Google の死後の設定の名前、本物チェックの公式のドメインと各社の注意喚起の文（`honmono.brands`）、Public Suffix List の版、健診の判定値（厚生労働省「標準的な健診・保健指導プログラム」の新しい版が出ていないか） | `constants.js`（`CHECKED`）、`kenshin/kenshin-values.js`（`CHECKED`）、`tejun/` のひな形、`honmono/psl-data.js`、各 `guide.html` の確認日と更新履歴 |
 | 毎年 2 月（国立天文台が翌年の暦要項を出したら） | 翌年の二十四節気を `constants.js` の `sekki.table` に足す（無くても計算で出るが、表の値を優先する） | `constants.js`（`sekki`） |
 
 直したら、そのページの `guide.html` の「更新履歴」に日付と内容を 1 行足す。
@@ -80,6 +81,7 @@ node tools/honmono/build-psl.cjs tools/honmono/work/public_suffix_list.dat
 | `*/index.html`・`*/guide.html` | 各道具の画面と使い方 |
 | `*/app.js`・`tokei/clock.js` | 各画面の制御 |
 | `calc.js` | 画面から切り離した関数（日付・時計・写経の並び・正規化・共有・バックアップ） |
+| `kenshin/kenshin-values.js`・`kenshin/kenshin-calc.js` | 健診の線の値と出典・グラフの SVG・CSV |
 | `notore/gen.js` | 脳トレプリントの問題の生成（seed つきの乱数）と用紙の HTML |
 | `notore/kanji-data.js`・`notore/kana-data.js` | 漢字の読みの語（作ったもの）・クロスワードの語とカギ（自作） |
 | `tools/notore/` | 漢字の語を常用漢字表から作るスクリプト |

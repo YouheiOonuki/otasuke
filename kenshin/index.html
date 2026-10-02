@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>健診結果の経年グラフ（血圧・血糖・HbA1c・LDL・肝機能を年ごとに）印刷できる｜くらしのおたすけ</title>
+  <meta name="description" content="健康診断の結果を年ごとに入れると、15 項目の推移を折れ線グラフに。厚生労働省の保健指導判定値・受診勧奨判定値の線つき。家族の分も、CSV、A4 1 枚の印刷。広告なし・登録なし・入力は端末の外に出ません。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/otasuke/kenshin/">
+
+  <meta property="og:title" content="健診結果の経年グラフ｜くらしのおたすけ">
+  <meta property="og:description" content="健康診断の結果を年ごとの折れ線に。厚生労働省の判定値の線つき、A4 1 枚で印刷。広告なし・登録なし。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/otasuke/kenshin/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/otasuke/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#7a3a0c" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15120e" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "健診結果の経年グラフ",
+    "description": "健康診断の結果（身長・体重・BMI・腹囲・血圧・空腹時血糖・HbA1c・LDL・HDL・中性脂肪・AST・ALT・γ-GT・eGFR・尿酸）を年ごとの折れ線グラフにし、A4 1 枚で印刷する。",
+    "url": "https://yorozu-craft.com/otasuke/kenshin/",
+    "applicationCategory": "HealthApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja"
+  }
+  </script>
+
+  <!-- 高齢者向けのページなので広告のスクリプトは読み込まない（企画書 29・52、ROADMAP D118）。所有確認の meta だけ残す -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="./kenshin.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <h1>健診結果の経年グラフ</h1>
+    <p class="subtitle">年ごとの結果を 15 項目の折れ線に。A4 1 枚で印刷。</p>
+  </header>
+
+  <main class="app-main">
+    <p class="noad">このページは広告なし・登録なし・入力は端末の外に出ません。</p>
+    <p class="bodynote">これは健診の結果を並べて見る道具で、医療の検査ではありません。気になるときは、健診を受けた所か、かかりつけの医師へ。</p>
+
+    <div class="card person no-print">
+      <div class="person-row">
+        <label for="person">だれの記録</label>
+        <select id="person"></select>
+        <button type="button" id="add-person" class="btn btn-sub">人を足す</button>
+      </div>
+      <details class="opt" id="opt-person">
+        <summary>名前と性別: <span class="opt-state"></span></summary>
+        <div class="field">
+          <label for="pname">名前（印刷の見出しに入る。空でもよい）</label>
+          <input type="text" id="pname" maxlength="20" placeholder="例: 母">
+        </div>
+        <div class="field">
+          <span class="label" id="l-sex">性別（腹囲の線が男女で違うため）</span>
+          <div class="choices" role="radiogroup" aria-labelledby="l-sex">
+            <label><input type="radio" name="sex" value="m"> 男性</label>
+            <label><input type="radio" name="sex" value="f"> 女性</label>
+            <label><input type="radio" name="sex" value="" checked> 選ばない</label>
+          </div>
+        </div>
+        <div class="btn-row"><button type="button" id="del-person" class="btn btn-sub">この人の記録をすべて消す</button></div>
+      </details>
+    </div>
+
+    <section class="card" id="result-card" tabindex="-1" aria-labelledby="result-title">
+      <h2 id="result-title">推移のグラフ</h2>
+      <p id="result-sum" class="result-sum" aria-live="polite"></p>
+      <div id="charts" class="charts"></div>
+      <p class="legend small" id="legend"></p>
+      <p class="small" id="empty-items"></p>
+      <div class="btn-row no-print">
+        <button type="button" id="open-entry" class="btn btn-big">結果を入れる</button>
+        <button type="button" id="print" class="btn btn-big">A4 1 枚に印刷する</button>
+        <button type="button" id="sample" class="btn btn-sub">例を入れて見る</button>
+      </div>
+      <p class="small">線は厚生労働省「標準的な健診・保健指導プログラム（令和6年度版）」の値です。くわしくは<a href="./guide.html">使い方</a>に。</p>
+    </section>
+
+    <details class="card opt no-print" id="opt-entry">
+      <summary>結果を 1 回分入れる: <span class="opt-state"></span></summary>
+      <form id="entry" autocomplete="off" onsubmit="return false">
+        <p class="small">結果票の数字を、そのまま入れてください。分からない欄は空のままで。</p>
+        <div class="when-row">
+          <div class="field">
+            <label for="e-year">受けた年</label>
+            <input type="number" id="e-year" inputmode="numeric" min="1950" max="2100" step="1" placeholder="例: 2025">
+          </div>
+          <div class="field">
+            <label for="e-month">月</label>
+            <select id="e-month"><option value="">分からない</option></select>
+          </div>
+        </div>
+        <p id="e-mode" class="small" aria-live="polite"></p>
+        <div class="grid" id="e-fields"></div>
+        <label class="check"><input type="checkbox" id="e-random"> 採血は空腹時ではなかった（食後 10 時間たっていない＝随時）</label>
+        <p id="e-msg" class="warn" aria-live="polite"></p>
+        <div class="btn-row">
+          <button type="button" id="e-save" class="btn">この回を保存する</button>
+          <button type="button" id="e-clear" class="btn btn-sub">欄を空にする</button>
+        </div>
+      </form>
+    </details>
+
+    <details class="card opt no-print" id="opt-list">
+      <summary>入れた記録: <span class="opt-state"></span></summary>
+      <div class="table-wrap"><table class="rec" id="rec-table"></table></div>
+    </details>
+
+    <section class="print-host" id="print-host" aria-label="印刷する紙" hidden>
+      <p class="preview-cap">印刷の見本（このまま A4 縦 1 枚に印刷されます）</p>
+      <div class="sheets-wrap" id="wrap"><div class="sheets" id="sheets"></div></div>
+    </section>
+
+    <details class="card opt no-print" id="file-box">
+      <summary>入力の保存・書き出し・消す</summary>
+      <p class="small">入力内容はこの端末のブラウザ（localStorage、キー <code>otasuke_kenshin</code>）にだけ保存され、外部には送信されません。書き出し・読み込み・消去はこの画面のボタンから。</p>
+      <div class="btn-row">
+        <button type="button" id="csv-export" class="btn btn-sub">CSV に書き出す</button>
+        <button type="button" id="csv-import" class="btn btn-sub">CSV から読み込む</button>
+      </div>
+      <p class="small">CSV は表計算ソフトで開けます（1 行が 1 人の 1 回）。読み込むと、同じ名前の人の同じ年月は置き換えます。</p>
+      <div class="btn-row">
+        <button type="button" id="backup-export" class="btn btn-sub">ファイルに書き出す</button>
+        <button type="button" id="backup-import" class="btn btn-sub">ファイルから読み込む</button>
+        <button type="button" class="btn btn-sub" data-reset-storage="otasuke_kenshin">保存した内容をすべて消す（初期状態に戻す）</button>
+      </div>
+      <input type="file" id="csv-file" accept=".csv,text/csv" hidden>
+      <input type="file" id="backup-file" accept=".json,application/json" hidden>
+      <p id="csv-msg" class="small" aria-live="polite"></p>
+      <p id="backup-msg" class="small" aria-live="polite"></p>
+    </details>
+
+    <p class="no-print"><a href="./guide.html">使い方・線の値と出典・よくある質問</a> ／ <a href="../../print-help.html">スマホで印刷する</a></p>
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">くらしのおたすけ</a></li>
+        <li><a href="./" aria-current="page">健診結果の経年グラフ</a></li>
+        <li><a href="./guide.html">使い方</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="../constants.js"></script>
+  <script src="../calc.js"></script>
+  <script src="../screen.js"></script>
+  <script src="../common.js"></script>
+  <script src="../reset-storage.js"></script>
+  <script src="./kenshin-values.js"></script>
+  <script src="./kenshin-calc.js"></script>
+  <script src="./app.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
