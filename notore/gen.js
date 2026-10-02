@@ -557,6 +557,8 @@
     CROSS: CROSS, crossword: crossword,
     NURIE: NURIE, mandala: mandala, monthGrid: monthGrid, addMonths: addMonths, defaultMonth: defaultMonth, reiwaLabel: reiwaLabel,
     buildSheets: buildSheets,
+    // 本の体裁（book.js）が同じ問題と同じ組み方を使うために出す（問題を写さない）
+    SALT: SALT, esc: esc, calcHtml: calcHtml, kanjiHtml: kanjiHtml, machigaiHtml: machigaiHtml, crossHtml: crossHtml,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.NotoreGen = api;

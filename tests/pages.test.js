@@ -37,7 +37,7 @@ test('広告のスクリプト（adsbygoogle.js・pagead2）をどのページ�
   }
   // JS から差し込むこともしない
   for (const f of ['common.js', 'calc.js', 'screen.js', 'constants.js', 'shakyo/app.js', 'reizoko/app.js', 'daicho/app.js', 'tejun/app.js', 'tokei/clock.js',
-    'notore/app.js', 'notore/gen.js', 'notore/kanji-data.js', 'notore/kana-data.js',
+    'notore/app.js', 'notore/gen.js', 'notore/kanji-data.js', 'notore/kana-data.js', 'notore/book.js', 'notore/book-values.js', 'notore/book-app.js',
     'kigo/app.js', 'kigo/sheet.js', 'kigo/sekki.js', 'kigo/kigo-data.js', 'honmono/app.js', 'honmono/check.js', 'honmono/psl-data.js',
     'kenshin/app.js', 'kenshin/kenshin-calc.js', 'kenshin/kenshin-values.js']) {
     assert.doesNotMatch(fs.readFileSync(path.join(ROOT, f), 'utf8'), /pagead2|adsbygoogle/i, f);
@@ -80,13 +80,17 @@ test('共通ページ（運営者情報・プライバシーポリシー）へ�
   }
 });
 
-test('着地ページ（print/）は noindex で sitemap に載せない。ほかのページは sitemap に載る', () => {
+// noindex のページ: 着地ページ（print/）と、脳トレの本の原稿（notore/book.html。オーナーの作業用、ROADMAP K127）
+const NOINDEX = ['print/index.html', 'notore/book.html'];
+test('着地ページ（print/）と本の原稿のページは noindex で sitemap に載せない。ほかのページは sitemap に載る', () => {
   const sm = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
-  assert.match(fs.readFileSync(path.join(ROOT, 'print/index.html'), 'utf8'), /<meta name="robots" content="noindex">/);
-  assert.doesNotMatch(sm, /\/print\//);
+  for (const r of NOINDEX) {
+    assert.match(fs.readFileSync(path.join(ROOT, r), 'utf8'), /<meta name="robots" content="noindex">/, r);
+    assert.ok(!sm.includes('/otasuke/' + r.replace(/index\.html$/, '')), r + ' が sitemap にある');
+  }
   for (const f of FILES) {
     const r = rel(f);
-    if (r === '404.html' || r.startsWith('print/')) continue;
+    if (r === '404.html' || NOINDEX.includes(r)) continue;
     const url = 'https://yorozu-craft.com/otasuke/' + r.replace(/index\.html$/, '');
     assert.ok(sm.includes('<loc>' + url + '</loc>'), url + ' が sitemap に無い');
     assert.ok(fs.readFileSync(f, 'utf8').includes('<link rel="canonical" href="' + url + '">'), r + ' の canonical');

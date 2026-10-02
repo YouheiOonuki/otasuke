@@ -1,0 +1,78 @@
+/* 脳トレの本（KDP のペーパーバック、B5）。ページの大きさと余白は book.js の pageCss が足す（裁ち落としあり/なしで変わる）
+   gen.js の用紙の HTML（.nt-*、notore.css）をそのまま使い、B5 の大きさに直すところだけをここで上書きする
+   字: 問題は 20pt 以上、説明とカギは 14pt 以上、答えのページは 11pt 以上（KDP の最小は 7pt） */
+.bk-book { width: max-content; }
+.bk-page {
+  position: relative; overflow: hidden; background: #fff; color: #000; margin: 0 0 6mm;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.35); line-height: 1.4;
+  /* 埋め込みが許されている書体だけ（BIZ UD・Noto・IPA はどれも埋め込み可のライセンス） */
+  font-family: "BIZ UDPGothic", "BIZ UDGothic", "Noto Sans CJK JP", "Noto Sans JP", "IPAPGothic", "IPAGothic", sans-serif;
+}
+.bk-in { position: absolute; display: flex; flex-direction: column; }
+.bk-folio { position: absolute; text-align: center; font-size: 12pt; line-height: 1; }
+
+/* 扉・使い方・目次 */
+.bk-title .bk-in { justify-content: center; align-items: center; text-align: center; }
+.bk-t1 { font-size: 30pt; font-weight: 700; line-height: 1.3; }
+.bk-t2 { font-size: 15pt; margin-top: 8mm; }
+.bk-h { font-size: 18pt; font-weight: 700; border-bottom: 0.6mm solid #000; padding-bottom: 1.5mm; margin: 0 0 4mm; }
+.bk-list { font-size: 15pt; line-height: 1.6; margin: 0 0 8mm; padding-left: 7mm; }
+.bk-list li + li { margin-top: 2mm; }
+.bk-colophon { margin-top: auto; font-size: 12pt; }
+.bk-toccols { display: flex; gap: 5mm; }
+.bk-toc { flex: 1; width: 0; border-collapse: collapse; font-size: 12pt; }
+.bk-toc th { font-size: 12pt; font-weight: 700; text-align: left; white-space: nowrap; border-bottom: 0.4mm solid #000; padding: 0 1mm 1mm; }
+.bk-toc td { height: 7.4mm; padding: 0 0.8mm; border-bottom: 0.2mm dotted #777; white-space: nowrap; }
+.bk-toc .bk-td-p, .bk-toc .bk-th-p { text-align: right; width: 11mm; }
+
+/* 問題のページ */
+.bk-head { display: flex; align-items: baseline; gap: 4mm; border-bottom: 0.6mm solid #000; padding-bottom: 1.5mm; }
+.bk-day { font-size: 22pt; font-weight: 700; line-height: 1.2; }
+.bk-kind { font-size: 15pt; }
+.bk-date { margin-left: auto; font-size: 15pt; white-space: pre; }
+.bk-body { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.bk-page .nt-lead { font-size: 15pt; margin: 2.5mm 0 2mm; }
+.bk-page .nt-lead b { font-size: 16pt; }
+.bk-page .nt-grid2 { grid-auto-rows: 18.5mm; column-gap: 6mm; }
+.bk-page .nt-no { font-size: 13pt; min-width: 8mm; }
+.bk-page .nt-expr { font-size: 21pt; }
+.bk-page .nt-box { height: 12mm; min-width: 24mm; font-size: 20pt; }
+.bk-page .nt-kanji { font-size: 22pt; font-family: "BIZ UDPMincho", "BIZ UDMincho", "Noto Serif CJK JP", "Noto Serif JP", "IPAPMincho", "IPAMincho", serif; }
+.bk-page .nt-yomi { min-width: 32mm; }
+.bk-page .nt-score { font-size: 15pt; }
+.bk-page .nt-cap { font-size: 14pt; }
+.bk-prob .nt-panel { width: 150mm; height: 85.71mm; margin: 0 auto; }
+.bk-page .nt-cluecols { font-size: 14pt; line-height: 1.35; }
+
+/* 答えのページ（1 ページに 2 日分） */
+.bk-ans .bk-in { gap: 4mm; }
+.bk-ablock { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; }
+.bk-ablock + .bk-ablock { border-top: 0.3mm solid #000; padding-top: 2mm; }
+.bk-ahead { font-size: 13pt; font-weight: 700; margin-bottom: 1.5mm; }
+.bk-ah { font-size: 18pt; margin-right: 4mm; }
+.bk-ans .nt-lead { display: none; }
+.bk-ans .nt-grid2 { grid-auto-rows: 8mm; column-gap: 5mm; }
+.bk-ans .nt-calc { grid-template-columns: repeat(3, 1fr); grid-auto-rows: 9.5mm; column-gap: 4mm; }
+.bk-ans .nt-no { font-size: 11pt; min-width: 6mm; }
+.bk-ans .nt-expr { font-size: 13pt; }
+.bk-ans .nt-box { height: 7mm; min-width: 10mm; font-size: 13pt; border-width: 0.3mm; padding: 0 1mm; }
+.bk-ans .nt-kanji { font-size: 14pt; }
+.bk-ans .nt-yomi { min-width: 34mm; font-size: 12pt; flex-direction: row; gap: 1mm; }
+.bk-ans .nt-yomi small { font-size: 11pt; }
+.bk-ans .nt-cap { font-size: 12pt; }
+.bk-ans .nt-panel { width: 105mm; height: 60mm; }
+.bk-ans .nt-difflist { font-size: 12pt; margin: 1.5mm 0 0 6mm; }
+.bk-ans .nt-difflist li + li { margin-top: 0.3mm; }
+.bk-ans .nt-cluecols { display: none; }
+.bk-ans .nt-crosswrap { justify-content: flex-start; margin: 0; }
+
+@media print {
+  html, body { background: #fff !important; margin: 0; padding: 0; }
+  .no-print, .app-header, .app-footer, main > :not(.bk-host), .bk-host > :not(.bk-book) { display: none !important; }
+  .app-main { max-width: none; margin: 0; padding: 0; }
+  .app-main > .bk-host, .app-main .bk-host > .bk-book { display: block !important; }
+  .bk-book { zoom: 1 !important; }
+  .bk-page { margin: 0; box-shadow: none; break-after: page; page-break-after: always; }
+  .bk-page:last-child { break-after: auto; page-break-after: auto; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

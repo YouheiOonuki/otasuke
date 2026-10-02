@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>脳トレの本の原稿（B5・100 日分）｜くらしのおたすけ</title>
+  <meta name="description" content="脳トレプリントの問題 100 日分を、B5 の本の体裁（目次・ページ番号・答え）で組む作業用のページ。">
+  <!-- オーナーの作業用（ROADMAP K127・企画書 57）。どのページからもリンクせず、sitemap に載せず、検索に出さない -->
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://yorozu-craft.com/otasuke/notore/book.html">
+
+  <!-- 高齢者向けのページと同じく広告のスクリプトは読み込まない（ROADMAP D118）。所有確認の meta だけ残す -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="./notore.css">
+  <link rel="stylesheet" href="./book.css">
+  <style id="bk-page-css"></style>
+  <style>
+    .bk-form .row { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; align-items: center; margin: 0.4rem 0; }
+    .bk-form input[type="text"] { max-width: 16rem; }
+    #bk-info { font-size: 0.95rem; }
+    @media screen { .bk-host { max-height: 75vh; overflow: auto; border: 1px solid var(--line, #ccc); padding: 8px; } .bk-book { zoom: 0.5; } }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <h1>脳トレの本の原稿（B5・100 日分）</h1>
+    <p class="subtitle">脳トレプリントの問題を、本の体裁の PDF にする作業用のページ。</p>
+  </header>
+
+  <main class="app-main">
+    <p class="noad">このページは広告なし・登録なし・入力は端末の外に出ません。</p>
+
+    <form class="card bk-form no-print" id="bk-form" autocomplete="off" onsubmit="return false">
+      <div class="row">
+        <label for="bk-seed">問題番号</label>
+        <input type="text" id="bk-seed" inputmode="numeric" maxlength="14" placeholder="12345-67890">
+        <label for="bk-title">題名</label>
+        <input type="text" id="bk-title" maxlength="30">
+      </div>
+      <div class="row">
+        <label class="check"><input type="checkbox" id="bk-bleed"> 裁ち落としあり（ページを幅 0.125・高さ 0.25 インチ大きく）</label>
+      </div>
+      <div class="btn-row">
+        <button type="button" id="bk-make" class="btn btn-sub">この番号で組む</button>
+        <button type="button" id="bk-print" class="btn btn-big">印刷する（PDF に保存）</button>
+      </div>
+      <p id="bk-info" aria-live="polite"></p>
+      <details>
+        <summary>PDF の作り方と KDP の値</summary>
+        <ul class="small">
+          <li>確実な作り方: <code>node tools/notore/book-pdf.mjs --seed 12345-67890</code>（Playwright。寸法とページ数を確かめて保存）。</li>
+          <li>Chrome の印刷で作るとき: 送信先「PDF に保存」、余白「なし」、倍率 100%、ヘッダーとフッターを外す。</li>
+          <li>判型・裁ち落とし・余白の値は <code>notore/book-values.js</code>（KDP のヘルプ、確認日つき）。</li>
+        </ul>
+      </details>
+    </form>
+
+    <section class="bk-host" aria-label="本の見本">
+      <div class="bk-book" id="bk-book"></div>
+    </section>
+  </main>
+
+  <footer class="app-footer no-print">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">くらしのおたすけ</a></li>
+        <li><a href="./">脳トレプリント</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="./kanji-data.js"></script>
+  <script src="./kana-data.js"></script>
+  <script src="./gen.js"></script>
+  <script src="./book-values.js"></script>
+  <script src="./book.js"></script>
+  <script src="./book-app.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
