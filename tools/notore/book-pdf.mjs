@@ -59,7 +59,9 @@ export async function makeBookPdf(o) {
     const out = o.out || path.join(process.cwd(), 'notore-book-' + o.seed.replace(/\D/g, '') + (o.bleed ? '-bleed' : '') + '.pdf');
     // 大きさは CSS の @page に任せず、値ファイルのインチをそのまま渡す（@page はピクセルに丸められて 0.5pt ほどずれるため）
     const size = V.pageSizeIn(o.bleed);
-    await page.pdf({ path: out, width: size.w + 'in', height: size.h + 'in', margin: { top: 0, right: 0, bottom: 0, left: 0 }, printBackground: true, preferCSSPageSize: false });
+    // KDP の提出ガイドラインの「よくある問題」（ブックマーク・注釈・メタデータ）に当たらないよう、題名を空にし、しおりと構造タグを付けない
+    await page.evaluate(() => { document.title = ''; });
+    await page.pdf({ path: out, width: size.w + 'in', height: size.h + 'in', margin: { top: 0, right: 0, bottom: 0, left: 0 }, printBackground: true, preferCSSPageSize: false, tagged: false, outline: false });
     // Chromium は大きさを 1/75 インチ刻みに切り上げるので、MediaBox を判型ちょうどに直す
     fs.writeFileSync(out, setMediaBox(fs.readFileSync(out), size.w * 72, size.h * 72));
     const pages = Number(await page.getAttribute('html', 'data-book-ready'));
