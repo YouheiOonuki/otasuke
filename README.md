@@ -2,7 +2,7 @@
 
 公開 URL: **https://yorozu-craft.com/otasuke/**
 
-離れて暮らす親のために、子（40〜50 代）が作って印刷・設置する道具。企画は yorozu-plans の `docs/29_くらしのおたすけ.md`（ROADMAP K109・K113・K114・K116・K121）と `docs/36_脳トレプリント.md`（K107）、`docs/42_本物チェックと季語.md`（K117・K118）、`docs/52_健診結果の経年グラフ.md`（K19）。
+離れて暮らす親のために、子（40〜50 代）が作って印刷・設置する道具。企画は yorozu-plans の `docs/29_くらしのおたすけ.md`（ROADMAP K109・K113・K114・K116・K121）と `docs/36_脳トレプリント.md`（K107）、`docs/42_本物チェックと季語.md`（K117・K118）、`docs/52_健診結果の経年グラフ.md`（K19）、`docs/57_脳トレの本の原稿.md`（K127）。
 yorozu-craft のツールの 1 つです（共通ルールは [youheioonuki.github.io の README](https://github.com/YouheiOonuki/youheioonuki.github.io) を参照）。
 
 ## このリポジトリだけの決まり
@@ -28,6 +28,7 @@ yorozu-craft のツールの 1 つです（共通ルールは [youheioonuki.gith
 | `kigo/` 季語カレンダー | 今日の季語・季節ごとの季語 139 語（読みと自作の 1 行の説明）・A4 の一覧（説明つきの表／季語だけ）。季節は立春・立夏・立秋・立冬で区切る（国立天文台 暦要項。表の無い年は `kigo/sekki.js` で計算）。川柳のお題は web-roulette の `/odai/` へ |
 | `kenshin/` 健診結果の経年グラフ | 15 項目（身長・体重・BMI・腹囲・収縮期／拡張期血圧・空腹時血糖・HbA1c・LDL・HDL・中性脂肪・AST・ALT・γ-GT・eGFR・尿酸）を年ごとの折れ線に（SVG を自前で描く。ライブラリなし）。線は厚生労働省「標準的な健診・保健指導プログラム（令和6年度版）」の保健指導判定値・受診勧奨判定値と、腹囲・BMI は同資料の階層化ステップ1（内臓脂肪蓄積のリスク判定）。名前は資料のまま、「異常」「正常」と言わない・判定の文を出さない（テストあり）。家族 10 人まで、1 人 60 回まで。CSV の書き出し・読み込み（UTF-8 の BOM つき。読むときは Shift_JIS も）。A4 縦 1 枚に 16 のグラフ |
 | `print/` | 印刷物のクレジットの着地ページ（noindex・sitemap に載せない） |
+| `notore/book.html` | 脳トレの本の原稿（KDP のペーパーバック、B5・100 日分・目次・ページ番号・答え）。オーナーの作業用で、noindex・sitemap に載せない・どこからもリンクしない（テストあり）。下の「脳トレの本の PDF を作る」 |
 
 ## 値と出典
 
@@ -47,6 +48,21 @@ node --test tests/*.test.js
 ```
 
 `tools/notore/grades.json` は学年別漢字配当表（小学校学習指導要領 平成29年告示の別表、1,026 字。gakushu-print の `constants.js` と同じもの）。
+
+## 脳トレの本の PDF を作る（K127）
+
+`notore/book.html` が、脳トレプリントの生成器（`notore/gen.js`）の関数で 100 日分の問題を作り、B5 の本の体裁に組む（扉・この本の使い方・目次 2 ページ・1 日 1 ページ・答えは 1 ページに 2 日分。154 ページ）。同じ問題番号からは同じ本になる。判型・裁ち落とし・余白・ページ数の値は `notore/book-values.js`（KDP のヘルプ、`CHECKED` つき）。表紙は作らない（オーナーが別に作る）。
+
+```sh
+NODE_PATH=$(npm root -g) node tools/notore/book-pdf.mjs --seed 12345-67890            # 裁ち落としなし（7.17×10.12 インチ）
+NODE_PATH=$(npm root -g) node tools/notore/book-pdf.mjs --seed 12345-67890 --bleed    # 裁ち落としあり（7.295×10.37 インチ）
+NODE_PATH=$(npm root -g) node --test tests/book-pdf.test.js                            # PDF のページ数・大きさ・はみ出し・書体
+```
+
+- Playwright（Chromium）で開いて PDF に保存し、ページ数・各ページの大きさ・はみ出し（枠より大きい中身）・埋め込みの書体を確かめる。合わなければ止まる
+- Chromium はページの大きさを 1/75 インチ刻みに切り上げる（7.17 → 7.18 インチ）。保存の後に MediaBox を判型ちょうどに直す（右と下の 1 mm 未満の余りを切る。`tools/notore/pdf-info.cjs`）
+- 書体は埋め込みの許される BIZ UD（Windows 10 以降に入っている）・Noto・IPA だけを並べる。ほかの書体に代わったら止まる
+- Chrome の印刷（「PDF に保存」）でも作れるが、大きさは 1/75 インチ刻みのままになる
 
 ## Public Suffix List を新しくする（honmono）
 
@@ -69,6 +85,7 @@ node tools/honmono/build-psl.cjs tools/honmono/work/public_suffix_list.dat
 | 時期 | 確認すること | 直す場所 |
 |------|------------|---------|
 | 確認日から 12 か月まで（check-site のメモが出たら） | 救急医療情報キットの用紙（多摩市・西東京市）の項目、LINE・Apple の手順の画面、Wake Lock の対応（MDN）、Apple・Google の死後の設定の名前、本物チェックの公式のドメインと各社の注意喚起の文（`honmono.brands`）、Public Suffix List の版、健診の判定値（厚生労働省「標準的な健診・保健指導プログラム」の新しい版が出ていないか） | `constants.js`（`CHECKED`）、`kenshin/kenshin-values.js`（`CHECKED`）、`tejun/` のひな形、`honmono/psl-data.js`、各 `guide.html` の確認日と更新履歴 |
+| 確認日から 12 か月まで、または出版の前 | KDP のヘルプの判型・裁ち落とし・余白の表・ページ数の範囲 | `notore/book-values.js`（`CHECKED`）、`tests/book.test.js` |
 | 毎年 2 月（国立天文台が翌年の暦要項を出したら） | 翌年の二十四節気を `constants.js` の `sekki.table` に足す（無くても計算で出るが、表の値を優先する） | `constants.js`（`sekki`） |
 
 直したら、そのページの `guide.html` の「更新履歴」に日付と内容を 1 行足す。
@@ -83,8 +100,10 @@ node tools/honmono/build-psl.cjs tools/honmono/work/public_suffix_list.dat
 | `calc.js` | 画面から切り離した関数（日付・時計・写経の並び・正規化・共有・バックアップ） |
 | `kenshin/kenshin-values.js`・`kenshin/kenshin-calc.js` | 健診の線の値と出典・グラフの SVG・CSV |
 | `notore/gen.js` | 脳トレプリントの問題の生成（seed つきの乱数）と用紙の HTML |
+| `notore/book.js`・`notore/book-values.js`・`notore/book.css`・`notore/book-app.js` | 脳トレの本の組み立て（gen.js の関数を使う）・KDP の値と出典・本の見た目・作業用の画面 |
+| `tools/notore/book-pdf.mjs`・`tools/notore/pdf-info.cjs` | 本の PDF を作って確かめるスクリプト（Playwright）・PDF の大きさとページ数を読む |
 | `notore/kanji-data.js`・`notore/kana-data.js` | 漢字の読みの語（作ったもの）・クロスワードの語とカギ（自作） |
-| `tools/notore/` | 漢字の語を常用漢字表から作るスクリプト |
+| `tools/notore/` | 漢字の語を常用漢字表から作るスクリプト、本の PDF のスクリプト |
 | `honmono/check.js`・`honmono/psl-data.js` | 本物チェックの読み解き（punycode・PSL・似せた綴り）と Public Suffix List |
 | `kigo/sekki.js`・`kigo/sheet.js`・`kigo/kigo-data.js` | 二十四節気の計算・今日の季語と印刷する紙・季語の一覧 |
 | `tools/honmono/`・`tools/kigo/` | PSL と季語の一覧を作り直すスクリプト（季語は辞書での確認の記録 `verified.json` つき） |
