@@ -81,6 +81,8 @@
     <article class="card content" id="lines">
       <h2>グラフの線（保健指導判定値・受診勧奨判定値）</h2>
       <p>線は、特定健診・特定保健指導のための厚生労働省の資料「標準的な健診・保健指導プログラム（令和6年度版）」の表の値です。名前も資料のまま、保健指導判定値（点線）と受診勧奨判定値（実線）を引きます。</p>
+      <p>保健指導判定値は「生活習慣を見直す保健指導の目安」、受診勧奨判定値は「医療機関の受診をすすめる目安」です。</p>
+      <p>線は特定健診（40〜74 歳が対象）のための値です。子どもの学校の健診の結果には当てないでください。</p>
       <p>腹囲と BMI は表に無いため、同じ資料の「内臓脂肪蓄積のリスク判定」（特定保健指導の対象を選ぶ手順のステップ1）の値を引きます。身長・体重・尿酸は資料に値が無く、線はありません。中性脂肪は空腹時と随時で値が違うので、採血が随時だった回は白抜きの点にしています。</p>
       <details><summary>線の値の一覧</summary>
         <div class="table-wrap"><table class="rec" id="value-table"></table></div>
@@ -95,16 +97,16 @@
 
     <article class="card content" id="notes">
       <h2>ご利用上の注意・データの扱い</h2>
-      <ul><li><strong>保存されるデータ</strong>：入力内容はこの端末のブラウザ（localStorage、キー <code>otasuke_kenshin</code>）にだけ保存され、外部には送信されません。書き出し・読み込み・消去はこの画面のボタンから。</li><li><strong>書き出したファイル</strong>：CSV とバックアップのファイルには健診の結果と名前が入ります。紙の結果票と同じように扱ってください。</li><li><strong>BMI</strong>：その回の身長と体重から計算します（体重 ÷ 身長〔m〕の 2 乗、小数 1 桁）。</li></ul>
+      <ul><li><strong>保存されるデータ</strong>：入力内容はこの端末のブラウザ（localStorage、キー <code>otasuke_kenshin</code>）にだけ保存され、外部には送信されません。書き出し・読み込み・消去はこの画面のボタンから。</li><li><strong>書き出したファイル</strong>：CSV とバックアップのファイルには健診の結果と名前が入ります。紙の結果票と同じように扱ってください。</li><li><strong>共有の端末</strong>：家族や職場で共有の端末で使ったときは、使い終わったら「入力の保存・書き出し・消す」の「保存した内容をすべて消す（初期状態に戻す）」を押してください。</li><li><strong>BMI</strong>：その回の身長と体重から計算します（体重 ÷ 身長〔m〕の 2 乗、小数 1 桁）。</li></ul>
       <p>根拠: 厚生労働省「標準的な健診・保健指導プログラム（令和6年度版）」第2編 別紙5・第2編第3章。最終確認日 <time datetime="2026-10-02">2026-10-02</time>。</p>
-      <details><summary>出典の一覧（URL）</summary><ul class="src"><li><a href="https://www.mhlw.go.jp/content/10900000/001231392.pdf" target="_blank" rel="noopener">第2編 別紙5「健診検査項目の保健指導判定値及び受診勧奨判定値」（p.125）</a></li><li><a href="https://www.mhlw.go.jp/content/10900000/001081570.pdf" target="_blank" rel="noopener">第2編 第3章「具体的な階層化の方法」ステップ1（p.57。腹囲・BMI、HbA1c の JDS 値と NGSP 値）</a></li><li><a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000194155_00004.html" target="_blank" rel="noopener">標準的な健診・保健指導プログラム（令和6年度版）の一覧</a></li></ul></details>
+      <details><summary>出典の一覧（URL）</summary><ul class="src"><li><a href="https://www.mhlw.go.jp/content/10900000/001231392.pdf" target="_blank" rel="noopener">第2編 別紙5「健診検査項目の保健指導判定値及び受診勧奨判定値」（p.125）</a></li><li><a href="https://www.mhlw.go.jp/content/10900000/001081570.pdf" target="_blank" rel="noopener">第2編 第3章「具体的な階層化の方法」ステップ1（p.57。腹囲・BMI、HbA1c の JDS 値と NGSP 値）</a></li><li><a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000194155_00004.html" target="_blank" rel="noopener">標準的な健診・保健指導プログラム（令和6年度版）の一覧</a></li><li><a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000161103.html" target="_blank" rel="noopener">特定健診・特定保健指導について（対象は 40〜74 歳）</a></li></ul></details>
       <p><a href="https://docs.google.com/forms/d/e/1FAIpQLSd8B90qh5lEIyr25iw1jOjdQjOyaPZ1_z2wMB4kH-EmEeJYWw/viewform?usp=pp_url&amp;entry.585564634=otasuke" target="_blank" rel="noopener">ご要望・不具合の報告（Google フォーム）</a>：いただいた内容をもとに直します。お返事はしていません。</p>
       <p>サイト全体の運営者情報・免責事項は<a href="../../about.html">こちら</a>、プライバシーポリシーは<a href="../../privacy-policy.html">こちら</a>です（すべてのツールで共通）。</p>
     </article>
 
     <article class="card content" id="changelog">
       <h2>更新履歴</h2>
-      <ul><li><time datetime="2026-10-02">2026-10-02</time> 公開</li></ul>
+      <ul><li><time datetime="2026-10-04">2026-10-04</time> 線の対象の年齢、判定値の言い換え、共有の端末での消し方を追記</li><li><time datetime="2026-10-02">2026-10-02</time> 公開</li></ul>
     </article>
   </main>
 
