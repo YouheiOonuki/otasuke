@@ -17,7 +17,7 @@ function htmlFiles(dir) {
   return out;
 }
 const FILES = htmlFiles(ROOT);
-const rel = (f) => path.relative(ROOT, f);
+const rel = (f) => path.relative(ROOT, f).split(path.sep).join('/');
 const NOAD = 'このページは広告なし・登録なし・入力は端末の外に出ません。';
 
 test('ページが揃っている（ハブ・8 つの道具と使い方・着地ページ・404）', () => {
