@@ -54,6 +54,7 @@
   function take(j, typed) {
     var s = window.YFlow.fromResult(j, typed);
     if (s.textarea !== null) { text.value = s.textarea; count(); $('photo-note').hidden = false; }
+    stopSpeak();
     last = s.last;
     document.querySelector('input[name="lang"][value=""]').checked = true;
     $('status').innerHTML = '';
@@ -99,7 +100,7 @@
   function showLang() {
     var lang = (document.querySelector('input[name="lang"]:checked') || {}).value || '';
     var box = $('tr');
-    if (!lang || !last) { box.hidden = true; return; }
+    if (!lang || !last) { box.hidden = true; showSpeak(); return; }
     var hit = last.tr[lang];
     if (hit) {
       box.hidden = false;
@@ -109,8 +110,10 @@
       hit.text.split('\n').forEach(function (line) { var p = document.createElement('p'); p.textContent = line; $('tr-text').appendChild(p); });
       $('tr-lost').hidden = !hit.lost.length;
       $('tr-lost').textContent = hit.lost.length ? '原文の数字 ' + hit.lost.join('・') + ' が訳に出てきません。原文で確かめてください。' : '';
+      showSpeak();
       return;
     }
+    showSpeak();
     var keep = last;
     post('/translate', { text: last.output, lang: lang }, '訳しています…', function (j) {
       if (keep !== last) return; // その間に別の結果になった
@@ -120,10 +123,64 @@
     });
   }
 
+  // 読み上げ（K165）: やさしい日本語か、選んだ言語の訳を、yorozu-ai が読み上げた音（WAV）で再生する。音はこの画面のメモリにだけあり、止めるか終われば捨てる
+  var speakState = 'idle';
+  var audio = null;
+  var audioUrl = '';
+  function speakTarget() {
+    var lang = (document.querySelector('input[name="lang"]:checked') || {}).value || '';
+    if (!last) return null;
+    if (!lang) return { lang: 'ja', text: last.output };
+    var hit = last.tr[lang];
+    return hit && window.YFlow.SPEAK[lang] ? { lang: lang, text: hit.text } : null;
+  }
+  function showSpeak() {
+    var t = speakTarget();
+    $('speak-row').hidden = !t;
+    $('speak').textContent = window.YFlow.SPEAK_LABEL[speakState];
+    $('speak').classList.toggle('playing', speakState !== 'idle');
+  }
+  function stopSpeak() { if (speakState !== 'idle') { speakState = 'idle'; dropAudio(); } }
+  function dropAudio() {
+    if (audio) { audio.pause(); audio.removeAttribute('src'); audio = null; }
+    if (audioUrl) { URL.revokeObjectURL(audioUrl); audioUrl = ''; }
+  }
+  function speakDo(ev) {
+    var s = window.YFlow.speakStep(speakState, ev);
+    speakState = s.state;
+    if (s.action === 'stop') dropAudio();
+    if (s.action === 'fetch') {
+      var t = speakTarget();
+      if (!t) { speakState = 'idle'; showSpeak(); return; }
+      fetch(API + '/speak', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ text: t.text, lang: t.lang }) })
+        .then(function (r) {
+          if (!r.ok) return r.json().then(function (j) { throw new Error(j.error || 'other'); });
+          return r.blob();
+        })
+        .then(function (blob) {
+          if (speakState !== 'loading') return; // 待つ間に止めた
+          dropAudio();
+          audioUrl = URL.createObjectURL(blob);
+          audio = new Audio(audioUrl);
+          audio.preservesPitch = true;
+          audio.playbackRate = window.YFlow.RATE[(document.querySelector('input[name="rate"]:checked') || {}).value || 'normal'];
+          audio.addEventListener('ended', function () { dropAudio(); speakDo('ended'); });
+          speakDo('ready');
+        })
+        .catch(function (e) { setStatus(ERR[e.message] || ERR.other, 'error'); speakDo('error'); });
+    }
+    if (s.action === 'play' && audio) audio.play().catch(function () { dropAudio(); speakDo('error'); });
+    showSpeak();
+  }
+  $('speak').addEventListener('click', function () { speakDo('press'); });
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="rate"]'), function (r) {
+    r.addEventListener('change', function () { if (audio) audio.playbackRate = window.YFlow.RATE[r.value]; });
+  });
+
   $('go').addEventListener('click', go);
   text.addEventListener('input', count);
   $('ruby').addEventListener('change', render);
-  Array.prototype.forEach.call(document.querySelectorAll('input[name="lang"]'), function (r) { r.addEventListener('change', showLang); });
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="lang"]'), function (r) { r.addEventListener('change', function () { stopSpeak(); showLang(); }); });
   $('photo-btn').addEventListener('click', function () { $('photo-file').click(); });
   $('photo-file').addEventListener('change', function () { photo(this.files && this.files[0]); this.value = ''; });
   $('clear').addEventListener('click', function () { text.value = ''; count(); $('photo-note').hidden = true; text.focus(); });

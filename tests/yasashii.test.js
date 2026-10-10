@@ -55,3 +55,28 @@ test('多言語（K164）: 4 言語と「やさしい日本語のまま」。ペ
   assert.ok(html.includes('保存はしません（写真も保存しません）'));
   assert.match(html, /<section class="card opt" lang="en" id="en">/);
 });
+
+test('読み上げ（K165）: 押すと用意 → 届けば再生 → 再生中に押すと止める → 終われば元に戻る。用意中に押してもやめられる', () => {
+  let s = YFlow.speakStep('idle', 'press');
+  assert.deepEqual(s, { state: 'loading', action: 'fetch' });
+  s = YFlow.speakStep(s.state, 'ready');
+  assert.deepEqual(s, { state: 'playing', action: 'play' });
+  assert.deepEqual(YFlow.speakStep('playing', 'press'), { state: 'idle', action: 'stop' }, '再生中に押すと止める');
+  assert.deepEqual(YFlow.speakStep('playing', 'ended'), { state: 'idle', action: null });
+  assert.deepEqual(YFlow.speakStep('loading', 'press'), { state: 'idle', action: 'stop' }, '用意中に押すとやめる');
+  assert.deepEqual(YFlow.speakStep('idle', 'ready'), { state: 'idle', action: null }, 'やめた後に音が届いても鳴らさない');
+  assert.deepEqual(YFlow.speakStep('loading', 'error'), { state: 'idle', action: null });
+  assert.equal(YFlow.SPEAK_LABEL.playing, '■ 止める');
+  assert.deepEqual(Object.keys(YFlow.SPEAK), ['ja', 'en', 'zh'], '読めるのは日本語・英語・中国語だけ（ベトナム語・ポルトガル語はボタンを出さない）');
+  assert.deepEqual(YFlow.RATE, { normal: 1, slow: 0.8 });
+});
+
+test('読み上げ（K165）: 画面のつなぎ（/speak に送る・音はメモリだけで終われば捨てる・言語を変えたら止める）', () => {
+  const app = read('yasashii/app.js');
+  assert.match(app, /fetch\(API \+ '\/speak'/);
+  assert.match(app, /URL\.revokeObjectURL\(audioUrl\)/);
+  assert.match(app, /addEventListener\('ended', function \(\) \{ dropAudio\(\); speakDo\('ended'\); \}\)/);
+  assert.match(app, /r\.addEventListener\('change', function \(\) \{ stopSpeak\(\); showLang\(\); \}\)/);
+  const html = read('yasashii/index.html');
+  assert.ok(html.includes('id="speak"') && html.includes('name="rate" value="slow"'));
+});

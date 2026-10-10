@@ -103,6 +103,13 @@
             <div id="tr-text"></div>
             <p id="tr-lost" class="warn" hidden></p>
           </div>
+          <div id="speak-row" class="speak-row" hidden>
+            <button type="button" id="speak" class="btn speak">🔊 読んでもらう</button>
+            <span class="rates" role="radiogroup" aria-label="読む速さ">
+              <label><input type="radio" name="rate" value="normal" checked> ふつう</label>
+              <label><input type="radio" name="rate" value="slow"> ゆっくり</label>
+            </span>
+          </div>
         </div>
       </div>
     </section>
@@ -115,6 +122,7 @@
         <li>原文に無い数字が出た文にも「⚠」が付きます。お金・日付・期限は、かならず原文で確かめてください。</li>
         <li>写真から読むときは、写真もサーバーの AI に送ります。写真も保存しません。読み取りは間違えることがあるので、欄に入った文を確かめてから言い換えてください。</li>
         <li>ほかの言葉（英語・中国語・ベトナム語・ポルトガル語）は、やさしい日本語の言い換えを AI が訳したものです。日本語の原文が正です。</li>
+        <li>「読んでもらう」は、言い換え（英語・中国語の訳も）を AI が声で読みます。読み間違えることがあります。読む文はサーバーの AI に送り、声も保存しません。</li>
         <li>1日に使える回数には上限があります。混んでいるときは、明日また使ってください。</li>
       </ul>
     </details>

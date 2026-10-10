@@ -26,7 +26,25 @@
       last: { source: source, output: j.output, long: j.long || [], added: j.added || [], missingNumbers: j.missingNumbers || [], tr: {} }
     };
   }
-  var api = { MAX_SIDE: MAX_SIDE, LANGS: LANGS, fitSize: fitSize, fromResult: fromResult };
+  // 読み上げ（K165）: 読める言語（ja はやさしい日本語、en・zh は訳）。vi・pt は読めないのでボタンを出さない
+  var SPEAK = { ja: true, en: true, zh: true };
+  var RATE = { normal: 1, slow: 0.8 }; // ふつう／ゆっくり（ブラウザの再生の速さ。音の高さは変えない）
+  /**
+   * 読み上げボタンの状態。idle（読んでもらう）→ loading（用意しています…）→ playing（止める）→ idle。
+   * ev: 'press'（ボタンを押す）| 'ready'（音が届いた）| 'ended'（終わった）| 'error'。返りは { state, action }
+   * action: 'fetch'（音をもらう）| 'play' | 'stop' | null
+   */
+  function speakStep(state, ev) {
+    if (ev === 'press') {
+      if (state === 'idle') return { state: 'loading', action: 'fetch' };
+      return { state: 'idle', action: 'stop' }; // 用意中・再生中に押したら止める
+    }
+    if (ev === 'ready') return state === 'loading' ? { state: 'playing', action: 'play' } : { state: state, action: null };
+    if (ev === 'ended' || ev === 'error') return { state: 'idle', action: null };
+    return { state: state, action: null };
+  }
+  var SPEAK_LABEL = { idle: '🔊 読んでもらう', loading: '用意しています…（押すとやめます）', playing: '■ 止める' };
+  var api = { MAX_SIDE: MAX_SIDE, LANGS: LANGS, fitSize: fitSize, fromResult: fromResult, SPEAK: SPEAK, RATE: RATE, speakStep: speakStep, SPEAK_LABEL: SPEAK_LABEL };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.YFlow = api;
 })(this);
