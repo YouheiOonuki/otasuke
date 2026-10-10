@@ -80,3 +80,9 @@ test('読み上げ（K165）: 画面のつなぎ（/speak に送る・音はメ�
   const html = read('yasashii/index.html');
   assert.ok(html.includes('id="speak"') && html.includes('name="rate" value="slow"'));
 });
+test('AI の枠切れ（D298）: サーバーの文（error quota の message）をそのまま出す。文を画面に写さない', () => {
+  const js = require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'yasashii', 'app.js'), 'utf8');
+  assert.match(js, /j\.error === 'quota' && j\.message/);
+  assert.equal((js.match(/[(=] ?errText\(j\)/g) || []).length, 2, '言い換え・写真・訳（post）と読み上げの 2 か所で使う');
+  assert.doesNotMatch(js, /枠を使い切りました/);
+});
