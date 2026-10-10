@@ -52,7 +52,7 @@
 
   <main class="app-main">
     <!-- 入力をサーバーで処理するので、otasuke の定型文（入力は端末の外に出ません）の代わりに例外の文（yorozu-plans 7.27・7.33.1 (a)）。tests/pages.test.js に例外として登録 -->
-    <p class="noad">このページは広告なし・登録なし。この道具は入力をサーバー（Cloudflare の AI）で処理します。保存はしません。名前や住所など個人が分かる部分は消してから貼ってください。</p>
+    <p class="noad">このページは広告なし・登録なし。この道具は入力をサーバー（Cloudflare の AI）で処理します。保存はしません（写真も保存しません）。名前や住所など個人が分かる部分は消してから貼ってください。</p>
 
     <form id="form" autocomplete="off" onsubmit="return false">
       <fieldset class="card req">
@@ -68,6 +68,11 @@
           <button type="button" id="clear" class="btn btn-sub">消す</button>
           <button type="button" id="sample" class="btn btn-sub">例を入れる</button>
         </div>
+        <div class="btn-row">
+          <button type="button" id="photo-btn" class="btn btn-sub">写真から（お知らせを撮る・選ぶ）</button>
+          <input type="file" id="photo-file" accept="image/*" hidden>
+        </div>
+        <p id="photo-note" class="hint" hidden>写真から読み取った文を上の欄に入れました。読み違いがあれば直して、「言い換える」を押すと、直した文で言い換え直します。</p>
       </fieldset>
     </form>
 
@@ -85,6 +90,19 @@
           <div id="out" class="out"></div>
           <p id="warn" class="warn" hidden></p>
           <div class="btn-row"><button type="button" id="copy" class="btn btn-sub">言い換えをコピー</button></div>
+          <fieldset class="langs">
+            <legend>ほかの言葉で読む</legend>
+            <label><input type="radio" name="lang" value="" checked> やさしい日本語のまま</label>
+            <label lang="en"><input type="radio" name="lang" value="en"> English</label>
+            <label lang="zh-Hans"><input type="radio" name="lang" value="zh"> 中文（简体）</label>
+            <label lang="vi"><input type="radio" name="lang" value="vi"> Tiếng Việt</label>
+            <label lang="pt"><input type="radio" name="lang" value="pt"> Português</label>
+          </fieldset>
+          <div id="tr" class="tr" hidden>
+            <p id="tr-notice" class="always"></p>
+            <div id="tr-text"></div>
+            <p id="tr-lost" class="warn" hidden></p>
+          </div>
         </div>
       </div>
     </section>
@@ -95,9 +113,16 @@
         <li>貼った文は、言い換えのために Cloudflare のサーバーの AI に送ります。送った文と言い換えは保存しません（Cloudflare も AI の学習に使いません）。</li>
         <li>1つの文を短く（40字まで）、漢字にふりがな、むずかしい言葉には説明を付けるように AI に頼んでいます。うまくいかない文には「⚠」の印が付きます。</li>
         <li>原文に無い数字が出た文にも「⚠」が付きます。お金・日付・期限は、かならず原文で確かめてください。</li>
+        <li>写真から読むときは、写真もサーバーの AI に送ります。写真も保存しません。読み取りは間違えることがあるので、欄に入った文を確かめてから言い換えてください。</li>
+        <li>ほかの言葉（英語・中国語・ベトナム語・ポルトガル語）は、やさしい日本語の言い換えを AI が訳したものです。日本語の原文が正です。</li>
         <li>1日に使える回数には上限があります。混んでいるときは、明日また使ってください。</li>
       </ul>
     </details>
+
+    <section class="card opt" lang="en" id="en">
+      <h2>For people learning Japanese</h2>
+      <p>Paste a Japanese notice, or take a photo of it, and this tool rewrites it in plain Japanese with furigana. The result is also shown in English, Chinese, Vietnamese or Portuguese. The text and photo are processed by AI on Cloudflare's servers and are not stored. AI rewrites and translations can be wrong, so check dates and amounts against the original Japanese notice.</p>
+    </section>
 
     <p class="no-print"><a href="./guide.html">使い方・気をつけること・よくある質問</a> · <a href="../">くらしのおたすけ（ほかの道具）</a></p>
   </main>
@@ -117,6 +142,7 @@
   </footer>
 
   <script src="./ruby.js"></script>
+  <script src="./flow.js"></script>
   <script src="./app.js"></script>
   <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
 </body>

@@ -25,3 +25,33 @@ test('ページ: 送り先は yorozu-ai の 1 つだけ・保存しない（loca
   assert.ok(html.includes('AI による言い換えです。原文と意味が違うことがあります。手続きや期限は原文で確かめてください。'));
   assert.ok(html.includes('maxlength="2000"'));
 });
+
+const YFlow = require('../yasashii/flow.js');
+
+test('写真（K163）: 送る前に長辺 1,600px に縮める。小さい写真はそのまま', () => {
+  assert.deepEqual(YFlow.fitSize(4032, 3024), { w: 1600, h: 1200 });
+  assert.deepEqual(YFlow.fitSize(3024, 4032), { w: 1200, h: 1600 });
+  assert.deepEqual(YFlow.fitSize(1200, 900), { w: 1200, h: 900 });
+});
+
+test('写真（K163）: 読み取った原文を欄に入れる。直した文で「言い換える」を押せば、その文で言い換え直す（文のときは欄を書き換えない）', () => {
+  const photo = YFlow.fromResult({ ok: true, source: '令和∞年度の納付書', output: '令和《れいわ》∞年度《ねんど》', long: [], added: [], missingNumbers: [] }, '');
+  assert.equal(photo.textarea, '令和∞年度の納付書', '読み取った原文が欄に入る（読み違いを人が直せる）');
+  assert.equal(photo.last.source, '令和∞年度の納付書');
+  // 直した文で押すと、文の言い換えとして送られ、結果の原文は直した文になる
+  const fixed = YFlow.fromResult({ ok: true, output: '令和《れいわ》8年度《ねんど》' }, '令和8年度の納付書');
+  assert.equal(fixed.textarea, null, '文のときは欄を書き換えない');
+  assert.equal(fixed.last.source, '令和8年度の納付書');
+  assert.deepEqual(fixed.last.tr, {}, '訳は結果ごとに覚え直す');
+  const app = read('yasashii/app.js');
+  assert.match(app, /post\('', \{ text: src \}/, '「言い換える」は欄の文を /v1/yasashii に送る');
+  assert.match(app, /post\('\/photo', \{ image: c\.toDataURL\('image\/jpeg', 0\.85\) \}/, '写真は縮めた JPEG を /photo に');
+});
+
+test('多言語（K164）: 4 言語と「やさしい日本語のまま」。ページの選択肢と同じ', () => {
+  assert.deepEqual(YFlow.LANGS.map((l) => l.code), ['', 'en', 'zh', 'vi', 'pt']);
+  const html = read('yasashii/index.html');
+  for (const l of YFlow.LANGS) assert.ok(html.includes(`name="lang" value="${l.code}"`), l.code);
+  assert.ok(html.includes('保存はしません（写真も保存しません）'));
+  assert.match(html, /<section class="card opt" lang="en" id="en">/);
+});

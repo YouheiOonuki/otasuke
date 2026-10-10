@@ -21,8 +21,8 @@ const rel = (f) => path.relative(ROOT, f).split(path.sep).join('/');
 const NOAD = 'このページは広告なし・登録なし・入力は端末の外に出ません。';
 // 入力をサーバーで処理するページだけは、定型文の代わりに例外の文（yorozu-plans 7.27・7.33.1 (a)、K147）。足すときは理由をここに書く
 const NOAD_EXCEPT = {
-  'yasashii/index.html': 'このページは広告なし・登録なし。この道具は入力をサーバー（Cloudflare の AI）で処理します。保存はしません。名前や住所など個人が分かる部分は消してから貼ってください。',
-  'yasashii/guide.html': 'このページは広告なし・登録なし。この道具は入力をサーバー（Cloudflare の AI）で処理します。保存はしません。名前や住所など個人が分かる部分は消してから貼ってください。',
+  'yasashii/index.html': 'このページは広告なし・登録なし。この道具は入力をサーバー（Cloudflare の AI）で処理します。保存はしません（写真も保存しません）。名前や住所など個人が分かる部分は消してから貼ってください。',
+  'yasashii/guide.html': 'このページは広告なし・登録なし。この道具は入力をサーバー（Cloudflare の AI）で処理します。保存はしません（写真も保存しません）。名前や住所など個人が分かる部分は消してから貼ってください。',
 };
 
 test('ページが揃っている（ハブ・8 つの道具と使い方・着地ページ・404）', () => {
@@ -44,7 +44,7 @@ test('広告のスクリプト（adsbygoogle.js・pagead2）をどのページ�
   for (const f of ['common.js', 'calc.js', 'screen.js', 'constants.js', 'shakyo/app.js', 'reizoko/app.js', 'daicho/app.js', 'tejun/app.js', 'tokei/clock.js',
     'notore/app.js', 'notore/gen.js', 'notore/kanji-data.js', 'notore/kana-data.js', 'notore/book.js', 'notore/book-values.js', 'notore/book-app.js',
     'kigo/app.js', 'kigo/sheet.js', 'kigo/sekki.js', 'kigo/kigo-data.js', 'honmono/app.js', 'honmono/check.js', 'honmono/psl-data.js',
-    'kenshin/app.js', 'kenshin/kenshin-calc.js', 'kenshin/kenshin-values.js', 'yasashii/app.js', 'yasashii/ruby.js']) {
+    'kenshin/app.js', 'kenshin/kenshin-calc.js', 'kenshin/kenshin-values.js', 'yasashii/app.js', 'yasashii/ruby.js', 'yasashii/flow.js']) {
     assert.doesNotMatch(fs.readFileSync(path.join(ROOT, f), 'utf8'), /pagead2|adsbygoogle/i, f);
   }
 });

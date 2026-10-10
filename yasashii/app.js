@@ -1,5 +1,5 @@
-// やさしい日本語に言い換え（yorozu-plans ROADMAP 7.33.1 K147、企画書 80）。言い換えは yorozu-ai（Workers AI）。
-// 貼った文はこの画面に置くだけで、保存しない（localStorage を使わない）。送るのは「言い換える」を押したときの 1 回だけ。
+// やさしい日本語に言い換え（yorozu-plans ROADMAP 7.33.1 K147・7.34.1 K163・7.34.2 K164、企画書 80・81）。言い換え・写真の読み取り・翻訳は yorozu-ai（Workers AI）。
+// 貼った文も写真もこの画面に置くだけで、保存しない（ブラウザにも残さない）。送るのはボタンを押したときだけ。
 (function () {
   'use strict';
   var API = 'https://yorozu-ai.oonuki-youhei.workers.dev/v1/yasashii';
@@ -7,20 +7,24 @@
   var SAMPLE = '令和8年度の国民年金保険料納付書をお送りします。お近くの金融機関・郵便局・コンビニエンスストアなどで納付してください。前納の納付書をご希望の際は、お近くの年金事務所にお問い合わせください。';
   var ERR = {
     busy: '今日は混んでいます。明日また使ってください。',
-    tooLong: '2,000字までにしてください。',
+    tooLong: '長すぎます。2,000字までにしてください。',
+    tooLarge: '写真が大きすぎます。',
+    type: 'この形式の写真は読めません。カメラで撮った写真を選んでください。',
+    noText: '写真から文字が読めませんでした。明るい所で、紙をまっすぐ撮ってください。',
     empty: '文を貼ってください。',
-    timeout: '時間がかかりすぎました。文を短くして、もう一度押してください。',
-    other: '言い換えができませんでした。少し待って、もう一度押してください。',
+    timeout: '時間がかかりすぎました。もう一度押してください。',
+    other: 'うまくいきませんでした。少し待って、もう一度押してください。'
   };
   function $(id) { return document.getElementById(id); }
   var text = $('text');
-  var last = null; // 直前の結果（ふりがなの切り替え・コピー用）
+  var last = null; // 直前の結果（ふりがなの切り替え・翻訳・コピー用）
 
   function setStatus(msg, cls) {
     $('status').innerHTML = '<p class="' + (cls || 'small') + '"></p>';
     $('status').firstChild.textContent = msg;
   }
   function count() { $('count').textContent = String(Array.from(text.value).length); }
+  function busy(on) { $('go').disabled = on; $('photo-btn').disabled = on; }
 
   function render() {
     if (!last) return;
@@ -43,31 +47,86 @@
     $('warn').hidden = !w.length;
     $('warn').textContent = w.join(' ');
     $('pair').hidden = false;
+    showLang();
+  }
+
+  /** 結果を受け取る（文でも写真でも） */
+  function take(j, typed) {
+    var s = window.YFlow.fromResult(j, typed);
+    if (s.textarea !== null) { text.value = s.textarea; count(); $('photo-note').hidden = false; }
+    last = s.last;
+    document.querySelector('input[name="lang"][value=""]').checked = true;
+    $('status').innerHTML = '';
+    render();
+    $('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function post(path, body, waitMsg, done) {
+    busy(true);
+    setStatus(waitMsg);
+    fetch(API + path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json(); })
+      .then(function (j) { if (!j.ok) { setStatus(ERR[j.error] || ERR.other, 'error'); return; } done(j); })
+      .catch(function () { setStatus(ERR.other, 'error'); })
+      .then(function () { busy(false); });
   }
 
   function go() {
     var src = text.value.trim();
     if (!src) { setStatus(ERR.empty, 'error'); return; }
     if (Array.from(src).length > MAX) { setStatus(ERR.tooLong, 'error'); return; }
-    $('go').disabled = true;
-    setStatus('言い換えています…（20秒ほどかかることがあります）');
-    fetch(API, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ text: src }) })
-      .then(function (r) { return r.json().then(function (j) { return { status: r.status, j: j }; }); })
-      .then(function (x) {
-        if (!x.j.ok) { setStatus(ERR[x.j.error] || ERR.other, 'error'); return; }
-        last = { source: src, output: x.j.output, long: x.j.long || [], added: x.j.added || [], missingNumbers: x.j.missingNumbers || [] };
-        $('status').innerHTML = '';
-        render();
-        $('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      })
-      .catch(function () { setStatus(ERR.other, 'error'); })
-      .then(function () { $('go').disabled = false; });
+    post('', { text: src }, '言い換えています…（20秒ほどかかることがあります）', function (j) { take(j, src); });
+  }
+
+  // 写真: ブラウザで長辺 1,600px の JPEG に縮めてから送る（送る量を減らす。写真はこの画面のメモリにだけある）
+  function photo(file) {
+    if (!file) return;
+    var url = URL.createObjectURL(file);
+    var img = new Image();
+    img.onload = function () {
+      var s = window.YFlow.fitSize(img.naturalWidth, img.naturalHeight);
+      var c = document.createElement('canvas');
+      c.width = s.w; c.height = s.h;
+      c.getContext('2d').drawImage(img, 0, 0, s.w, s.h);
+      URL.revokeObjectURL(url);
+      post('/photo', { image: c.toDataURL('image/jpeg', 0.85) }, '写真を読んでいます…（30秒ほどかかることがあります）', function (j) { take(j, ''); });
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); setStatus(ERR.type, 'error'); };
+    img.src = url;
+  }
+
+  // 翻訳（やさしい日本語の出力を訳す。同じ結果の訳は覚えておき、もう一度は送らない）
+  function showLang() {
+    var lang = (document.querySelector('input[name="lang"]:checked') || {}).value || '';
+    var box = $('tr');
+    if (!lang || !last) { box.hidden = true; return; }
+    var hit = last.tr[lang];
+    if (hit) {
+      box.hidden = false;
+      box.lang = lang === 'zh' ? 'zh-Hans' : lang;
+      $('tr-notice').textContent = hit.notice;
+      $('tr-text').innerHTML = '';
+      hit.text.split('\n').forEach(function (line) { var p = document.createElement('p'); p.textContent = line; $('tr-text').appendChild(p); });
+      $('tr-lost').hidden = !hit.lost.length;
+      $('tr-lost').textContent = hit.lost.length ? '原文の数字 ' + hit.lost.join('・') + ' が訳に出てきません。原文で確かめてください。' : '';
+      return;
+    }
+    var keep = last;
+    post('/translate', { text: last.output, lang: lang }, '訳しています…', function (j) {
+      if (keep !== last) return; // その間に別の結果になった
+      last.tr[lang] = j;
+      $('status').innerHTML = '';
+      showLang();
+    });
   }
 
   $('go').addEventListener('click', go);
   text.addEventListener('input', count);
   $('ruby').addEventListener('change', render);
-  $('clear').addEventListener('click', function () { text.value = ''; count(); text.focus(); });
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="lang"]'), function (r) { r.addEventListener('change', showLang); });
+  $('photo-btn').addEventListener('click', function () { $('photo-file').click(); });
+  $('photo-file').addEventListener('change', function () { photo(this.files && this.files[0]); this.value = ''; });
+  $('clear').addEventListener('click', function () { text.value = ''; count(); $('photo-note').hidden = true; text.focus(); });
   $('sample').addEventListener('click', function () { text.value = SAMPLE; count(); });
   $('paste').addEventListener('click', function () {
     if (!navigator.clipboard || !navigator.clipboard.readText) { text.focus(); return; }

@@ -60,7 +60,7 @@
 
   <main class="app-main">
     <!-- 入力をサーバーで処理する道具の使い方なので、定型文の代わりに例外の文（道具のページと同じ。tests/pages.test.js の NOAD_EXCEPT） -->
-    <p class="noad">このページは広告なし・登録なし。この道具は入力をサーバー（Cloudflare の AI）で処理します。保存はしません。名前や住所など個人が分かる部分は消してから貼ってください。</p>
+    <p class="noad">このページは広告なし・登録なし。この道具は入力をサーバー（Cloudflare の AI）で処理します。保存はしません（写真も保存しません）。名前や住所など個人が分かる部分は消してから貼ってください。</p>
     <p class="card" style="text-align:center"><a href="./">▶ むずかしい文を貼って言い換える</a></p>
 
     <article class="card content" id="about">
@@ -74,6 +74,7 @@
     <article class="card content" id="howto">
       <h2>使い方</h2>
       <ol><li>お知らせの文をコピーして、欄に貼る（2,000 字まで）。名前・住所・番号は消しておく。</li><li>「言い換える」を押す。20 秒ほどかかることがあります。</li><li>右（スマホでは下）の言い換えを読む。ふりがなが邪魔なら「ふりがなを出す」を外す。</li><li>⚠ の文と、お金・日付・期限は、左の原文で確かめる。</li></ol>
+      <p>紙のお知らせは「写真から」で撮るか選ぶと、AI が文字を読んで欄に入れます。読み違いがあれば欄で直して、もう一度「言い換える」を押してください。言い換えの下で、英語・中国語・ベトナム語・ポルトガル語でも読めます（AI の翻訳です。日本語の原文が正です）。</p>
     </article>
 
     <article class="card content" id="faq">
@@ -83,7 +84,7 @@
 
     <article class="card content" id="notes">
       <h2>ご利用上の注意・データの扱い</h2>
-      <ul><li><strong>サーバーで処理する</strong>：くらしのおたすけのほかの道具と違い、この道具は貼った文を Cloudflare のサーバーの AI（Workers AI）に送ります。保存はしません。数えるのは、その日の回数だけです。</li><li><strong>1 日の上限</strong>：使える回数には 1 日の上限があります。混んでいるときは、明日また使ってください。</li><li><strong>言い換えは目安</strong>：手続き・期限・金額は、原文と、お知らせを出したところで確かめてください。</li></ul>
+      <ul><li><strong>サーバーで処理する</strong>：くらしのおたすけのほかの道具と違い、この道具は貼った文を Cloudflare のサーバーの AI（Workers AI）に送ります。保存はしません。数えるのは、その日の回数だけです。</li><li><strong>写真と翻訳</strong>：写真も同じ AI に送り、保存しません。翻訳は、やさしい日本語の言い換えを AI が訳したものです。</li><li><strong>1 日の上限</strong>：使える回数には 1 日の上限があります。混んでいるときは、明日また使ってください。</li><li><strong>言い換えは目安</strong>：手続き・期限・金額は、原文と、お知らせを出したところで確かめてください。</li></ul>
       <p>考え方の出典: 出入国在留管理庁・文化庁「<a href="https://www.moj.go.jp/isa/support/portal/plainjapanese_guideline.html" target="_blank" rel="noopener">在留支援のためのやさしい日本語ガイドライン</a>」。最終確認日 <time datetime="2026-10-11">2026-10-11</time>。</p>
       <p><a href="/post/?from=/otasuke/yasashii/guide.html">ご要望・不具合の報告</a>：いただいた内容をもとに直します。お返事はしていません。読み違いのふりがなを見つけたら、その言葉を教えてください（お知らせの文は送らないでください）。</p>
       <p>サイト全体の運営者情報・免責事項は<a href="../../about.html">こちら</a>、プライバシーポリシーは<a href="../../privacy-policy.html">こちら</a>です（すべてのツールで共通）。</p>
@@ -91,7 +92,7 @@
 
     <article class="card content" id="changelog">
       <h2>更新履歴</h2>
-      <ul><li><time datetime="2026-10-11">2026-10-11</time> 公開</li></ul>
+      <ul><li><time datetime="2026-10-11">2026-10-11</time> 公開。写真から読む・ほかの言葉で読む を追加</li></ul>
     </article>
   </main>
 
