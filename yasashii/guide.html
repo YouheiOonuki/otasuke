@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>やさしい日本語に言い換えの使い方（役所のお知らせを短い文とふりがなで）｜くらしのおたすけ</title>
+  <meta name="description" content="「やさしい日本語に言い換え」の使い方。どんな文に向くか、AI の言い換えで気をつけること、ふりがなと ⚠ の印の見方、貼った文の扱い、よくある質問。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/otasuke/yasashii/guide.html">
+
+  <meta property="og:title" content="やさしい日本語に言い換えの使い方｜くらしのおたすけ">
+  <meta property="og:description" content="役所のお知らせを短い文とふりがなに。AI の言い換えで気をつけることと、貼った文の扱い。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://yorozu-craft.com/otasuke/yasashii/guide.html">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/otasuke/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- よくある質問（下の #faq と内容をそろえる） -->
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "貼った文は保存されますか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "保存しません。言い換えのために Cloudflare のサーバーの AI に送りますが、貼った文も言い換えた文も残しません。Cloudflare も AI の学習に使いません。名前や住所など、個人が分かる部分は消してから貼ってください。" }
+    },
+    {
+      "@type": "Question",
+      "name": "言い換えをそのまま信じてよいですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "いいえ。AI による言い換えなので、原文と意味が違うことや、ふりがなの読み違いがあります。手続き・期限・金額は、かならず原文で確かめてください。" }
+    },
+    {
+      "@type": "Question",
+      "name": "⚠ の印は何ですか？",
+      "acceptedAnswer": { "@type": "Answer", "text": "40 字より短くできなかった文と、原文に無い数字が出てきた文に付きます。その文は特に原文と見比べてください。" }
+    }
+  ]
+}
+  </script>
+
+  <!-- 高齢者向けのページなので広告のスクリプトは読み込まない（企画書 29、ROADMAP D118）。所有確認の meta だけ残す -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <h1>やさしい日本語に言い換えの使い方</h1>
+    <p class="subtitle">どんな文に向くか・気をつけること・よくある質問</p>
+  </header>
+
+  <main class="app-main">
+    <!-- 入力をサーバーで処理する道具の使い方なので、定型文の代わりに例外の文（道具のページと同じ。tests/pages.test.js の NOAD_EXCEPT） -->
+    <p class="noad">このページは広告なし・登録なし。この道具は入力をサーバー（Cloudflare の AI）で処理します。保存はしません。名前や住所など個人が分かる部分は消してから貼ってください。</p>
+    <p class="card" style="text-align:center"><a href="./">▶ むずかしい文を貼って言い換える</a></p>
+
+    <article class="card content" id="about">
+      <h2>この道具について</h2>
+      <p>役所や会社から届くお知らせには、「納付」「前納」「該当」のようなむずかしい言葉と、長い文が多くあります。この道具は、そうした文を貼ると、AI が「やさしい日本語」に言い換えて、原文と並べて見せます。</p>
+      <p>やさしい日本語では、1 つの文を短くし（この道具では 40 字まで）、1 つの文には 1 つのことだけを書きます。漢字にはふりがなを付け、言い換えられない言葉（制度や書類の名前）は、後ろに「（＝やさしい説明）」を付けます。数字・日付・金額は原文と同じ数字のままにします。</p>
+      <p>読む人として考えているのは、むずかしい文が読みにくくなってきた親の世代と、日本語を勉強している人です。家族が代わりに貼って、言い換えを見せながら一緒に読む使い方もできます。</p>
+      <p>言い換えは AI がするので、原文と意味が違うことや、ふりがなの読み違いがあります。<strong>AI による言い換えです。原文と意味が違うことがあります。手続きや期限は原文で確かめてください。</strong>原文に無い数字が出た文と、短くできなかった文には「⚠」の印が付きます。</p>
+    </article>
+
+    <article class="card content" id="howto">
+      <h2>使い方</h2>
+      <ol><li>お知らせの文をコピーして、欄に貼る（2,000 字まで）。名前・住所・番号は消しておく。</li><li>「言い換える」を押す。20 秒ほどかかることがあります。</li><li>右（スマホでは下）の言い換えを読む。ふりがなが邪魔なら「ふりがなを出す」を外す。</li><li>⚠ の文と、お金・日付・期限は、左の原文で確かめる。</li></ol>
+    </article>
+
+    <article class="card content" id="faq">
+      <h2>よくある質問</h2>
+      <dl class="faq"><dt>貼った文は保存されますか？</dt><dd>保存しません。言い換えのために Cloudflare のサーバーの AI に送りますが、貼った文も言い換えた文も残しません。Cloudflare も AI の学習に使いません。名前や住所など、個人が分かる部分は消してから貼ってください。</dd><dt>言い換えをそのまま信じてよいですか？</dt><dd>いいえ。AI による言い換えなので、原文と意味が違うことや、ふりがなの読み違いがあります。手続き・期限・金額は、かならず原文で確かめてください。</dd><dt>⚠ の印は何ですか？</dt><dd>40 字より短くできなかった文と、原文に無い数字が出てきた文に付きます。その文は特に原文と見比べてください。</dd></dl>
+    </article>
+
+    <article class="card content" id="notes">
+      <h2>ご利用上の注意・データの扱い</h2>
+      <ul><li><strong>サーバーで処理する</strong>：くらしのおたすけのほかの道具と違い、この道具は貼った文を Cloudflare のサーバーの AI（Workers AI）に送ります。保存はしません。数えるのは、その日の回数だけです。</li><li><strong>1 日の上限</strong>：使える回数には 1 日の上限があります。混んでいるときは、明日また使ってください。</li><li><strong>言い換えは目安</strong>：手続き・期限・金額は、原文と、お知らせを出したところで確かめてください。</li></ul>
+      <p>考え方の出典: 出入国在留管理庁・文化庁「<a href="https://www.moj.go.jp/isa/support/portal/plainjapanese_guideline.html" target="_blank" rel="noopener">在留支援のためのやさしい日本語ガイドライン</a>」。最終確認日 <time datetime="2026-10-11">2026-10-11</time>。</p>
+      <p><a href="/post/?from=/otasuke/yasashii/guide.html">ご要望・不具合の報告</a>：いただいた内容をもとに直します。お返事はしていません。読み違いのふりがなを見つけたら、その言葉を教えてください（お知らせの文は送らないでください）。</p>
+      <p>サイト全体の運営者情報・免責事項は<a href="../../about.html">こちら</a>、プライバシーポリシーは<a href="../../privacy-policy.html">こちら</a>です（すべてのツールで共通）。</p>
+    </article>
+
+    <article class="card content" id="changelog">
+      <h2>更新履歴</h2>
+      <ul><li><time datetime="2026-10-11">2026-10-11</time> 公開</li></ul>
+    </article>
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">くらしのおたすけ</a></li>
+        <li><a href="./">やさしい日本語に言い換え</a></li>
+        <li><a href="./guide.html" aria-current="page">使い方</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
