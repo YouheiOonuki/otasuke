@@ -15,6 +15,8 @@
     timeout: '時間がかかりすぎました。もう一度押してください。',
     other: 'うまくいきませんでした。少し待って、もう一度押してください。'
   };
+  // AI の枠切れ（error 'quota'）の文はサーバー（yorozu-ai の QUOTA_MESSAGE）が持つ。ここに写さない（D298）
+  function errText(j) { return (j && j.error === 'quota' && j.message) || ERR[j && j.error] || ERR.other; }
   function $(id) { return document.getElementById(id); }
   var text = $('text');
   var last = null; // 直前の結果（ふりがなの切り替え・翻訳・コピー用）
@@ -67,7 +69,7 @@
     setStatus(waitMsg);
     fetch(API + path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })
       .then(function (r) { return r.json(); })
-      .then(function (j) { if (!j.ok) { setStatus(ERR[j.error] || ERR.other, 'error'); return; } done(j); })
+      .then(function (j) { if (!j.ok) { setStatus(errText(j), 'error'); return; } done(j); })
       .catch(function () { setStatus(ERR.other, 'error'); })
       .then(function () { busy(false); });
   }
@@ -154,7 +156,7 @@
       if (!t) { speakState = 'idle'; showSpeak(); return; }
       fetch(API + '/speak', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ text: t.text, lang: t.lang }) })
         .then(function (r) {
-          if (!r.ok) return r.json().then(function (j) { throw new Error(j.error || 'other'); });
+          if (!r.ok) return r.json().then(function (j) { var e = new Error(j.error || 'other'); e.text = errText(j); throw e; });
           return r.blob();
         })
         .then(function (blob) {
@@ -167,7 +169,7 @@
           audio.addEventListener('ended', function () { dropAudio(); speakDo('ended'); });
           speakDo('ready');
         })
-        .catch(function (e) { setStatus(ERR[e.message] || ERR.other, 'error'); speakDo('error'); });
+        .catch(function (e) { setStatus(e.text || ERR.other, 'error'); speakDo('error'); });
     }
     if (s.action === 'play' && audio) audio.play().catch(function () { dropAudio(); speakDo('error'); });
     showSpeak();
