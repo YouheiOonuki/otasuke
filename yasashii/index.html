@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>やさしい日本語に言い換え（役所やお知らせの文を短く・ふりがなつきで）｜くらしのおたすけ</title>
+  <meta name="description" content="役所やお知らせのむずかしい文を貼ると、短い文・ふりがな・言葉の説明つきの「やさしい日本語」に AI が言い換えます。原文と並べて表示。広告なし・登録なし・保存しません。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/otasuke/yasashii/">
+
+  <meta property="og:title" content="やさしい日本語に言い換え｜くらしのおたすけ">
+  <meta property="og:description" content="むずかしいお知らせの文を、短い文・ふりがなつきに。原文と並べて表示。広告なし・保存しない。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/otasuke/yasashii/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/otasuke/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#7a3a0c" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15120e" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "やさしい日本語に言い換え",
+    "description": "役所やお知らせの文を、短い文・ふりがな・言葉の説明つきのやさしい日本語に、AI で言い換える。原文と並べて表示。入力は保存しない。",
+    "url": "https://yorozu-craft.com/otasuke/yasashii/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja"
+  }
+  </script>
+
+  <!-- 高齢者向けのページなので広告のスクリプトは読み込まない（企画書 29、ROADMAP D118）。所有確認の meta だけ残す -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="./yasashii.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <h1>やさしい日本語に言い換え</h1>
+    <p class="subtitle">むずかしいお知らせの文を、短い文とふりがなで。</p>
+  </header>
+
+  <main class="app-main">
+    <!-- 入力をサーバーで処理するので、otasuke の定型文（入力は端末の外に出ません）の代わりに例外の文（yorozu-plans 7.27・7.33.1 (a)）。tests/pages.test.js に例外として登録 -->
+    <p class="noad">このページは広告なし・登録なし。この道具は入力をサーバー（Cloudflare の AI）で処理します。保存はしません。名前や住所など個人が分かる部分は消してから貼ってください。</p>
+
+    <form id="form" autocomplete="off" onsubmit="return false">
+      <fieldset class="card req">
+        <legend>むずかしい文を貼る</legend>
+        <div class="field">
+          <label for="text">役所やお知らせの文（2,000字まで）</label>
+          <textarea id="text" rows="7" maxlength="2000" spellcheck="false"></textarea>
+          <p class="hint"><span id="count">0</span> / 2,000字</p>
+        </div>
+        <div class="btn-row">
+          <button type="button" id="go" class="btn">言い換える</button>
+          <button type="button" id="paste" class="btn btn-sub">貼り付ける</button>
+          <button type="button" id="clear" class="btn btn-sub">消す</button>
+          <button type="button" id="sample" class="btn btn-sub">例を入れる</button>
+        </div>
+      </fieldset>
+    </form>
+
+    <section class="card result" id="result" aria-live="polite">
+      <p class="always"><strong>AI による言い換えです。原文と意味が違うことがあります。手続きや期限は原文で確かめてください。</strong></p>
+      <div id="status"><p class="small">文を貼って「言い換える」を押すと、ここに原文と並べて出ます。20秒ほどかかることがあります。</p></div>
+      <div class="pair" id="pair" hidden>
+        <div class="col">
+          <h2>原文</h2>
+          <div id="src" class="src"></div>
+        </div>
+        <div class="col">
+          <h2>やさしい日本語</h2>
+          <label class="toggle"><input type="checkbox" id="ruby" checked> ふりがなを出す</label>
+          <div id="out" class="out"></div>
+          <p id="warn" class="warn" hidden></p>
+          <div class="btn-row"><button type="button" id="copy" class="btn btn-sub">言い換えをコピー</button></div>
+        </div>
+      </div>
+    </section>
+
+    <details class="card opt" id="more">
+      <summary>この道具のしくみ・注意</summary>
+      <ul class="plain">
+        <li>貼った文は、言い換えのために Cloudflare のサーバーの AI に送ります。送った文と言い換えは保存しません（Cloudflare も AI の学習に使いません）。</li>
+        <li>1つの文を短く（40字まで）、漢字にふりがな、むずかしい言葉には説明を付けるように AI に頼んでいます。うまくいかない文には「⚠」の印が付きます。</li>
+        <li>原文に無い数字が出た文にも「⚠」が付きます。お金・日付・期限は、かならず原文で確かめてください。</li>
+        <li>1日に使える回数には上限があります。混んでいるときは、明日また使ってください。</li>
+      </ul>
+    </details>
+
+    <p class="no-print"><a href="../">くらしのおたすけ（ほかの道具）</a></p>
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">くらしのおたすけ</a></li>
+        <li><a href="./" aria-current="page">やさしい日本語に言い換え</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="./ruby.js"></script>
+  <script src="./app.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

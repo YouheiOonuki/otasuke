@@ -1,0 +1,15 @@
+/* やさしい日本語に言い換え: 原文と言い換えを左右に（狭い画面では上下） */
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.75rem; }
+.pair[hidden] { display: none; }
+.pair h2 { font-size: 1.1rem; margin: 0 0 0.5rem; }
+.src p, .out p { margin: 0 0 0.6rem; line-height: 2.1; }
+.src { opacity: 0.85; font-size: 0.95em; }
+.out { font-size: 1.1em; }
+.out rt { font-size: 0.55em; }
+.out .marked { background: color-mix(in srgb, #e0a000 18%, transparent); border-radius: 4px; padding: 0 0.25rem; }
+.mark { margin-right: 0.25rem; }
+.warn { font-weight: 600; }
+.toggle { display: inline-flex; gap: 0.4rem; align-items: center; margin-bottom: 0.5rem; min-height: 48px; }
+.toggle input { width: 1.4rem; height: 1.4rem; }
+@media (max-width: 720px) { .pair { grid-template-columns: 1fr; } }
+@media print { .btn-row, .toggle { display: none; } }
