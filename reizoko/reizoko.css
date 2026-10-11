@@ -27,3 +27,13 @@
 .cal .dt { font-weight: 700; }
 .cal .wk-0 { text-decoration: underline; }
 .cal .blankdate { color: #000; }
+
+/* スマホでかざす QR の紙（D318） */
+.pz.qr h2 { font-size: 26pt; }
+.qr-lead { font-size: 14pt; text-align: center; margin: 0 0 6mm; }
+.qr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7mm; }
+.qr-box { border: 1mm solid #000; border-radius: 4mm; padding: 4mm; text-align: center; }
+.qr-code svg { width: 50mm; height: 50mm; display: block; margin: 0 auto 2mm; }
+.qr-name { font-size: 19pt; font-weight: 700; margin: 0 0 1.5mm; }
+.qr-say { font-size: 13pt; margin: 0; }
+.qr-foot { font-size: 12pt; text-align: center; margin-top: 7mm; }

@@ -67,9 +67,10 @@
             <label><input type="radio" name="kind" value="kyukyu" checked> 救急情報シート</label>
             <label><input type="radio" name="kind" value="fukuyaku"> 服薬カレンダー</label>
             <label><input type="radio" name="kind" value="ketsuatsu"> 血圧記録表</label>
+            <label><input type="radio" name="kind" value="qr"> スマホでかざす QR の紙</label>
           </div>
         </div>
-        <div class="field">
+        <div class="field" data-for="kyukyu fukuyaku ketsuatsu">
           <label for="name">名前</label>
           <input type="text" id="name" maxlength="30" placeholder="例：山田 花子">
           <p class="hint">空欄なら手で書く欄にします。</p>
