@@ -137,10 +137,33 @@
       '</tbody></table><p class="foot">上＝上の血圧、下＝下の血圧、脈＝脈拍。受診のときに持っていく。</p></div>';
     return sheet(html, d);
   }
+  // スマホでかざす QR の紙（ROADMAP 7.50 D318。無料の印刷物のセットの 1 枚目と同じもの）。QR は bingo の qrcode.js を同じ URL で読む（写しを持たない）
+  var QR_ITEMS = [
+    { url: 'https://line.me/R/ti/p/@762ovaqd', name: 'LINE で計算', say: '友だちに追加して、文を送ると<br>計算して返事が来ます' },
+    { url: 'https://yorozu-craft.com/otasuke/yasashii/?from=print-qr', name: 'やさしい日本語', say: '役所のお知らせを<br>短く、ふりがなつきに' },
+    { url: 'https://yorozu-craft.com/seido-keisan/kogaku-ryoyohi/?from=print-qr', name: '入院したときの医療費', say: '1 か月に払う上限<br>（高額療養費）の目安' },
+    { url: 'https://yorozu-craft.com/otasuke/kenshin/?from=print-qr', name: '健診の結果をグラフに', say: '毎年の値を並べて<br>変わり方を見る' },
+  ];
+  var qrLoading = false;
+  function qrSvg(url) {
+    if (!window.qrcode) {
+      if (!qrLoading) { qrLoading = true; var s = document.createElement('script'); s.src = '/bingo/vendor/qrcode.js'; s.onload = function () { update(); }; document.head.appendChild(s); }
+      return '<p class="qr-wait">QR を作っています…</p>';
+    }
+    var q = window.qrcode(0, 'M'); q.addData(url); q.make();
+    return q.createSvgTag({ cellSize: 6, margin: 2, scalable: true });
+  }
+  function qrSheet(d) {
+    return sheet('<div class="pz qr"><h2>スマホをかざして使う 4 つの道具</h2>' +
+      '<p class="qr-lead">スマホのカメラを四角に向けると、ページが開きます。無料・登録なし。</p><div class="qr-grid">' +
+      QR_ITEMS.map(function (it) { return '<div class="qr-box"><div class="qr-code">' + qrSvg(it.url) + '</div><p class="qr-name">' + esc(it.name) + '</p><p class="qr-say">' + it.say + '</p></div>'; }).join('') +
+      '</div><p class="qr-foot">冷蔵庫や電話のそばに貼っておくと便利です</p></div>', d);
+  }
+
   function sheet(inner, d) { return '<div class="sheet">' + inner + (d.credit ? O.credit() : '') + '</div>'; }
 
   function render(d) {
-    var html = d.kind === 'kyukyu' ? kyukyuSheet(d) : d.kind === 'fukuyaku' ? fukuyakuSheet(d) : ketsuatsuSheet(d);
+    var html = d.kind === 'kyukyu' ? kyukyuSheet(d) : d.kind === 'fukuyaku' ? fukuyakuSheet(d) : d.kind === 'qr' ? qrSheet(d) : ketsuatsuSheet(d);
     $('sheets').innerHTML = html;
     var n = $('sheets').children.length;
     $('pages-note').textContent = 'A4 縦 ' + n + ' 枚';

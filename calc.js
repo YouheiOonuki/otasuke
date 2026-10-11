@@ -202,7 +202,7 @@
     var times = Array.isArray(f.times) ? f.times.filter(function (t) { return TIMINGS.indexOf(t) >= 0; }) : ['morning', 'noon', 'evening', 'bed'];
     var b = d.ketsuatsu && typeof d.ketsuatsu === 'object' ? d.ketsuatsu : {};
     return {
-      kind: pick(d.kind, ['kyukyu', 'fukuyaku', 'ketsuatsu'], 'kyukyu'),
+      kind: pick(d.kind, ['kyukyu', 'fukuyaku', 'ketsuatsu', 'qr'], 'kyukyu'),
       name: str(d.name, 30),
       kyukyu: kk,
       signCard: bool(d.signCard, true),
