@@ -61,7 +61,7 @@
         <div class="field">
           <label for="text">役所やお知らせの文（2,000字まで）</label>
           <textarea id="text" rows="7" maxlength="2000" spellcheck="false"></textarea>
-          <p class="hint"><span id="count">0</span> / 2,000字</p>
+          <output class="hint count-line" for="text"><span id="count">0</span> / 2,000字</output>
         </div>
         <div class="btn-row">
           <button type="button" id="go" class="btn">言い換える</button>
@@ -73,13 +73,15 @@
           <button type="button" id="photo-btn" class="btn btn-sub">写真から（お知らせを撮る・選ぶ）</button>
           <input type="file" id="photo-file" accept="image/*" hidden>
         </div>
-        <p id="photo-note" class="hint" hidden>写真から読み取った文を上の欄に入れました。読み違いがあれば直して、「言い換える」を押すと、直した文で言い換え直します。</p>
+        <!-- data-keep: 写真を読んだあとの知らせ（押したあとにだけ出る状態の文） -->
+        <p id="photo-note" class="hint" hidden data-keep>写真から読み取った文を上の欄に入れました。読み違いがあれば直して、「言い換える」を押すと、直した文で言い換え直します。</p>
       </fieldset>
     </form>
 
     <section class="card result" id="result" aria-live="polite">
-      <p class="always"><strong>AI による言い換えです。原文と意味が違うことがあります。手続きや期限は原文で確かめてください。</strong></p>
-      <div id="status"><p class="small">文を貼って「言い換える」を押すと、ここに原文と並べて出ます。20秒ほどかかることがあります。</p></div>
+      <!-- data-keep: AI の出力は目安（D117） -->
+      <p class="always" data-keep><strong>AI による言い換えです。原文と意味が違うことがあります。手続きや期限は原文で確かめてください。</strong></p>
+      <div id="status"></div>
       <div class="pair" id="pair" hidden>
         <div class="col">
           <h2>原文</h2>
@@ -128,10 +130,10 @@
       </ul>
     </details>
 
-    <section class="card opt" lang="en" id="en">
-      <h2>For people learning Japanese</h2>
+    <details class="card opt" lang="en" id="en">
+      <summary>For people learning Japanese</summary>
       <p>Paste a Japanese notice, or take a photo of it, and this tool rewrites it in plain Japanese with furigana. The result is also shown in English, Chinese, Vietnamese or Portuguese. The text and photo are processed by AI on Cloudflare's servers and are not stored. AI rewrites and translations can be wrong, so check dates and amounts against the original Japanese notice.</p>
-    </section>
+    </details>
 
     <p class="no-print"><a href="./guide.html">使い方・気をつけること・よくある質問</a> · <a href="../">くらしのおたすけ（ほかの道具）</a></p>
   </main>
