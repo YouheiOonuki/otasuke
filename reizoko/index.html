@@ -73,12 +73,10 @@
         <div class="field" data-for="kyukyu fukuyaku ketsuatsu">
           <label for="name">名前</label>
           <input type="text" id="name" maxlength="30" placeholder="例：山田 花子">
-          <p class="hint">空欄なら手で書く欄にします。</p>
         </div>
         <div class="field" data-for="fukuyaku ketsuatsu">
           <label for="start">はじめの日</label>
           <input type="date" id="start">
-          <p class="hint">空欄なら日付も手で書く欄にします。</p>
         </div>
         <div class="field" data-for="fukuyaku ketsuatsu">
           <span class="label" id="l-days">日数</span>
@@ -96,7 +94,7 @@
       </div>
 
       <section class="print-host" aria-label="見本">
-        <p class="preview-cap">見本（このまま A4 に印刷されます）</p>
+        <h2 class="preview-cap">見本</h2>
         <div class="sheets-wrap" id="wrap"><div class="sheets" id="sheets"></div></div>
       </section>
 
@@ -166,7 +164,7 @@
         <button type="button" id="backup-import" class="btn btn-sub">ファイルから読み込む</button>
         <button type="button" class="btn btn-sub" data-reset-storage="otasuke_reizoko">保存した内容をすべて消す（初期状態に戻す）</button>
       </div>
-      <p class="small">リンクに入るのは紙の種類と日数などの形だけです（名前・病気・薬・電話は入りません）。家族の共用の端末では、印刷のあと「入力を消す」を押してください。</p>
+      <p class="small">リンクに入るのは紙の種類と日数などの形だけです（名前・病気・薬・電話は入りません）。家族の共用の端末では、印刷のあと「入力を消す」で消します。</p>
       <input type="file" id="backup-file" accept=".json,application/json" hidden>
       <p id="backup-msg" class="small" aria-live="polite"></p>
       <p id="share-msg" class="small" aria-live="polite"></p>

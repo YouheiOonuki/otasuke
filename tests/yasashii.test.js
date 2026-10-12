@@ -53,7 +53,7 @@ test('多言語（K164）: 4 言語と「やさしい日本語のまま」。ペ
   const html = read('yasashii/index.html');
   for (const l of YFlow.LANGS) assert.ok(html.includes(`name="lang" value="${l.code}"`), l.code);
   assert.ok(html.includes('保存はしません（写真も保存しません）'));
-  assert.match(html, /<section class="card opt" lang="en" id="en">/);
+  assert.match(html, /<details class="card opt" lang="en" id="en">/, "英語の段落は折りたたみ（段 3。画面の文を置かない）");
 });
 
 test('読み上げ（K165）: 押すと用意 → 届けば再生 → 再生中に押すと止める → 終われば元に戻る。用意中に押してもやめられる', () => {

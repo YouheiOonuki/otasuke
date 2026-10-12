@@ -53,7 +53,8 @@
 
   <main class="app-main">
     <p class="noad">このページは広告なし・登録なし・入力は端末の外に出ません。</p>
-    <p class="bodynote">これは健診の結果を並べて見る道具で、医療の検査ではありません。気になるときは、健診を受けた所か、かかりつけの医師へ。</p>
+    <!-- data-keep: 医療の検査ではない旨と受診の案内（安全上の注意 R4。段 3 でも画面に残す） -->
+    <p class="bodynote" data-keep>これは健診の結果を並べて見る道具で、医療の検査ではありません。気になるときは、健診を受けた所か、かかりつけの医師へ。</p>
 
     <div class="card person no-print">
       <div class="person-row">
@@ -90,13 +91,12 @@
         <button type="button" id="print" class="btn btn-big">A4 1 枚に印刷する</button>
         <button type="button" id="sample" class="btn btn-sub">例を入れて見る</button>
       </div>
-      <p class="small">線は厚生労働省「標準的な健診・保健指導プログラム（令和6年度版）」の値です。くわしくは<a href="./guide.html">使い方</a>に。</p>
     </section>
 
     <details class="card opt no-print" id="opt-entry">
       <summary>結果を 1 回分入れる: <span class="opt-state"></span></summary>
       <form id="entry" autocomplete="off" onsubmit="return false">
-        <p class="small">結果票の数字を、そのまま入れてください。分からない欄は空のままで。</p>
+        <p class="small">結果票の数字のまま入れます。分からない欄は空のままで。</p>
         <div class="when-row">
           <div class="field">
             <label for="e-year">受けた年</label>
@@ -124,7 +124,7 @@
     </details>
 
     <section class="print-host" id="print-host" aria-label="印刷する紙" hidden>
-      <p class="preview-cap">印刷の見本（このまま A4 縦 1 枚に印刷されます）</p>
+      <h2 class="preview-cap">印刷の見本</h2>
       <div class="sheets-wrap" id="wrap"><div class="sheets" id="sheets"></div></div>
     </section>
 

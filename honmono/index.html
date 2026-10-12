@@ -59,7 +59,8 @@
         <legend>届いた文を貼る</legend>
         <div class="field">
           <label for="text">メールや SMS の文（リンクだけでも）</label>
-          <p class="hint">リンクは開かずに、長押しして「リンクをコピー」。</p>
+          <!-- data-keep: リンクを開かない具体的な動作（安全上の注意。段 3 でも画面に残す） -->
+          <p class="hint" data-keep>リンクは開かずに、長押しして「リンクをコピー」。</p>
           <textarea id="text" rows="5" spellcheck="false" autocapitalize="off"></textarea>
         </div>
         <div class="btn-row">
@@ -71,15 +72,15 @@
     </form>
 
     <section class="card result" id="result" aria-live="polite">
-      <p class="always"><strong>どんな結果でも、リンクは開かず</strong>、いつもの公式アプリ・ブックマーク・前から知っている電話番号で確かめてください。</p>
-      <div id="out"><p class="small">文を貼ると、ここに確認すべき点が出ます。この画面は「安全」とは判定しません。</p></div>
+      <p class="always" data-keep><strong>どんな結果でも、リンクは開かず</strong>、いつもの公式アプリ・ブックマーク・前から知っている電話番号で確かめてください。</p>
+      <div id="out"><p class="small" data-keep>この画面は「安全」とは判定しません。</p></div>
     </section>
 
     <details class="card opt" id="more">
       <summary>この画面で分かること・分からないこと</summary>
       <ul class="plain">
         <li>分かること: リンクの本当の持ち主の単位（登録ドメイン）、似せた綴り、ほかの国の文字、短縮 URL、「@」の飾り。</li>
-        <li>分からないこと: そのサイトが偽物かどうか、送り主が本物かどうか。送信元の名前やアドレスは簡単に偽装できます（警察庁）。</li>
+        <li>分からないこと: そのサイトが偽物かどうか、送り主が本物かどうか。送信元の名前やアドレスは偽装できます（警察庁）。</li>
         <li>メールでは、見えている URL と、押したときの行き先がちがうことがあります（国税庁の事例）。貼るのは「リンクをコピー」で取ったものに。</li>
         <li>貼った文は、この端末の中で読むだけです。保存も送信もしません。リンクも開きません。</li>
       </ul>
