@@ -53,7 +53,8 @@
 
   <main class="app-main">
     <!-- 入力をサーバーで処理するので、otasuke の定型文（入力は端末の外に出ません）の代わりに例外の文（yorozu-plans 7.27・7.33.1 (a)）。tests/pages.test.js に例外として登録 -->
-    <p class="noad">このページは広告なし・登録なし。この道具は入力をサーバー（Cloudflare の AI）で処理します。保存はしません（写真も保存しません）。名前や住所など個人が分かる部分は消してから貼ってください。</p>
+    <!-- data-keep: 定型（D118 の広告なし・登録なし＋7.27 のサーバーで処理する道具の 1 文と、入れたものの扱い）。check-site とテストが文字どおりに見張る -->
+    <p class="noad" data-keep>このページは広告なし・登録なし。この道具は入力をサーバー（Cloudflare の AI）で処理します。保存はしません（写真も保存しません）。名前や住所など個人が分かる部分は消してから貼ってください。</p>
 
     <form id="form" autocomplete="off" onsubmit="return false">
       <fieldset class="card req">
@@ -73,8 +74,7 @@
           <button type="button" id="photo-btn" class="btn btn-sub">写真から（お知らせを撮る・選ぶ）</button>
           <input type="file" id="photo-file" accept="image/*" hidden>
         </div>
-        <!-- data-keep: 写真を読んだあとの知らせ（押したあとにだけ出る状態の文） -->
-        <p id="photo-note" class="hint" hidden data-keep>写真から読み取った文を上の欄に入れました。読み違いがあれば直して、「言い換える」を押すと、直した文で言い換え直します。</p>
+        <output id="photo-note" class="hint" hidden>写真から読み取った文を上の欄に入れました。読み違いがあれば直して、「言い換える」を押すと、直した文で言い換え直します。</output>
       </fieldset>
     </form>
 
