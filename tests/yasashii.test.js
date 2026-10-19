@@ -86,3 +86,17 @@ test('AI の枠切れ（D298）: サーバーの文（error quota の message）
   assert.equal((js.match(/[(=] ?errText\(j\)/g) || []).length, 2, '言い換え・写真・訳（post）と読み上げの 2 か所で使う');
   assert.doesNotMatch(js, /枠を使い切りました/);
 });
+
+// 使い方ページの「1 日の上限」の数は yorozu-ai の wrangler.jsonc の vars が正本（DAILY_LIMIT・PHOTO_DAILY_LIMIT）。
+// 2 か所に持つので突き合わせる（yorozu-plans CLAUDE.md「値を 2 箇所に持ってよいのは機械が突き合わせられるときだけ」）。
+// PC で隣に yorozu-ai があるときだけ見る（無ければ飛ばす）
+test('使い方の 1 日の上限の数が yorozu-ai の設定と同じ。プライバシーポリシーの 7.7 へのリンク', (t) => {
+  const guide = read('yasashii/guide.html');
+  assert.match(guide, /privacy-policy\.html#yasashii/);
+  const wf = path.join(__dirname, '..', '..', 'yorozu-ai', 'wrangler.jsonc');
+  if (!fs.existsSync(wf)) return t.skip('yorozu-ai が隣に無い');
+  const w = fs.readFileSync(wf, 'utf8');
+  const v = (k) => Number((w.match(new RegExp(`"${k}":\\s*"(\\d+)"`)) || [])[1]);
+  assert.ok(guide.includes(`合わせて 1 日 ${v('DAILY_LIMIT')} 回`), `DAILY_LIMIT ${v('DAILY_LIMIT')}`);
+  assert.ok(guide.includes(`写真は 1 日 ${v('PHOTO_DAILY_LIMIT')} 回`), `PHOTO_DAILY_LIMIT ${v('PHOTO_DAILY_LIMIT')}`);
+});
