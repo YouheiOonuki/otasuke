@@ -18,8 +18,8 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="theme-color" content="#7a3a0c" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#15120e" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#eef0f2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15191d" media="(prefers-color-scheme: dark)">
 
   <script type="application/ld+json">
   {
@@ -52,7 +52,7 @@
   </header>
 
   <main class="app-main">
-    <p class="noad">このページは広告なし・登録なし・入力は端末の外に出ません。</p>
+    <p class="notice">このページは広告なし・登録なし・入力は端末の外に出ません。</p>
     <!-- data-keep: 医療の検査ではない旨と受診の案内（安全上の注意 R4。段 3 でも画面に残す） -->
     <p class="bodynote" data-keep>これは健診の結果を並べて見る道具で、医療の検査ではありません。気になるときは、健診を受けた所か、かかりつけの医師へ。</p>
 
@@ -60,7 +60,7 @@
       <div class="person-row">
         <label for="person">だれの記録</label>
         <select id="person"></select>
-        <button type="button" id="add-person" class="btn btn-sub">人を足す</button>
+        <button type="button" id="add-person" class="btn">人を足す</button>
       </div>
       <details class="opt" id="opt-person">
         <summary>名前と性別: <span class="opt-state"></span></summary>
@@ -76,7 +76,7 @@
             <label><input type="radio" name="sex" value="" checked> 選ばない</label>
           </div>
         </div>
-        <div class="btn-row"><button type="button" id="del-person" class="btn btn-sub">この人の記録をすべて消す</button></div>
+        <div class="btn-row"><button type="button" id="del-person" class="btn">この人の記録をすべて消す</button></div>
       </details>
     </div>
 
@@ -87,9 +87,9 @@
       <p class="legend small" id="legend"></p>
       <p class="small" id="empty-items"></p>
       <div class="btn-row no-print">
-        <button type="button" id="open-entry" class="btn btn-big">結果を入れる</button>
-        <button type="button" id="print" class="btn btn-big">A4 1 枚に印刷する</button>
-        <button type="button" id="sample" class="btn btn-sub">例を入れて見る</button>
+        <button type="button" id="open-entry" class="btn">結果を入れる</button>
+        <button type="button" id="print" class="btn-primary">A4 1 枚に印刷する</button>
+        <button type="button" id="sample" class="btn">例を入れて見る</button>
       </div>
     </section>
 
@@ -110,10 +110,10 @@
         <p id="e-mode" class="small" aria-live="polite"></p>
         <div class="grid" id="e-fields"></div>
         <label class="check"><input type="checkbox" id="e-random"> 採血は空腹時ではなかった（食後 10 時間たっていない＝随時）</label>
-        <p id="e-msg" class="warn" aria-live="polite"></p>
+        <p id="e-msg" class="field-error" aria-live="polite"></p>
         <div class="btn-row">
           <button type="button" id="e-save" class="btn">この回を保存する</button>
-          <button type="button" id="e-clear" class="btn btn-sub">欄を空にする</button>
+          <button type="button" id="e-clear" class="btn">欄を空にする</button>
         </div>
       </form>
     </details>
@@ -132,14 +132,14 @@
       <summary>入力の保存・書き出し・消す</summary>
       <p class="small">入力内容はこの端末のブラウザ（localStorage、キー <code>otasuke_kenshin</code>）にだけ保存され、外部には送信されません。書き出し・読み込み・消去はこの画面のボタンから。</p>
       <div class="btn-row">
-        <button type="button" id="csv-export" class="btn btn-sub">CSV に書き出す</button>
-        <button type="button" id="csv-import" class="btn btn-sub">CSV から読み込む</button>
+        <button type="button" id="csv-export" class="btn">CSV に書き出す</button>
+        <button type="button" id="csv-import" class="btn">CSV から読み込む</button>
       </div>
       <p class="small">CSV は表計算ソフトで開けます（1 行が 1 人の 1 回）。読み込むと、同じ名前の人の同じ年月は置き換えます。</p>
       <div class="btn-row">
-        <button type="button" id="backup-export" class="btn btn-sub">ファイルに書き出す</button>
-        <button type="button" id="backup-import" class="btn btn-sub">ファイルから読み込む</button>
-        <button type="button" class="btn btn-sub" data-reset-storage="otasuke_kenshin">保存した内容をすべて消す（初期状態に戻す）</button>
+        <button type="button" id="backup-export" class="btn">ファイルに書き出す</button>
+        <button type="button" id="backup-import" class="btn">ファイルから読み込む</button>
+        <button type="button" class="btn" data-reset-storage="otasuke_kenshin">保存した内容をすべて消す（初期状態に戻す）</button>
       </div>
       <input type="file" id="csv-file" accept=".csv,text/csv" hidden>
       <input type="file" id="backup-file" accept=".json,application/json" hidden>

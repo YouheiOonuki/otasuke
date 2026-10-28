@@ -18,8 +18,8 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="theme-color" content="#7a3a0c" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#15120e" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#eef0f2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15191d" media="(prefers-color-scheme: dark)">
 
   <script type="application/ld+json">
   {
@@ -46,7 +46,7 @@
 </head>
 <body>
 
-  <div class="fixbar" id="fixbar" role="status" hidden>
+  <div class="fixed-bar" id="fixbar" role="status" hidden>
     <button type="button"><span id="fixbar-text"></span></button>
   </div>
 
@@ -56,7 +56,7 @@
   </header>
 
   <main class="app-main">
-    <p class="noad">このページは広告なし・登録なし・入力は端末の外に出ません。</p>
+    <p class="notice">このページは広告なし・登録なし・入力は端末の外に出ません。</p>
 
     <form id="form" autocomplete="off" onsubmit="return false">
       <fieldset class="card req">
@@ -74,12 +74,12 @@
           </div>
         </div>
         <div class="btn-row">
-          <button type="button" id="preset" class="btn btn-sub">よくある項目を行に入れる</button>
+          <button type="button" id="preset" class="btn">よくある項目を行に入れる</button>
         </div>
       </fieldset>
 
       <div class="btn-row no-print">
-        <button type="button" id="print" class="btn btn-big">印刷する</button>
+        <button type="button" id="print" class="btn-primary">印刷する</button>
         <span id="pages-note" aria-live="polite"></span>
       </div>
 
@@ -90,9 +90,9 @@
 
       <details class="card opt" id="opt-rows">
         <summary>行を書く: <span class="opt-state"></span></summary>
-        <p class="warn">パスワードは書かないでください。書くのは「控えの場所」（例: 青い手帳・金庫の封筒）だけ。</p>
+        <p class="notice">パスワードは書かないでください。書くのは「控えの場所」（例: 青い手帳・金庫の封筒）だけ。</p>
         <div id="rows"></div>
-        <div class="btn-row"><button type="button" id="add" class="btn btn-sub">＋ 行を足す</button></div>
+        <div class="btn-row"><button type="button" id="add" class="btn">＋ 行を足す</button></div>
       </details>
 
       <details class="card opt" id="opt-print">
@@ -106,9 +106,9 @@
       <summary>入力の保存・書き出し・消す</summary>
       <p class="small">入力内容はこの端末のブラウザ（localStorage、キー <code>otasuke_daicho</code>）にだけ保存され、外部には送信されません。書き出し・読み込みはこの画面のボタンから。</p>
       <div class="btn-row">
-        <button type="button" id="backup-export" class="btn btn-sub">ファイルに書き出す</button>
-        <button type="button" id="backup-import" class="btn btn-sub">ファイルから読み込む</button>
-        <button type="button" class="btn btn-sub" data-reset-storage="otasuke_daicho">保存した内容をすべて消す（初期状態に戻す）</button>
+        <button type="button" id="backup-export" class="btn">ファイルに書き出す</button>
+        <button type="button" id="backup-import" class="btn">ファイルから読み込む</button>
+        <button type="button" class="btn" data-reset-storage="otasuke_daicho">保存した内容をすべて消す（初期状態に戻す）</button>
       </div>
       <p class="small">書き出したファイルには ID や契約先が入ります。紙と同じように、しまう場所に気をつけてください。共有リンクはありません。</p>
       <input type="file" id="backup-file" accept=".json,application/json" hidden>

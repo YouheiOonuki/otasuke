@@ -132,7 +132,7 @@
       return '<tr><td>' + esc(K.whenLabel(r.when)) + (r.random ? '<br><span class="small">随時</span>' : '') + '</td>' +
         LIST_COLS.map(function (k) { return '<td>' + (r.v[k] === undefined ? '—' : r.v[k]) + '</td>'; }).join('') +
         '<td>' + Object.keys(r.v).length + '</td>' +
-        '<td><button type="button" class="btn btn-sub btn-s" data-edit="' + r.when + '">直す</button> <button type="button" class="btn btn-sub btn-s" data-del="' + r.when + '">消す</button></td></tr>';
+        '<td><button type="button" class="btn" data-edit="' + r.when + '">直す</button> <button type="button" class="btn" data-del="' + r.when + '">消す</button></td></tr>';
     }).join('');
     $('rec-table').innerHTML = p.records.length ? head + '<tbody>' + body + '</tbody>' : '<tbody><tr><td>まだありません。</td></tr></tbody>';
   }
