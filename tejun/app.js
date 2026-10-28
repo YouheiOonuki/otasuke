@@ -41,8 +41,8 @@
     $('photos').innerHTML = data.steps.map(function (s, i) {
       return '<div class="photo-row"><span class="ttl">' + (i + 1) + '. ' + esc(s.text || '（手順なし）') + '</span>' +
         (s.photo ? '<img src="' + s.photo + '" alt="' + (i + 1) + ' の写真">' : '') +
-        '<label class="btn btn-sub">写真を選ぶ<input type="file" accept="image/*" data-i="' + i + '" hidden></label>' +
-        (s.photo ? '<button type="button" class="btn btn-sub" data-del="' + i + '">外す</button>' : '') + '</div>';
+        '<label class="btn">写真を選ぶ<input type="file" accept="image/*" data-i="' + i + '" hidden></label>' +
+        (s.photo ? '<button type="button" class="btn" data-del="' + i + '">外す</button>' : '') + '</div>';
     }).join('') + '<p id="photo-msg" class="small" aria-live="polite"></p>';
   }
   function shrink(file) {

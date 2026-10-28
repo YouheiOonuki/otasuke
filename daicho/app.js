@@ -24,8 +24,8 @@
         FIELDS.map(function (f) {
           return '<div class="field"><label for="r' + i + '-' + f[0] + '">' + f[1] + '</label><input type="text" id="r' + i + '-' + f[0] + '" data-f="' + f[0] + '" value="' + esc(r[f[0]]) + '" placeholder="' + esc(f[2]) + '" maxlength="60"></div>';
         }).join('') +
-        '<p class="warn" data-warn hidden>パスワードのように見えます。台帳には控えの場所だけを書いてください。</p>' +
-        '<button type="button" class="btn btn-sub" data-del>この行を消す</button></fieldset>';
+        '<p class="field-error" data-warn hidden>パスワードのように見えます。台帳には控えの場所だけを書いてください。</p>' +
+        '<button type="button" class="btn" data-del>この行を消す</button></fieldset>';
     }).join('');
     checkWarn();
   }

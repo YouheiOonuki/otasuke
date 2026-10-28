@@ -1,13 +1,13 @@
 /* 健診結果の経年グラフ（../style.css のトークンだけで色を決める。印刷する紙は白黒） */
 
 /* 体を測る道具の定型文（WRITING 2 章）。結果より前に置く */
-.bodynote { font-size: 0.98rem; margin: 0 0 0.9rem; padding: 0.5rem 0.8rem; border: 1px solid var(--border); border-radius: 6px; background: var(--card); }
+.bodynote { font-size: 0.98rem; margin: 0 0 0.9rem; padding: 0.5rem 0.8rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); }
 
 .person .person-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.7rem; }
 .person .person-row label { font-weight: 700; }
 .person .person-row select { width: auto; flex: 1 1 10rem; max-width: 18rem; }
 .person details.opt { margin-top: 0.6rem; }
-.person details.opt > summary { cursor: pointer; min-height: 48px; padding: 0.6rem 0; color: var(--accent); font-weight: 700; }
+.person details.opt > summary { min-height: 48px; }
 .person .field { margin-top: 0.6rem; }
 
 .result-sum { font-weight: 700; font-size: 1.05rem; }
@@ -55,7 +55,8 @@
 table.rec { border-collapse: collapse; font-size: 0.92rem; width: 100%; }
 table.rec th, table.rec td { border-bottom: 1px solid var(--border); padding: 0.35rem 0.4rem; text-align: right; white-space: nowrap; }
 table.rec th:first-child, table.rec td:first-child { text-align: left; }
-.btn-s { min-height: 44px; padding: 0.3rem 0.7rem; font-size: 0.95rem; }
+table.rec .btn { min-height: 44px; padding: var(--sp-1) var(--sp-3); font-size: 0.95rem; }
+#open-entry { font-size: 1.25rem; min-height: 60px; padding: var(--sp-3) var(--sp-6); }   /* 主の操作（印刷）と並ぶ大きな押し場所 */
 
 /* 印刷する紙（A4 縦 1 枚。見本は common.js が幅に合わせて縮める） */
 .kenshin-sheet .pin { position: absolute; left: 9mm; right: 9mm; top: 8mm; bottom: 9mm; display: flex; flex-direction: column; }

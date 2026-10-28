@@ -102,22 +102,22 @@ body.light .c-week { color: #7a1f00; }
 
 .setup {
   position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; z-index: 5;
-  background: #f0ebe0; color: #221b12; font-size: 18px; line-height: 1.7;
+  background: var(--bg); color: var(--text); font-size: 18px; line-height: 1.7;
 }
 .setup-in { max-width: 640px; margin: 0 auto; padding: 16px; box-sizing: border-box; }
-.setup h1 { font-size: 28px; color: #7a3a0c; margin: 8px 0; }
-.setup .noad { font-weight: 700; padding: 8px 12px; border-left: 5px solid #7a3a0c; background: #fffdf8; margin: 0 0 12px; }
-.setup fieldset { border: 1px solid #b9a887; border-radius: 8px; padding: 8px 14px 14px; margin: 12px 0; background: #fffdf8; }
-.setup legend { font-weight: 700; color: #7a3a0c; padding: 0 4px; }
+.setup h1 { font-size: 28px; margin: 8px 0; }
+.setup .notice { font-weight: 700; margin: 0 0 12px; }
+.setup fieldset { border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 14px 14px; margin: 12px 0; background: var(--card); }
+.setup legend { font-weight: 700; padding: 0 4px; }
 .setup .check { display: block; padding: 10px 0 10px 32px; text-indent: -32px; line-height: 1.5; }
 .setup input[type=checkbox], .setup input[type=radio] { width: 22px; height: 22px; vertical-align: middle; margin-right: 8px; }
-.setup .choices label { display: inline-block; min-height: 44px; line-height: 44px; margin: 6px 10px 0 0; padding: 0 12px; border: 2px solid #b9a887; border-radius: 8px; }
+.setup .choices label { display: inline-block; min-height: 44px; line-height: 44px; margin: 6px 10px 0 0; padding: 0 12px; border: 2px solid var(--input-border); border-radius: var(--radius); }
 .setup .btns { margin: 16px 0 8px; }
-.setup .btn { font: inherit; font-size: 22px; font-weight: 700; min-height: 60px; padding: 0 24px; margin: 0 10px 10px 0; border-radius: 10px; border: 2px solid #7a3a0c; background: #7a3a0c; color: #fffdf8; }
-.setup .btn.sub { background: #fffdf8; color: #7a3a0c; font-size: 18px; min-height: 52px; }
+.setup .btn, .setup .btn-primary { font-size: 18px; min-height: 52px; padding: 0 24px; margin: 0 10px 10px 0; border-width: 2px; }
+.setup .btn-primary { font-size: 22px; min-height: 60px; }
 .setup .status { font-weight: 700; min-height: 1.7em; }
 .setup details { margin: 8px 0; }
-.setup summary { min-height: 48px; line-height: 48px; cursor: pointer; color: #7a3a0c; font-weight: 700; }
+.setup summary { min-height: 48px; line-height: 48px; padding-block: 0; }
 .setup ul { padding-left: 1.3em; margin: 0; }
-.setup a { color: #7a3a0c; }
 .setup .links { font-size: 16px; margin-top: 16px; }
+.setup .links a { display: inline-flex; align-items: center; min-height: 48px; }   /* otasuke の押し場所の基準 48px（小さくしない） */

@@ -22,7 +22,7 @@
     .bk-form .row { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; align-items: center; margin: 0.4rem 0; }
     .bk-form input[type="text"] { max-width: 16rem; }
     #bk-info { font-size: 0.95rem; }
-    @media screen { .bk-host { max-height: 75vh; overflow: auto; border: 1px solid var(--line, #ccc); padding: 8px; } .bk-book { zoom: 0.5; } }
+    @media screen { .bk-host { max-height: 75vh; overflow: auto; border: 1px solid var(--border); padding: 8px; } .bk-book { zoom: 0.5; } }
   </style>
 </head>
 <body>
@@ -33,7 +33,7 @@
   </header>
 
   <main class="app-main">
-    <p class="noad">このページは広告なし・登録なし・入力は端末の外に出ません。</p>
+    <p class="notice">このページは広告なし・登録なし・入力は端末の外に出ません。</p>
 
     <form class="card bk-form no-print" id="bk-form" autocomplete="off" onsubmit="return false">
       <div class="row">
@@ -46,8 +46,8 @@
         <label class="check"><input type="checkbox" id="bk-bleed"> 裁ち落としあり（ページを幅 0.125・高さ 0.25 インチ大きく）</label>
       </div>
       <div class="btn-row">
-        <button type="button" id="bk-make" class="btn btn-sub">この番号で組む</button>
-        <button type="button" id="bk-print" class="btn btn-big">印刷する（PDF に保存）</button>
+        <button type="button" id="bk-make" class="btn">この番号で組む</button>
+        <button type="button" id="bk-print" class="btn-primary">印刷する（PDF に保存）</button>
       </div>
       <p id="bk-info" aria-live="polite"></p>
       <details>
