@@ -91,7 +91,7 @@ html { font-size: 112.5%; }   /* 18px */
 
 /* 入力（大きめ） */
 .field { margin-bottom: var(--sp-4); }
-.field > label, .field > .label { display: block; font-weight: 700; margin-bottom: var(--sp-1); }
+.field > label, .field > .label { display: block; font-weight: 700; margin-bottom: var(--sp-1); font-size: var(--fs-m); }
 .field .hint { font-size: 0.9rem; color: var(--muted); margin-bottom: var(--sp-2); }
 output.hint { display: block; font-size: 0.9rem; font-weight: 400; }  /* 字数・読み取りの知らせ（皮の output は結果の大きな数字なので戻す） */
 input[type="text"], input[type="tel"], input[type="date"], input[type="number"], select, textarea {
@@ -128,6 +128,7 @@ textarea { min-height: 5.5rem; max-width: 100%; padding-block: var(--sp-2); }
 /* 読みもの（guide.html） */
 .content { overflow-wrap: anywhere; }   /* 長いドメイン名などで横にはみ出さない */
 .content h3 { font-size: 1.02rem; margin: var(--sp-4) 0 var(--sp-1); }
+.content p, .content li { font-size: var(--fs-m); }   /* 本文は大きな字のまま（シニア向け。小さくしない） */
 .content p + p { margin-top: var(--sp-2); }
 .content ul, .content ol { padding-left: 1.4rem; margin: var(--sp-1) 0; }
 .content li + li { margin-top: var(--sp-1); }
@@ -138,7 +139,7 @@ textarea { min-height: 5.5rem; max-width: 100%; padding-block: var(--sp-2); }
 .src { font-size: 0.85rem; color: var(--muted); word-break: break-all; }
 
 /* 行に 1 つだけのリンク（使い方への行・出典の一覧）も押せる高さに */
-.app-main > p.no-print > a, .content li > a:only-child, .src a { display: inline-flex; align-items: center; min-height: 48px; }
+.app-main > p.no-print > a, .app-main > p.small > a:only-child, .content li > a:only-child, .src a { display: inline-flex; align-items: center; min-height: 48px; }
 
 /* ハブ（トップ）のカード */
 .tools { list-style: none; display: grid; gap: var(--sp-3); }
