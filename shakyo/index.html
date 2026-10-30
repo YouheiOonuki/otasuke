@@ -77,13 +77,6 @@
             <label><input type="radio" name="size" value="xl"> 特大（1 行 14 字）</label>
           </div>
         </div>
-        <div class="field">
-          <span class="label" id="l-spacing">行間</span>
-          <div class="choices" role="radiogroup" aria-labelledby="l-spacing">
-            <label><input type="radio" name="spacing" value="normal" checked> ふつう</label>
-            <label><input type="radio" name="spacing" value="wide"> ひろい</label>
-          </div>
-        </div>
       </fieldset>
 
       <div class="btn-row no-print">
@@ -97,7 +90,14 @@
       </section>
 
       <details class="card opt" id="opt-more">
-        <summary>字の濃さ・題・願文・名前: <span class="opt-state"></span></summary>
+        <summary>行間・字の濃さ・題・願文・名前: <span class="opt-state"></span></summary>
+        <div class="field">
+          <span class="label" id="l-spacing">行間</span>
+          <div class="choices" role="radiogroup" aria-labelledby="l-spacing">
+            <label><input type="radio" name="spacing" value="normal" checked> ふつう</label>
+            <label><input type="radio" name="spacing" value="wide"> ひろい</label>
+          </div>
+        </div>
         <div class="field">
           <span class="label" id="l-shade">なぞる字の濃さ</span>
           <div class="choices" role="radiogroup" aria-labelledby="l-shade">

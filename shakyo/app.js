@@ -55,7 +55,7 @@
     $('sheets').innerHTML = html;
     $('pages-note').textContent = 'A4 ' + (L.orient === 'land' ? '横' : '縦') + ' ' + L.pages.length + ' 枚';
     O.fitPreview($('wrap'));
-    window.YorozuScreen.detailsSummary({ 'opt-more': (d.kind === 'trace' ? { light: 'うすい', normal: 'ふつう', dark: 'こい' }[d.shade] + '・' : '') + (d.title === 'with' ? '仏説あり' : '仏説なし') + (d.prayer ? '・為' + d.prayer : '') + (d.name ? '・名前あり' : '') });
+    window.YorozuScreen.detailsSummary({ 'opt-more': (d.spacing === 'wide' ? '行間ひろい・' : '行間ふつう・') + (d.kind === 'trace' ? { light: 'うすい', normal: 'ふつう', dark: 'こい' }[d.shade] + '・' : '') + (d.title === 'with' ? '仏説あり' : '仏説なし') + (d.prayer ? '・為' + d.prayer : '') + (d.name ? '・名前あり' : '') });
   }
 
   function update() {
