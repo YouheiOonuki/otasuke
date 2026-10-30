@@ -80,12 +80,6 @@
           <textarea id="steps" rows="6" placeholder="例：「LINE」を押す"></textarea>
           <p class="small" id="steps-note" aria-live="polite"></p>
         </div>
-        <div class="field">
-          <label for="helpName">困ったら電話する人</label>
-          <input type="text" id="helpName" maxlength="20" placeholder="例：ひろし">
-          <label for="helpTel" class="small">電話番号</label>
-          <input type="tel" id="helpTel" maxlength="20" placeholder="例：090-0000-0000">
-        </div>
       </fieldset>
 
       <div class="btn-row no-print">
@@ -97,6 +91,16 @@
         <h2 class="preview-cap">見本</h2>
         <div class="sheets-wrap" id="wrap"><div class="sheets" id="sheets"></div></div>
       </section>
+
+      <details class="card opt" id="opt-help">
+        <summary>困ったら電話する人: <span class="opt-state"></span></summary>
+        <div class="field">
+          <label for="helpName">困ったら電話する人</label>
+          <input type="text" id="helpName" maxlength="20" placeholder="例：ひろし">
+          <label for="helpTel" class="small">電話番号</label>
+          <input type="tel" id="helpTel" maxlength="20" placeholder="例：090-0000-0000">
+        </div>
+      </details>
 
       <details class="card opt" id="opt-photo">
         <summary>画面の写真を入れる: <span class="opt-state"></span></summary>

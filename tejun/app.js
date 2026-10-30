@@ -101,6 +101,7 @@
     O.fitPreview($('wrap'));
     var nPhoto = data.steps.filter(function (s) { return s.photo; }).length;
     window.YorozuScreen.detailsSummary({
+      'opt-help': data.helpName || data.helpTel ? (data.helpName || data.helpTel) : '手で書く',
       'opt-photo': nPhoto ? nPhoto + ' 枚' : 'なし',
       'opt-print': (data.layout === 'a5' ? '2 枚どり' : 'A4 に 1 枚') + '・' + (data.credit ? '作成元を入れる' : '作成元なし'),
     });
