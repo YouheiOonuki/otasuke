@@ -166,6 +166,8 @@
     var html = d.kind === 'kyukyu' ? kyukyuSheet(d) : d.kind === 'fukuyaku' ? fukuyakuSheet(d) : d.kind === 'qr' ? qrSheet(d) : ketsuatsuSheet(d);
     $('sheets').innerHTML = html;
     var n = $('sheets').children.length;
+    Array.prototype.forEach.call($('sheets').children, function (e, i) { if (i > 0) e.classList.add('rz-more'); });
+    $('show-all').hidden = n < 2;
     $('pages-note').textContent = 'A4 縦 ' + n + ' 枚';
     O.fitPreview($('wrap'));
     var filled = C && d.kyukyu ? Calc.KYUKYU_FIELDS.filter(function (f) { return d.kyukyu[f]; }).length : 0;
@@ -206,6 +208,13 @@
   form.addEventListener('change', function (e) { sharedView = false; if (e.target.name !== 'kind' || radio('kind') !== saved.kind) update(e); });
   update();
   O.watchPreview($('wrap'));
+
+  $('show-all').addEventListener('click', function () {
+    var all = $('wrap').classList.toggle('all');
+    this.setAttribute('aria-expanded', all ? 'true' : 'false');
+    this.textContent = all ? '1 枚めだけ見る' : 'すべての見本を見る';
+    O.fitPreview($('wrap'));
+  });
 
   O.printSetup({ button: 'print' });
   O.shareSetup({ button: 'share', msg: 'share-msg', note: '名前・病気・薬・電話はリンクに入っていません。', get: function () {
