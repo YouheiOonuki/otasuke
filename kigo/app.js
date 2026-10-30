@@ -59,7 +59,7 @@
     $('pages-note').textContent = 'A4 縦 ' + r.sheets + ' 枚';
     $('show-all').hidden = r.sheets < 2;
     O.fitPreview($('wrap'));
-    window.YorozuScreen.detailsSummary({ 'opt-more': [d.yomi ? '読みがなあり' : '読みがななし', d.size === 'large' ? '大きい字' : 'ふつうの字'].join('・') });
+    window.YorozuScreen.detailsSummary({ 'opt-more': [d.form === 'words' ? '季語だけ' : '説明つきの表', d.yomi ? '読みがなあり' : '読みがななし', d.size === 'large' ? '大きい字' : 'ふつうの字'].join('・') });
   }
 
   function update() {
