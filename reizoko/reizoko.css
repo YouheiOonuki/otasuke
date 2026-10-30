@@ -37,3 +37,9 @@
 .qr-name { font-size: 19pt; font-weight: 700; margin: 0 0 1.5mm; }
 .qr-say { font-size: 13pt; margin: 0; }
 .qr-foot { font-size: 12pt; text-align: center; margin-top: 7mm; }
+
+/* 見本: 画面では 1 枚めだけ。「すべての見本を見る」で残りも。印刷ではすべて */
+.sheets-wrap:not(.all) .rz-more { display: none; }
+@media print {
+  .rz-more { display: block !important; }
+}
