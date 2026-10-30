@@ -75,13 +75,6 @@
             <label><input type="radio" name="season" value="all"> 全部</label>
           </div>
         </div>
-        <div class="field">
-          <span class="label" id="l-form">形</span>
-          <div class="choices" role="radiogroup" aria-labelledby="l-form">
-            <label><input type="radio" name="form" value="table" checked> 説明つきの表</label>
-            <label><input type="radio" name="form" value="words"> 季語だけ（1 枚）</label>
-          </div>
-        </div>
       </fieldset>
 
       <div class="btn-row no-print">
@@ -89,7 +82,7 @@
         <span id="pages-note" aria-live="polite"></span>
       </div>
 
-      <section class="print-host" aria-label="見本">
+      <section class="print-host" id="preview" aria-label="見本">
         <p class="preview-cap">見本（1 枚め。このまま A4 に印刷されます）</p>
         <div class="sheets-wrap" id="wrap"><div class="sheets" id="sheets"></div></div>
         <p class="no-print"><button type="button" id="show-all" class="btn" aria-expanded="false">すべての見本を見る</button></p>
@@ -97,6 +90,13 @@
 
       <details class="card opt" id="opt-more">
         <summary>くわしい設定: <span class="opt-state"></span></summary>
+        <div class="field">
+          <span class="label" id="l-form">形</span>
+          <div class="choices" role="radiogroup" aria-labelledby="l-form">
+            <label><input type="radio" name="form" value="table" checked> 説明つきの表</label>
+            <label><input type="radio" name="form" value="words"> 季語だけ（1 枚）</label>
+          </div>
+        </div>
         <label class="check"><input type="checkbox" id="yomi" checked> 読みがなをつける</label>
         <div class="field">
           <span class="label" id="l-size">字の大きさ</span>
