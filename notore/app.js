@@ -47,9 +47,11 @@
     $('show-all').hidden = r.sheets < 2;
     O.fitPreview($('wrap'));
     var state = [];
+    state.push(d.pages + ' 枚');
     if (d.kind === 'calc') state.push(G.OP_NAMES[d.op]);
     if (d.kind === 'nurie') state.push(d.month ? d.month.replace('-', '年') + '月から' : '今月（21 日からは来月）から');
     state.push(d.name ? '名前あり' : '名前は手書き');
+    if (d.kind !== 'nurie') state.push(d.answers ? '答えのページあり' : '答えのページなし');
     window.YorozuScreen.detailsSummary({ 'opt-more': state.join('・') });
   }
 
