@@ -26,3 +26,13 @@
 
 /* 写真を読んだあとの知らせは output（状態の文。7.73 判断 3） */
 output#photo-note:not([hidden]) { display: block; }
+
+/* スマホで「結果」を 1 画面目に（見出しの上下を詰める・写真のボタンを 1 行に） */
+@media (max-width: 480px) {
+  .app-header { padding-block: var(--sp-2); }
+  #photo-btn { padding-inline: var(--sp-2); }
+  .req .btn-row { gap: var(--sp-2); margin: var(--sp-2) 0; }
+  .req legend { margin-bottom: var(--sp-2); }
+  fieldset.card.req { margin-bottom: var(--sp-2); }
+  .notice { margin-bottom: var(--sp-2); }
+}
