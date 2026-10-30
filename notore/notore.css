@@ -57,3 +57,6 @@
 @media print {
   .nt-more { display: block !important; }
 }
+
+/* 画面の上の詰め（スマホで「印刷する」を 1 画面目に） */
+@media (max-width: 480px) { .app-header { padding-block: var(--sp-2); } }
