@@ -88,7 +88,9 @@
     var style = '--h:' + (32 * scale) + 'pt;--t:' + t + 'pt;--n:' + (15 * scale) + 'mm;--p:' + ((anyPhoto ? 52 : 0) * scale) + 'mm';
     var help = '<div class="help"><small>こまったら、電話する</small>' +
       (data.helpName ? esc(data.helpName) : '<span class="line"></span>') + '　' + (data.helpTel ? esc(data.helpTel) : '<span class="line"></span>') + '</div>';
-    return '<div class="tz" style="' + style + '"><h2>' + (data.title ? esc(data.title) : '<span style="display:inline-block;min-width:120mm">&nbsp;</span>') + '</h2><ol>' +
+    // 題が空のときは手で書く空欄。見出しの要素にしない（中身の無い h2 を作らない）
+    var title = data.title ? '<h2 class="tz-title">' + esc(data.title) + '</h2>' : '<div class="tz-title"><span style="display:inline-block;min-width:120mm">&nbsp;</span></div>';
+    return '<div class="tz" style="' + style + '">' + title + '<ol>' +
       rows.map(function (s, i) {
         return '<li><span class="no">' + (i + 1) + '</span><span class="tx' + (s.text ? '' : ' empty') + '">' + esc(s.text) + '</span>' +
           (anyPhoto ? '<span class="ph">' + (s.photo ? '<img src="' + s.photo + '" alt="">' : '') + '</span>' : '') + '</li>';
