@@ -227,6 +227,7 @@
       'opt-list': p.records.length + ' 回',
     });
     if (resetForm) { $('e-year').value = ''; $('e-month').value = ''; fillForm(null); updateMode(); $('e-msg').textContent = ''; }
+    window.yzUsed?.();
   }
 
   // --- 例（架空の数字）を入れる ---

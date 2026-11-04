@@ -194,6 +194,7 @@
     saved = d;
     render(d);
     if (!sharedView) O.store.set(KEY, d);
+    window.yzUsed?.();
   }
 
   // 共有リンク: 紙の種類と形だけ（名前・病気・薬・電話は入れない）。開いた人の保存は、何か変えるまで上書きしない

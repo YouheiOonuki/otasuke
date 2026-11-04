@@ -66,6 +66,7 @@
     var d = current();
     render(d);
     if (!sharedView) O.store.set(KEY, d);
+    window.yzUsed?.();
   }
 
   var iso = isoToday();

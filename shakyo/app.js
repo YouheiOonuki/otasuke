@@ -62,6 +62,7 @@
     var d = current();
     render(d);
     if (!sharedView) O.store.set(KEY, d);
+    window.yzUsed?.();
   }
 
   // 共有リンクで開いたときは、何か変えるまで端末の保存を上書きしない（名前・願文はリンクに入らない）

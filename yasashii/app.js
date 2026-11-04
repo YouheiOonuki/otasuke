@@ -50,6 +50,7 @@
     $('warn').textContent = w.join(' ');
     $('pair').hidden = false;
     showLang();
+    window.yzUsed?.();
   }
 
   /** 結果を受け取る（文でも写真でも） */

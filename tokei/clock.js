@@ -104,6 +104,7 @@
       $('c-sec').textContent = opt.seconds ? p.sec : '';
       fit();
     }
+    window.yzUsed?.();
   }
   // 次の秒のはじめに合わせて呼ぶ（呼び出しの列は 1 本だけ）
   function loop() { tick(); setTimeout(loop, 1000 - (Date.now() % 1000) + 20); }
