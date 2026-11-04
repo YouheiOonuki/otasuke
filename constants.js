@@ -77,7 +77,7 @@
         blank: { title: '', steps: [] },
       },
       source: 'LINEみんなの使い方ガイド「写真／動画を送信する」（2024-08-28 更新）、Apple「iPhone のカメラで QR コードをスキャンする」（iPhone ユーザガイド iOS 27）',
-      url: 'https://guide.line.me/ja/chats-calls-notifications/chats/send-images-videos.html',
+      url: 'https://guide.line.me/ja/communication/send-images-videos.html',
       url2: 'https://support.apple.com/ja-jp/guide/iphone/iphe8bda8762/ios',
       checked: CHECKED,
     },
