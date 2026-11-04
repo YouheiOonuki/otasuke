@@ -101,6 +101,7 @@
       'opt-rows': rows.length ? rows.length + ' 行に入力' : 'まだ入力なし（手書きでも使えます）',
       'opt-print': (data.card ? 'カードあり' : 'カードなし') + '・' + (data.credit ? '作成元を入れる' : '作成元なし'),
     });
+    window.yzUsed?.();
   }
 
   function save() { O.store.set(KEY, data); }

@@ -105,6 +105,7 @@
       'opt-photo': nPhoto ? nPhoto + ' 枚' : 'なし',
       'opt-print': (data.layout === 'a5' ? '2 枚どり' : 'A4 に 1 枚') + '・' + (data.credit ? '作成元を入れる' : '作成元なし'),
     });
+    window.yzUsed?.();
   }
   function save() { return sharedView ? true : O.store.set(KEY, data); }
 

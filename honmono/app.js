@@ -55,6 +55,7 @@
       }).join('') + '</ul>';
     }
     out.innerHTML = h;
+    window.yzUsed?.();
   }
 
   var timer = 0;
