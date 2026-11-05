@@ -6,12 +6,12 @@
 // Playwright はこのリポジトリの依存に入れていない（公開物に入らない道具）。グローバルに入れたものを NODE_PATH で読む:
 //   NODE_PATH=$(npm root -g) node tools/notore/book-pdf.mjs ...
 import { createRequire } from 'node:module';
-import { pathToFileURL } from 'node:url';
+import { pathToFileURL, fileURLToPath } from 'node:url';
 import fs from 'node:fs';
 import path from 'node:path';
 
 const require = createRequire(import.meta.url);
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../..');
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const V = require(path.join(ROOT, 'notore/book-values.js'));
 const { pdfInfo, setMediaBox } = require(path.join(ROOT, 'tools/notore/pdf-info.cjs'));
 

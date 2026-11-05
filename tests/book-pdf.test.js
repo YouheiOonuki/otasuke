@@ -12,6 +12,14 @@ const V = require('../notore/book-values.js');
 let hasPw = true;
 try { require.resolve('playwright'); } catch (e) { hasPw = false; }
 
+// 読み込みだけは Playwright なしで確かめる。パスに日本語（OneDrive の「ドキュメント」）や空白があっても ROOT が解けること
+// （URL.pathname は %エンコードと先頭の / が残り、Windows で C:\C:\… になった。ROADMAP 7.188.10・Q-111）
+test('book-pdf.mjs を読み込める（ROOT を fileURLToPath で解く）', async () => {
+  const mod = await import(pathToFileURL(path.join(__dirname, '../tools/notore/book-pdf.mjs')).href);
+  assert.equal(typeof mod.makeBookPdf, 'function');
+  assert.equal(typeof mod.checkPdf, 'function');
+});
+
 for (const bleed of [false, true]) {
   test('PDF（' + (bleed ? '裁ち落としあり' : '裁ち落としなし') + '）: 154 ページ、判型の大きさ、はみ出しなし、フォントは埋め込み', { skip: hasPw ? false : 'playwright が無い', timeout: 240000 }, async () => {
     const mod = await import(pathToFileURL(path.join(__dirname, '../tools/notore/book-pdf.mjs')).href);
