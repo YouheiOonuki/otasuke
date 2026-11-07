@@ -30,13 +30,17 @@
   // 言語 → 先に選ぶ声の言語タグ（その言語の声が端末に無ければ、その言語ではボタンを出さない）
   var SPEAK = { ja: 'ja-JP', en: 'en-US', zh: 'zh-CN', vi: 'vi-VN', pt: 'pt-BR' };
   var RATE = { normal: 1, slow: 0.75 }; // ふつう／ゆっくり
-  /** 声の一覧（getVoices() の形）から、その言語の声を 1 つ。先に SPEAK のタグに合う声、次に端末の中の声（localService）。無ければ null */
+  /**
+   * 声の一覧（getVoices() の形）から、その言語の声を 1 つ。端末の中の声（localService）だけを使う —— ネットの声（Chrome の「Google 日本語」・
+   * Edge の Online の声など、localService が false）は文をブラウザの会社のサーバーに送るので、「読む文は端末の外に出ない」と合わない。
+   * 先に SPEAK のタグに合う声。無ければ null（その言語ではボタンを出さない）
+   */
   function pickVoice(voices, lang) {
     var tag = SPEAK[lang];
     if (!tag) return null;
     var norm = function (s) { return String(s || '').replace(/_/g, '-').toLowerCase(); };
-    var same = (voices || []).filter(function (v) { var l = norm(v.lang); return l === lang || l.indexOf(lang + '-') === 0; });
-    var rank = function (v) { return (norm(v.lang) === tag.toLowerCase() ? 0 : 2) + (v.localService === false ? 1 : 0); };
+    var same = (voices || []).filter(function (v) { var l = norm(v.lang); return v.localService !== false && (l === lang || l.indexOf(lang + '-') === 0); });
+    var rank = function (v) { return norm(v.lang) === tag.toLowerCase() ? 0 : 1; };
     return same.slice().sort(function (a, b) { return rank(a) - rank(b); })[0] || null;
   }
   /**

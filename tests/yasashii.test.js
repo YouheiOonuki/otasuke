@@ -66,11 +66,12 @@ test('読み上げ（K165、D515）: 押すと読む → 読んでいる間に�
   assert.deepEqual(YFlow.RATE, { normal: 1, slow: 0.75 });
 });
 
-test('読み上げ（K165、D515）: 声は言語で選ぶ。合うタグ → 端末の中の声の順。無ければ null（ボタンを出さない）', () => {
+test('読み上げ（K165、D515）: 声は言語で選ぶ。端末の中の声だけ（ネットの声は文を外に送るので使わない）。合うタグが先。無ければ null（ボタンを出さない）', () => {
   const v = (lang, localService = true, name = lang) => ({ lang, localService, name });
   const voices = [v('en-GB'), v('en-US', false), v('ja_JP', false, 'net'), v('ja-JP', true, 'local'), v('zh-TW'), v('pt-PT'), v('pt-BR')];
   assert.equal(YFlow.pickVoice(voices, 'ja').name, 'local', 'ja-JP の端末の中の声が先（ja_JP の書き方も ja として見る）');
-  assert.equal(YFlow.pickVoice(voices, 'en').name, 'en-US', 'en-US はネットの声でも、合わないタグの端末の声より先');
+  assert.equal(YFlow.pickVoice(voices, 'en').name, 'en-GB', 'en-US はネットの声なので使わず、端末の中の en-GB');
+  assert.equal(YFlow.pickVoice([v('ja-JP', false)], 'ja'), null, 'ネットの声しか無い → 出さない');
   assert.equal(YFlow.pickVoice(voices, 'zh').name, 'zh-TW', 'zh-CN が無ければほかの zh');
   assert.equal(YFlow.pickVoice(voices, 'pt').name, 'pt-BR');
   assert.equal(YFlow.pickVoice(voices, 'vi'), null, 'ベトナム語の声が無い → 出さない');
