@@ -26,25 +26,57 @@
       last: { source: source, output: j.output, long: j.long || [], added: j.added || [], missingNumbers: j.missingNumbers || [], tr: {} }
     };
   }
-  // 読み上げ（K165）: 読める言語（ja はやさしい日本語、en・zh は訳）。vi・pt は読めないのでボタンを出さない
-  var SPEAK = { ja: true, en: true, zh: true };
-  var RATE = { normal: 1, slow: 0.8 }; // ふつう／ゆっくり（ブラウザの再生の速さ。音の高さは変えない）
+  // 読み上げ（K165。yorozu-plans 企画書 81 の 6 章、D515）: 端末のブラウザの読み上げ（speechSynthesis）で読む。文は端末から出ない。
+  // 言語 → 先に選ぶ声の言語タグ（その言語の声が端末に無ければ、その言語ではボタンを出さない）
+  var SPEAK = { ja: 'ja-JP', en: 'en-US', zh: 'zh-CN', vi: 'vi-VN', pt: 'pt-BR' };
+  var RATE = { normal: 1, slow: 0.75 }; // ふつう／ゆっくり
   /**
-   * 読み上げボタンの状態。idle（読んでもらう）→ loading（用意しています…）→ playing（止める）→ idle。
-   * ev: 'press'（ボタンを押す）| 'ready'（音が届いた）| 'ended'（終わった）| 'error'。返りは { state, action }
-   * action: 'fetch'（音をもらう）| 'play' | 'stop' | null
+   * 声の一覧（getVoices() の形）から、その言語の声を 1 つ。端末の中の声（localService）だけを使う —— ネットの声（Chrome の「Google 日本語」・
+   * Edge の Online の声など、localService が false）は文をブラウザの会社のサーバーに送るので、「読む文は端末の外に出ない」と合わない。
+   * 先に SPEAK のタグに合う声。無ければ null（その言語ではボタンを出さない）
+   */
+  function pickVoice(voices, lang) {
+    var tag = SPEAK[lang];
+    if (!tag) return null;
+    var norm = function (s) { return String(s || '').replace(/_/g, '-').toLowerCase(); };
+    var same = (voices || []).filter(function (v) { var l = norm(v.lang); return v.localService !== false && (l === lang || l.indexOf(lang + '-') === 0); });
+    var rank = function (v) { return norm(v.lang) === tag.toLowerCase() ? 0 : 1; };
+    return same.slice().sort(function (a, b) { return rank(a) - rank(b); })[0] || null;
+  }
+  /**
+   * 読む文。ふりがなを外す。1 字の漢字の言葉だけ読みに置き換える（「月《つき》」を「がつ」と読まないように。企画書 81 の 6 章）。
+   * 2 字以上は読み上げに任せる。数字・日付はかなに直さない（D515）
+   */
+  // 後読み（?<=）は使わない: 古い iPhone の Safari（16.4 より前）で、このファイルごと読めなくなる
+  function speechText(s) {
+    return String(s).replace(/([一-鿿々]+)《([^《》]*)》/g, function (m, kanji, yomi, at, all) {
+      var one = kanji.length === 1 && /^[ぁ-ん]+$/.test(yomi) && !/\d/.test(all.charAt(at - 1)) && !/[一-鿿]/.test(all.charAt(at + m.length));
+      return one ? yomi : kanji;
+    }).replace(/《[^《》]*》/g, ''); // 漢字でない語の後ろの《》（カタカナの言葉など）は捨てる
+  }
+  /**
+   * 訳文に残した日本語の括弧（「(年齢)」「(4月)」。訳は数字を含む言葉の原文の書き方を括弧で残す: K164）を外す。
+   * 英語・中国語などの声が日本語の字を読むと崩れるため（企画書 81 の 6 章）。かなか漢字を含む括弧だけ
+   */
+  function stripJaParens(s) {
+    return String(s).replace(/\s*[（(][^（）()]*[\u3040-\u30ff\u4e00-\u9fff][^（）()]*[）)]/g, '');
+  }
+  /** 読む文を、行と文の終わりで区切った列に（長い 1 つを渡すと途中で止まる端末があるため、文ごとに続けて渡す。3.7 の点では切らない）。lang が ja 以外（訳）なら日本語の括弧を外す */
+  function speechParts(s, lang) {
+    return (lang && lang !== 'ja' ? stripJaParens(speechText(s)) : speechText(s)).replace(/([。！？])/g, '$1\n').replace(/([.!?])\s+/g, '$1\n')
+      .split('\n').map(function (p) { return p.trim(); }).filter(Boolean);
+  }
+  /**
+   * 読み上げボタンの状態。idle（読んでもらう）→ playing（止める）→ idle。
+   * ev: 'press'（ボタンを押す）| 'ended'（読み終えた）| 'error'。返りは { state, action }。action: 'play' | 'stop' | null
    */
   function speakStep(state, ev) {
-    if (ev === 'press') {
-      if (state === 'idle') return { state: 'loading', action: 'fetch' };
-      return { state: 'idle', action: 'stop' }; // 用意中・再生中に押したら止める
-    }
-    if (ev === 'ready') return state === 'loading' ? { state: 'playing', action: 'play' } : { state: state, action: null };
+    if (ev === 'press') return state === 'idle' ? { state: 'playing', action: 'play' } : { state: 'idle', action: 'stop' };
     if (ev === 'ended' || ev === 'error') return { state: 'idle', action: null };
     return { state: state, action: null };
   }
-  var SPEAK_LABEL = { idle: '🔊 読んでもらう', loading: '用意しています…（押すとやめます）', playing: '■ 止める' };
-  var api = { MAX_SIDE: MAX_SIDE, LANGS: LANGS, fitSize: fitSize, fromResult: fromResult, SPEAK: SPEAK, RATE: RATE, speakStep: speakStep, SPEAK_LABEL: SPEAK_LABEL };
+  var SPEAK_LABEL = { idle: '🔊 読んでもらう', playing: '■ 止める' };
+  var api = { MAX_SIDE: MAX_SIDE, LANGS: LANGS, fitSize: fitSize, fromResult: fromResult, SPEAK: SPEAK, RATE: RATE, pickVoice: pickVoice, speechText: speechText, stripJaParens: stripJaParens, speechParts: speechParts, speakStep: speakStep, SPEAK_LABEL: SPEAK_LABEL };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.YFlow = api;
 })(this);

@@ -126,16 +126,23 @@
     });
   }
 
-  // 読み上げ（K165）: やさしい日本語か、選んだ言語の訳を、yorozu-ai が読み上げた音（WAV）で再生する。音はこの画面のメモリにだけあり、止めるか終われば捨てる
+  // 読み上げ（K165。企画書 81 の 6 章、D515）: やさしい日本語か、選んだ言語の訳を、端末のブラウザの読み上げ（speechSynthesis）で読む。文は端末から出ない。
+  // その言語の声が端末に無ければボタンを出さない。日本語の声が無い端末では「読んでもらう」そのものを出さない（押せないボタンを置かない）
+  var synth = window.speechSynthesis || null;
+  var voices = [];
   var speakState = 'idle';
-  var audio = null;
-  var audioUrl = '';
+  var reading = null; // { parts, at, gen }（読んでいる文の列・いま読んでいる位置）
+  var gen = 0; // 止めたあとに届く古い onend・onerror を無視するための番号
+  function voiceFor(lang) {
+    return synth && typeof window.SpeechSynthesisUtterance === 'function' ? window.YFlow.pickVoice(voices, lang) : null;
+  }
+  function loadVoices() { voices = synth ? synth.getVoices() : []; showSpeak(); }
   function speakTarget() {
     var lang = (document.querySelector('input[name="lang"]:checked') || {}).value || '';
-    if (!last) return null;
+    if (!last || !voiceFor('ja')) return null;
     if (!lang) return { lang: 'ja', text: last.output };
     var hit = last.tr[lang];
-    return hit && window.YFlow.SPEAK[lang] ? { lang: lang, text: hit.text } : null;
+    return hit && voiceFor(lang) ? { lang: lang, text: hit.text } : null;
   }
   function showSpeak() {
     var t = speakTarget();
@@ -143,42 +150,53 @@
     $('speak').textContent = window.YFlow.SPEAK_LABEL[speakState];
     $('speak').classList.toggle('playing', speakState !== 'idle');
   }
-  function stopSpeak() { if (speakState !== 'idle') { speakState = 'idle'; dropAudio(); } }
-  function dropAudio() {
-    if (audio) { audio.pause(); audio.removeAttribute('src'); audio = null; }
-    if (audioUrl) { URL.revokeObjectURL(audioUrl); audioUrl = ''; }
+  function rate() { return window.YFlow.RATE[(document.querySelector('input[name="rate"]:checked') || {}).value || 'normal']; }
+  function hush() { gen++; reading = null; if (synth) synth.cancel(); }
+  function stopSpeak() { if (speakState !== 'idle') { speakState = 'idle'; hush(); showSpeak(); } }
+  /** reading.at から終わりまでを、続けて読み上げに渡す（文ごとに 1 つ） */
+  function readFrom(t) {
+    var my = gen;
+    var v = voiceFor(t.lang);
+    reading.parts.slice(reading.at).forEach(function (text, i, rest) {
+      var u = new window.SpeechSynthesisUtterance(text);
+      u.voice = v; u.lang = v.lang; u.rate = rate();
+      u.onstart = function () { if (my === gen && reading) reading.at = reading.at0 + i; };
+      if (i === rest.length - 1) u.onend = function () { if (my === gen) speakDo('ended'); };
+      u.onerror = function () { if (my === gen) { hush(); speakDo('error'); } };
+      synth.speak(u);
+    });
   }
   function speakDo(ev) {
     var s = window.YFlow.speakStep(speakState, ev);
     speakState = s.state;
-    if (s.action === 'stop') dropAudio();
-    if (s.action === 'fetch') {
+    if (s.action === 'stop' || ev === 'ended') hush();
+    if (s.action === 'play') {
       var t = speakTarget();
       if (!t) { speakState = 'idle'; showSpeak(); return; }
-      fetch(API + '/speak', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ text: t.text, lang: t.lang }) })
-        .then(function (r) {
-          if (!r.ok) return r.json().then(function (j) { var e = new Error(j.error || 'other'); e.text = errText(j); throw e; });
-          return r.blob();
-        })
-        .then(function (blob) {
-          if (speakState !== 'loading') return; // 待つ間に止めた
-          dropAudio();
-          audioUrl = URL.createObjectURL(blob);
-          audio = new Audio(audioUrl);
-          audio.preservesPitch = true;
-          audio.playbackRate = window.YFlow.RATE[(document.querySelector('input[name="rate"]:checked') || {}).value || 'normal'];
-          audio.addEventListener('ended', function () { dropAudio(); speakDo('ended'); });
-          speakDo('ready');
-        })
-        .catch(function (e) { setStatus(e.text || ERR.other, 'error'); speakDo('error'); });
+      hush();
+      reading = { lang: t.lang, parts: window.YFlow.speechParts(t.text, t.lang), at: 0, at0: 0 };
+      if (!reading.parts.length) { speakState = 'idle'; reading = null; showSpeak(); return; }
+      readFrom(reading);
     }
-    if (s.action === 'play' && audio) audio.play().catch(function () { dropAudio(); speakDo('error'); });
     showSpeak();
   }
   $('speak').addEventListener('click', function () { speakDo('press'); });
+  // 速さを読んでいる途中で変えたら、いま読んでいる文から読み直す
   Array.prototype.forEach.call(document.querySelectorAll('input[name="rate"]'), function (r) {
-    r.addEventListener('change', function () { if (audio) audio.playbackRate = window.YFlow.RATE[r.value]; });
+    r.addEventListener('change', function () {
+      if (speakState !== 'playing' || !reading) return;
+      var keep = { lang: reading.lang, parts: reading.parts, at: reading.at, at0: reading.at };
+      hush();
+      reading = keep;
+      readFrom(reading);
+    });
   });
+  if (synth) {
+    if (typeof synth.addEventListener === 'function') synth.addEventListener('voiceschanged', loadVoices); // Chrome は声の一覧が後から届く
+    else synth.onvoiceschanged = loadVoices;
+    loadVoices();
+  }
+  window.addEventListener('pagehide', stopSpeak);
 
   $('go').addEventListener('click', go);
   text.addEventListener('input', count);

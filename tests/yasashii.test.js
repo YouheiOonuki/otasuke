@@ -56,34 +56,68 @@ test('多言語（K164）: 4 言語と「やさしい日本語のまま」。ペ
   assert.match(html, /<details class="card opt" lang="en" id="en">/, "英語の段落は折りたたみ（段 3。画面の文を置かない）");
 });
 
-test('読み上げ（K165）: 押すと用意 → 届けば再生 → 再生中に押すと止める → 終われば元に戻る。用意中に押してもやめられる', () => {
-  let s = YFlow.speakStep('idle', 'press');
-  assert.deepEqual(s, { state: 'loading', action: 'fetch' });
-  s = YFlow.speakStep(s.state, 'ready');
-  assert.deepEqual(s, { state: 'playing', action: 'play' });
-  assert.deepEqual(YFlow.speakStep('playing', 'press'), { state: 'idle', action: 'stop' }, '再生中に押すと止める');
+test('読み上げ（K165、D515）: 押すと読む → 読んでいる間に押すと止める → 読み終えれば元に戻る', () => {
+  assert.deepEqual(YFlow.speakStep('idle', 'press'), { state: 'playing', action: 'play' });
+  assert.deepEqual(YFlow.speakStep('playing', 'press'), { state: 'idle', action: 'stop' }, '読んでいる間に押すと止める');
   assert.deepEqual(YFlow.speakStep('playing', 'ended'), { state: 'idle', action: null });
-  assert.deepEqual(YFlow.speakStep('loading', 'press'), { state: 'idle', action: 'stop' }, '用意中に押すとやめる');
-  assert.deepEqual(YFlow.speakStep('idle', 'ready'), { state: 'idle', action: null }, 'やめた後に音が届いても鳴らさない');
-  assert.deepEqual(YFlow.speakStep('loading', 'error'), { state: 'idle', action: null });
-  assert.equal(YFlow.SPEAK_LABEL.playing, '■ 止める');
-  assert.deepEqual(Object.keys(YFlow.SPEAK), ['ja', 'en', 'zh'], '読めるのは日本語・英語・中国語だけ（ベトナム語・ポルトガル語はボタンを出さない）');
-  assert.deepEqual(YFlow.RATE, { normal: 1, slow: 0.8 });
+  assert.deepEqual(YFlow.speakStep('playing', 'error'), { state: 'idle', action: null });
+  assert.deepEqual(YFlow.SPEAK_LABEL, { idle: '🔊 読んでもらう', playing: '■ 止める' });
+  assert.deepEqual(Object.keys(YFlow.SPEAK), ['ja', 'en', 'zh', 'vi', 'pt'], '5 言語とも、端末に声があれば読む');
+  assert.deepEqual(YFlow.RATE, { normal: 1, slow: 0.75 });
 });
 
-test('読み上げ（K165）: 画面のつなぎ（/speak に送る・音はメモリだけで終われば捨てる・言語を変えたら止める）', () => {
+test('読み上げ（K165、D515）: 声は言語で選ぶ。端末の中の声だけ（ネットの声は文を外に送るので使わない）。合うタグが先。無ければ null（ボタンを出さない）', () => {
+  const v = (lang, localService = true, name = lang) => ({ lang, localService, name });
+  const voices = [v('en-GB'), v('en-US', false), v('ja_JP', false, 'net'), v('ja-JP', true, 'local'), v('zh-TW'), v('pt-PT'), v('pt-BR')];
+  assert.equal(YFlow.pickVoice(voices, 'ja').name, 'local', 'ja-JP の端末の中の声が先（ja_JP の書き方も ja として見る）');
+  assert.equal(YFlow.pickVoice(voices, 'en').name, 'en-GB', 'en-US はネットの声なので使わず、端末の中の en-GB');
+  assert.equal(YFlow.pickVoice([v('ja-JP', false)], 'ja'), null, 'ネットの声しか無い → 出さない');
+  assert.equal(YFlow.pickVoice(voices, 'zh').name, 'zh-TW', 'zh-CN が無ければほかの zh');
+  assert.equal(YFlow.pickVoice(voices, 'pt').name, 'pt-BR');
+  assert.equal(YFlow.pickVoice(voices, 'vi'), null, 'ベトナム語の声が無い → 出さない');
+  assert.equal(YFlow.pickVoice([], 'ja'), null);
+  assert.equal(YFlow.pickVoice([v('jam')], 'ja'), null, '前の 2 字が同じだけの別の言語は数えない');
+});
+
+test('読み上げ（K165、D515）: 読む文。ふりがなを外し、1 字の漢字の言葉だけ読みに置き換える。数字・日付はかなに直さない', () => {
+  assert.equal(YFlow.speechText('納付《のうふ》の期限《きげん》は10月《がつ》13日《にち》です。'), '納付の期限は10月13日です。', '数字の後ろの 1 字は置き換えない');
+  assert.equal(YFlow.speechText('月《つき》が変《か》わる。12か月《げつ》の間《あいだ》。'), 'つきがかわる。12かげつのあいだ。', '「か月《げつ》」の月は前がかななので置き換わる（正しい読み）');
+  assert.equal(YFlow.speechText('医療費《いりょうひ》は30万《まん》円《えん》でした。'), '医療費は30万えんでした。');
+  assert.equal(YFlow.speechText('令和《れいわ》8年《ねん》4月《がつ》1日《ついたち》から'), '令和8年4月1日から', 'かなに直す手当て（toSpeech）は持ち越さない');
+  assert.equal(YFlow.speechText('前納《ぜんのう》（＝先《さき》に払《はら》うこと）'), '前納（＝さきにはらうこと）');
+  assert.equal(YFlow.speechText('前《まえ》に人《ひと》がいます。'), 'まえにひとがいます。');
+  assert.equal(YFlow.speechText('金《きん》額《がく》'), '金がく', '後ろに漢字が続く 1 字は置き換えない（前の版の toSpeech と同じ決まり）');
+  assert.equal(YFlow.speechText('マイナンバーカード《カード》'), 'マイナンバーカード');
+  assert.deepEqual(YFlow.speechParts('今日《きょう》は晴《は》れ。明日《あした》は雨《あめ》！\n3.7 million yen. It is due. 你好。'),
+    ['今日ははれ。', '明日はあめ！', '3.7 million yen.', 'It is due.', '你好。'], '行と文の終わりで区切る。3.7 の点では切らない');
+});
+
+test('読み上げ（K165、D515）: 訳文に残した日本語の括弧は読まない（企画書 81 の 6 章）。やさしい日本語の括弧は読む', () => {
+  assert.equal(YFlow.stripJaParens('It varies by age (年齢), from April (4月), 3.7 million yen (約370万円).'), 'It varies by age, from April, 3.7 million yen.');
+  assert.equal(YFlow.stripJaParens('年龄（年齢）和收入'), '年龄和收入');
+  assert.equal(YFlow.stripJaParens('Pay by June 30 (see page 2).'), 'Pay by June 30 (see page 2).', 'かなも漢字も無い括弧は残す');
+  assert.deepEqual(YFlow.speechParts('It varies by age (年齢). Pay it.', 'en'), ['It varies by age.', 'Pay it.']);
+  assert.deepEqual(YFlow.speechParts('前納《ぜんのう》（＝先《さき》に払《はら》うこと）', 'ja'), ['前納（＝さきにはらうこと）'], 'やさしい日本語の説明の括弧は外さない');
+  assert.match(read('yasashii/app.js'), /speechParts\(t\.text, t\.lang\)/);
+});
+
+test('読み上げ（K165、D515）: 画面のつなぎ（端末の speechSynthesis で読む・サーバーに送らない・声の一覧は後からも見る・言語を変えたら止める）', () => {
   const app = read('yasashii/app.js');
-  assert.match(app, /fetch\(API \+ '\/speak'/);
-  assert.match(app, /URL\.revokeObjectURL\(audioUrl\)/);
-  assert.match(app, /addEventListener\('ended', function \(\) \{ dropAudio\(\); speakDo\('ended'\); \}\)/);
-  assert.match(app, /r\.addEventListener\('change', function \(\) \{ stopSpeak\(\); showLang\(\); \}\)/);
+  const code = app.replace(/^\s*\/\/.*$/gm, '');
+  assert.doesNotMatch(code, /\/speak'|new Audio|audioUrl/, '読み上げで外に送らない・音のファイルを作らない');
+  assert.match(code, /new window\.SpeechSynthesisUtterance\(text\)/);
+  assert.match(code, /addEventListener\('voiceschanged', loadVoices\)/, 'Chrome は声の一覧が後から届く');
+  assert.match(code, /if \(!last \|\| !voiceFor\('ja'\)\) return null;/, '日本語の声が無ければ、どの言語でも出さない');
+  assert.match(code, /return hit && voiceFor\(lang\) \?/, 'その言語の声が無ければ出さない');
+  assert.match(code, /r\.addEventListener\('change', function \(\) \{ stopSpeak\(\); showLang\(\); \}\)/);
   const html = read('yasashii/index.html');
   assert.ok(html.includes('id="speak"') && html.includes('name="rate" value="slow"'));
+  assert.ok(html.includes('読む文は端末の外に出ません'));
 });
 test('AI の枠切れ（D298）: サーバーの文（error quota の message）をそのまま出す。文を画面に写さない', () => {
   const js = require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'yasashii', 'app.js'), 'utf8');
   assert.match(js, /j\.error === 'quota' && j\.message/);
-  assert.equal((js.match(/[(=] ?errText\(j\)/g) || []).length, 2, '言い換え・写真・訳（post）と読み上げの 2 か所で使う');
+  assert.equal((js.match(/[(=] ?errText\(j\)/g) || []).length, 1, '言い換え・写真・訳（post）の 1 か所で使う');
   assert.doesNotMatch(js, /枠を使い切りました/);
 });
 
