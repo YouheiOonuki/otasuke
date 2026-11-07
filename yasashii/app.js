@@ -174,7 +174,7 @@
       var t = speakTarget();
       if (!t) { speakState = 'idle'; showSpeak(); return; }
       hush();
-      reading = { lang: t.lang, parts: window.YFlow.speechParts(t.text), at: 0, at0: 0 };
+      reading = { lang: t.lang, parts: window.YFlow.speechParts(t.text, t.lang), at: 0, at0: 0 };
       if (!reading.parts.length) { speakState = 'idle'; reading = null; showSpeak(); return; }
       readFrom(reading);
     }

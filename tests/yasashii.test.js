@@ -91,6 +91,15 @@ test('読み上げ（K165、D515）: 読む文。ふりがなを外し、1 字�
     ['今日ははれ。', '明日はあめ！', '3.7 million yen.', 'It is due.', '你好。'], '行と文の終わりで区切る。3.7 の点では切らない');
 });
 
+test('読み上げ（K165、D515）: 訳文に残した日本語の括弧は読まない（企画書 81 の 6 章）。やさしい日本語の括弧は読む', () => {
+  assert.equal(YFlow.stripJaParens('It varies by age (年齢), from April (4月), 3.7 million yen (約370万円).'), 'It varies by age, from April, 3.7 million yen.');
+  assert.equal(YFlow.stripJaParens('年龄（年齢）和收入'), '年龄和收入');
+  assert.equal(YFlow.stripJaParens('Pay by June 30 (see page 2).'), 'Pay by June 30 (see page 2).', 'かなも漢字も無い括弧は残す');
+  assert.deepEqual(YFlow.speechParts('It varies by age (年齢). Pay it.', 'en'), ['It varies by age.', 'Pay it.']);
+  assert.deepEqual(YFlow.speechParts('前納《ぜんのう》（＝先《さき》に払《はら》うこと）', 'ja'), ['前納（＝さきにはらうこと）'], 'やさしい日本語の説明の括弧は外さない');
+  assert.match(read('yasashii/app.js'), /speechParts\(t\.text, t\.lang\)/);
+});
+
 test('読み上げ（K165、D515）: 画面のつなぎ（端末の speechSynthesis で読む・サーバーに送らない・声の一覧は後からも見る・言語を変えたら止める）', () => {
   const app = read('yasashii/app.js');
   const code = app.replace(/^\s*\/\/.*$/gm, '');

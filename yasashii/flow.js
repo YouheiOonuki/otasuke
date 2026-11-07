@@ -50,9 +50,16 @@
       return one ? yomi : kanji;
     }).replace(/《[^《》]*》/g, ''); // 漢字でない語の後ろの《》（カタカナの言葉など）は捨てる
   }
-  /** 読む文を、行と文の終わりで区切った列に（長い 1 つを渡すと途中で止まる端末があるため、文ごとに続けて渡す。3.7 の点では切らない） */
-  function speechParts(s) {
-    return speechText(s).replace(/([。！？])/g, '$1\n').replace(/([.!?])\s+/g, '$1\n')
+  /**
+   * 訳文に残した日本語の括弧（「(年齢)」「(4月)」。訳は数字を含む言葉の原文の書き方を括弧で残す: K164）を外す。
+   * 英語・中国語などの声が日本語の字を読むと崩れるため（企画書 81 の 6 章）。かなか漢字を含む括弧だけ
+   */
+  function stripJaParens(s) {
+    return String(s).replace(/\s*[（(][^（）()]*[\u3040-\u30ff\u4e00-\u9fff][^（）()]*[）)]/g, '');
+  }
+  /** 読む文を、行と文の終わりで区切った列に（長い 1 つを渡すと途中で止まる端末があるため、文ごとに続けて渡す。3.7 の点では切らない）。lang が ja 以外（訳）なら日本語の括弧を外す */
+  function speechParts(s, lang) {
+    return (lang && lang !== 'ja' ? stripJaParens(speechText(s)) : speechText(s)).replace(/([。！？])/g, '$1\n').replace(/([.!?])\s+/g, '$1\n')
       .split('\n').map(function (p) { return p.trim(); }).filter(Boolean);
   }
   /**
@@ -65,7 +72,7 @@
     return { state: state, action: null };
   }
   var SPEAK_LABEL = { idle: '🔊 読んでもらう', playing: '■ 止める' };
-  var api = { MAX_SIDE: MAX_SIDE, LANGS: LANGS, fitSize: fitSize, fromResult: fromResult, SPEAK: SPEAK, RATE: RATE, pickVoice: pickVoice, speechText: speechText, speechParts: speechParts, speakStep: speakStep, SPEAK_LABEL: SPEAK_LABEL };
+  var api = { MAX_SIDE: MAX_SIDE, LANGS: LANGS, fitSize: fitSize, fromResult: fromResult, SPEAK: SPEAK, RATE: RATE, pickVoice: pickVoice, speechText: speechText, stripJaParens: stripJaParens, speechParts: speechParts, speakStep: speakStep, SPEAK_LABEL: SPEAK_LABEL };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.YFlow = api;
 })(this);
