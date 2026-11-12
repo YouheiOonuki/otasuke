@@ -6,7 +6,7 @@
 (function (root) {
   'use strict';
 
-  var CHECKED = '2026-10-02';   // 下の 3 ページをこの日に開いて、表の値を 1 つずつ確かめた
+  var CHECKED = '2026-11-13';   // 下の 3 ページをこの日に開いて、表の値を 1 つずつ確かめた
 
   var SOURCES = {
     trim: {
