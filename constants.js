@@ -6,7 +6,7 @@
 (function (root) {
   'use strict';
 
-  var CHECKED = '2026-09-25';   // 下の出典をすべてこの日に開いて確かめた
+  var CHECKED = '2026-11-14';   // 下の出典をすべてこの日に開いて確かめた
 
   var CONSTANTS = {
     CHECKED: CHECKED,

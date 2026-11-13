@@ -28,6 +28,7 @@ for line in open(os.path.join(ROOT, 'tools/kigo/kigo.tsv'), encoding='utf-8'):
     for sec in re.split(r'class="dictype cf ', s)[1:]:
         name = sec.split('"', 1)[0]
         if name not in DICTS: continue
+        sec = sec.split('</article>', 1)[0]   # 辞書の項目だけ。後ろの「今日のキーワード」（季語の印を含む）を読まない
         tags = TAG.findall(re.sub(r'<[^>]+>', '', sec))
         if tags: found[name] = tags
     ok = [n for n, t in found.items() if t[0] == season]
