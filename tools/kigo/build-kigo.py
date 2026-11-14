@@ -13,17 +13,28 @@ os.makedirs(os.path.join(ROOT, cache), exist_ok=True)
 DICTS = {'daijisen': 'デジタル大辞泉', 'nikkokuseisen': '精選版 日本国語大辞典'}
 TAG = re.compile(r'《\s*季(?:語)?\s*[・\s]?\s*(新年|春|夏|秋|冬)[^》]{0,20}》')
 
-rows, verified, bad = [], {}, []
+rows, verified, bad, moved = [], {}, [], []
 for line in open(os.path.join(ROOT, 'tools/kigo/kigo.tsv'), encoding='utf-8'):
     line = line.rstrip('\n')
     if not line or line.startswith('#'): continue
     season, word, yomi, expl, look = line.split('|')
     url = 'https://kotobank.jp/word/' + urllib.parse.quote(look)
     f = os.path.join(ROOT, cache, look + '.kotobank')
-    if not os.path.exists(f) or os.path.getsize(f) < 1000:
-        subprocess.run(['curl', '-sSL', '-m', '30', '-A', 'Mozilla/5.0', '-o', f, url], check=True)
-        time.sleep(0.7)
+    if not os.path.exists(f) or os.path.getsize(f) < 1000 or not os.path.exists(f + '.url'):
+        r = subprocess.run(['curl', '-sSL', '-m', '30', '-A', 'Mozilla/5.0', '-o', f, '-w', '%{http_code} %{url_effective}', url],
+                           check=True, capture_output=True, text=True)
+        open(f + '.url', 'w', encoding='utf-8').write(r.stdout)
+        time.sleep(1.0)   # 1 語 1 本、間を 1 秒以上（Q-230）
     s = open(f, encoding='utf-8', errors='replace').read()
+    # 転送先（コトバンクは /word/<見出し> を /word/<見出し>-<番号> へ 301 で送る）を url に持つ。
+    # 書き換えるのは、転送先が同じホストの /word/ で 200 のときだけ（季は転送先の頁で下が確かめる）。ほかは元の url のまま、moved に残す
+    code, _, final = open(f + '.url', encoding='utf-8').read().strip().partition(' ')
+    p = urllib.parse.urlsplit(final)
+    if final != url:
+        if code == '200' and p.scheme == 'https' and p.netloc == 'kotobank.jp' and p.path.startswith('/word/'):
+            url = urllib.parse.urlunsplit((p.scheme, p.netloc, p.path, '', ''))
+        else:
+            moved.append((word, code, final))
     found = {}
     for sec in re.split(r'class="dictype cf ', s)[1:]:
         name = sec.split('"', 1)[0]
@@ -36,6 +47,7 @@ for line in open(os.path.join(ROOT, 'tools/kigo/kigo.tsv'), encoding='utf-8'):
     verified[word] = {'season': season, 'lookup': look, 'url': url, 'dicts': {DICTS[n]: found[n] for n in found}}
     rows.append([season, word, yomi, expl])
 
+for m in moved: print('転送先を採らなかった（url は元のまま）:', m)
 if bad:
     for b in bad: print('確かめられない:', b)
     sys.exit(1)
