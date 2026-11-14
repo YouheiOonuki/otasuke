@@ -38,6 +38,12 @@
       url: 'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000194155_00004.html',
       checked: CHECKED,
     },
+    // 特定健診の対象（40〜74 歳）。guide の「線は特定健診（40〜74 歳が対象）のための値」の根拠（Q-238 で 2026-11-15 に開いて同じことを確かめた）
+    target: {
+      title: '厚生労働省「特定健診・特定保健指導について」',
+      url: 'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000161103.html',
+      checked: CHECKED,
+    },
   };
 
   // 項目（順は画面と印刷の並び）。unit は資料の書き方。打ち間違いを止める範囲は ../calc.js の KENSHIN_RANGE（線の値ではない）

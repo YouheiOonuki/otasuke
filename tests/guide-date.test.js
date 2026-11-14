@@ -16,11 +16,11 @@ const GUIDE_CHECKED = {
   'shakyo/guide.html': 'constants.js',
   'tejun/guide.html': 'constants.js',
   'tokei/guide.html': 'constants.js',
+  'kenshin/guide.html': 'kenshin/kenshin-values.js',
 };
 // 対応から外した guide と理由（日付は動かさない。出どころの確かめ直しは企画側が決める）
 const NOT_TIED = {
   'honmono/guide.html': '根拠の Public Suffix List（版は psl-data.js）が constants.js の出典に無い',
-  'kenshin/guide.html': '根拠の厚生労働省 0000161103.html が kenshin-values.js の出典に無い',
   'notore/guide.html': '根拠（常用漢字表・学習指導要領）が値ファイル book-values.js の出典に無い（constants.js 側にある）',
   'yasashii/guide.html': '根拠の出入国在留管理庁「やさしい日本語ガイドライン」がどの値ファイルの出典にも無い',
 };
