@@ -5,6 +5,7 @@
 //   PRIVATE を入れないと「xxx.pages.dev」の持ち主が「pages.dev」と出てしまい、持ち主の単位として誤る
 // ・日本語などの規則はブラウザが URL を読むときと同じ punycode（xn--）に直して入れる
 // ・リストは Mozilla Public License 2.0。出力の先頭に元の告知と VERSION・COMMIT を残す
+// ・作った日（端末の暦の日付）を CHECKED に書く。guide の最終確認日はこれと constants.js の CHECKED の古いほう（tests/guide-date.test.js。Q-240）
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -28,6 +29,8 @@ for (const raw of text.split('\n')) {
   const ascii = body.split('.').map((l) => (l === '*' ? '*' : url.domainToASCII(l) || l.toLowerCase())).join('.');
   (section === 'private' ? priv : icann).push(neg + ascii);
 }
+const now = new Date();
+const checked = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 if (icann.length < 5000 || priv.length < 1000) throw new Error('規則の数が少なすぎる: ' + icann.length + ' / ' + priv.length);
 const out = `// This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,7 +40,9 @@ const out = `// This Source Code Form is subject to the terms of the Mozilla Pub
 // 元のリスト: VERSION ${version}・COMMIT ${commit}。日本語などの規則は punycode（xn--）に直した。コメントは省いた
 (function (root) {
   'use strict';
+  var CHECKED = '${checked}';   // この写しを作った日（build-psl.cjs が書く）
   var PSL = {
+    checked: CHECKED,
     version: ${JSON.stringify(version)},
     commit: ${JSON.stringify(commit)},
     icann: ${JSON.stringify(icann.join('\n'))},
@@ -48,4 +53,4 @@ const out = `// This Source Code Form is subject to the terms of the Mozilla Pub
 })(this);
 `;
 fs.writeFileSync(path.join(__dirname, '..', '..', 'honmono', 'psl-data.js'), out);
-console.log('ICANN', icann.length, 'PRIVATE', priv.length, 'bytes', Buffer.byteLength(out));
+console.log('CHECKED', checked, 'VERSION', version, 'ICANN', icann.length, 'PRIVATE', priv.length, 'bytes', Buffer.byteLength(out));

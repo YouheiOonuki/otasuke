@@ -20,7 +20,7 @@ const GUIDE_CHECKED = {
 };
 // 対応から外した guide と理由（日付は動かさない。出どころの確かめ直しは企画側が決める）
 const NOT_TIED = {
-  'honmono/guide.html': '根拠の Public Suffix List（版は psl-data.js）が constants.js の出典に無い',
+  'honmono/guide.html': 'constants.js の出典のうち消費者庁 caution_039 の題が原文と違う（Q-236、2026-11-15）。guide もその題を出すので、constants.js と psl-data.js の両方には対応させていない',
   'notore/guide.html': '根拠（常用漢字表・学習指導要領）が値ファイル book-values.js の出典に無い（constants.js 側にある）',
   'yasashii/guide.html': '根拠の出入国在留管理庁「やさしい日本語ガイドライン」がどの値ファイルの出典にも無い',
 };
