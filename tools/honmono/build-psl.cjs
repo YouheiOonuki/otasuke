@@ -42,7 +42,6 @@ const out = `// This Source Code Form is subject to the terms of the Mozilla Pub
   'use strict';
   var CHECKED = '${checked}';   // この写しを作った日（build-psl.cjs が書く）
   var PSL = {
-    checked: CHECKED,
     version: ${JSON.stringify(version)},
     commit: ${JSON.stringify(commit)},
     icann: ${JSON.stringify(icann.join('\n'))},
