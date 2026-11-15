@@ -8,7 +8,7 @@ const path = require('node:path');
 
 const ROOT = path.join(__dirname, '..');
 
-// guide → 確認日を持つ値ファイル（対応はここ 1 か所）
+// guide → 確認日を持つ値ファイル（対応はここ 1 か所）。値ファイルを複数並べたときは、guide の日付はその CHECKED の古いほう、外の出どころはどれかの出典にあればよい
 const GUIDE_CHECKED = {
   'daicho/guide.html': 'constants.js',
   'kigo/guide.html': 'constants.js',
@@ -19,10 +19,10 @@ const GUIDE_CHECKED = {
   'kenshin/guide.html': 'kenshin/kenshin-values.js',
   'notore/guide.html': 'constants.js',
   'yasashii/guide.html': 'constants.js',
+  'honmono/guide.html': ['constants.js', 'honmono/psl-data.js'],
 };
 // 対応から外した guide と理由（日付は動かさない。出どころの確かめ直しは企画側が決める）
 const NOT_TIED = {
-  'honmono/guide.html': 'constants.js の出典のうち消費者庁 caution_039 の題が原文と違う（Q-236、2026-11-15）。guide もその題を出すので、constants.js と psl-data.js の両方には対応させていない',
 };
 
 const read = (f) => fs.readFileSync(path.join(ROOT, f), 'utf8');
@@ -38,17 +38,22 @@ test('guide は全部、対応か対応外のどちらかに入っている', ()
 });
 
 for (const [g, v] of Object.entries(GUIDE_CHECKED)) {
-  test(`${g} の最終確認日が ${v} の CHECKED と同じ`, () => {
-    const c = checkedOf(v);
-    assert.match(c || '', /^\d{4}-\d{2}-\d{2}$/, `${v} に CHECKED が無い`);
+  const files = [].concat(v);
+  const name = files.join('・');
+  test(`${g} の最終確認日が ${name} の CHECKED（古いほう）と同じ`, () => {
+    const cs = files.map((f) => {
+      const c = checkedOf(f);
+      assert.match(c || '', /^\d{4}-\d{2}-\d{2}$/, `${f} に CHECKED が無い`);
+      return c;
+    });
     const [attr, text] = guideDate(g);
     assert.equal(attr, text, 'datetime と表示が同じ');
-    assert.equal(attr, c);
+    assert.equal(attr, cs.sort()[0]);
   });
-  test(`${g} の外の出どころは ${v} の出典に全部ある`, () => {
-    const src = read(v);
+  test(`${g} の外の出どころは ${name} の出典に全部ある`, () => {
+    const src = files.map(read).join('\n');
     const links = outLinks(g);
     assert.ok(links.length > 0);
-    for (const u of links) assert.ok(src.includes(u), `${u} が ${v} に無い`);
+    for (const u of links) assert.ok(src.includes(u), `${u} が ${name} に無い`);
   });
 }
