@@ -185,6 +185,14 @@
       url: 'https://laws.e-gov.go.jp/law/431CO0000000143',
       checked: CHECKED,
     },
+
+    // やさしい日本語に言い換え（yasashii/）の考え方の出どころ。書き言葉のお知らせを、短い文・ふりがな・むずかしい言葉の言い換えで伝える。
+    // 言い換えは AI が行うので、ここの値を画面は読まない。guide の「最終確認日」をこの出典の確認日に対応させるためにここに置く（tests/guide-date.test.js）
+    yasashiiGuideline: {
+      source: '出入国在留管理庁・文化庁「在留支援のためのやさしい日本語ガイドライン」（書き言葉のガイドライン）',
+      url: 'https://www.moj.go.jp/isa/support/portal/plainjapanese_guideline.html',
+      checked: CHECKED,
+    },
   };
 
   if (typeof module !== 'undefined' && module.exports) module.exports = CONSTANTS;

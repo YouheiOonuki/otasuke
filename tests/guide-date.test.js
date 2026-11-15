@@ -18,11 +18,11 @@ const GUIDE_CHECKED = {
   'tokei/guide.html': 'constants.js',
   'kenshin/guide.html': 'kenshin/kenshin-values.js',
   'notore/guide.html': 'constants.js',
+  'yasashii/guide.html': 'constants.js',
 };
 // 対応から外した guide と理由（日付は動かさない。出どころの確かめ直しは企画側が決める）
 const NOT_TIED = {
   'honmono/guide.html': 'constants.js の出典のうち消費者庁 caution_039 の題が原文と違う（Q-236、2026-11-15）。guide もその題を出すので、constants.js と psl-data.js の両方には対応させていない',
-  'yasashii/guide.html': '根拠の出入国在留管理庁「やさしい日本語ガイドライン」がどの値ファイルの出典にも無い',
 };
 
 const read = (f) => fs.readFileSync(path.join(ROOT, f), 'utf8');
