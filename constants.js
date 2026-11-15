@@ -6,7 +6,7 @@
 (function (root) {
   'use strict';
 
-  var CHECKED = '2026-11-14';   // 下の出典をすべてこの日に開いて確かめた
+  var CHECKED = '2026-11-15';   // 下の出典をすべてこの日に開いて確かめた
 
   var CONSTANTS = {
     CHECKED: CHECKED,
@@ -136,7 +136,7 @@
       brands: [
         { id: 'nta', name: '国税庁（e-Tax）', domains: ['nta.go.jp'], words: ['国税庁', '税務署', 'e-Tax', 'eTax', 'イータックス'], tokens: ['nta', 'etax', 'e-tax', 'kokuzei'],
           note: '国税庁は、URL を書いた案内を SMS で送ることはなく、税金の納付の求めや差押えについて SMS・メール・LINE を送ることもないと案内しています。e-Tax のメールは、原則として本文に URL を書いていないとしています。',
-          src: '国税庁「不審なメールや電話にご注意ください」・e-Tax「『税務署からのお知らせ』等のメールが届いた方へ」', url: 'https://www.nta.go.jp/information/attention/attention.htm', url2: 'https://www.e-tax.nta.go.jp/topics/topics_oshirase_mail.htm' },
+          src: '国税庁「国税庁をかたった偽メールにご注意ください」・e-Tax「『税務署からのお知らせ』等のメールが届いた方へ」', url: 'https://www.nta.go.jp/information/attention/attention.htm', url2: 'https://www.e-tax.nta.go.jp/topics/topics_oshirase_mail.htm' },
         { id: 'nenkin', name: '日本年金機構', domains: ['nenkin.go.jp'], words: ['日本年金機構', '年金機構'], tokens: ['nenkin'] },
         { id: 'myna', name: 'マイナポータル', domains: ['myna.go.jp'], words: ['マイナポータル'], tokens: ['myna', 'mynaportal'] },
         { id: 'japanpost', name: '日本郵便・ゆうちょ銀行', domains: ['japanpost.jp'], words: ['日本郵便', '郵便局', 'ゆうパック', 'ゆうちょ', 'JP POST', 'Japan Post'], tokens: ['japanpost', 'jppost', 'japan-post', 'jp-post', 'yubin', 'yuubin', 'yucho', 'yuucho', 'jpbank', 'jp-bank'],
@@ -171,7 +171,7 @@
       // 画面の「確かめ方」の根拠（言い換えて 1 文ずつ使う）
       advice: {
         npa: { name: '警察庁「フィッシング対策」', url: 'https://www.npa.go.jp/bureau/cyber/countermeasures/phishing.html' },   // 送信元の名前・アドレスは簡単に偽装できる／フィッシング 110 番・警察へ
-        caa: { name: '消費者庁「クレジットカードの不正利用にご注意ください!」', url: 'https://www.caa.go.jp/policies/policy/consumer_policy/caution/caution_039' },   // SMS やメールでいきなりカード番号を求めることはない
+        caa: { name: '消費者庁「インターネットの安全・安心な利用」の「クレジットカード不正利用に関する注意喚起」', url: 'https://www.caa.go.jp/policies/policy/consumer_policy/caution/caution_039' },   // SMS やメールでいきなりカード番号を求めることはない
         antiphishing: { name: 'フィッシング対策協議会「フィッシングとは」', url: 'https://www.antiphishing.jp/consumer/abt_phishing.html' },   // 見破れない・鍵マークでも偽物がある・いつもの公式アプリとブックマークから
         kokusen: { name: '国民生活センター「通販サイト、カード会社、宅配便事業者などをかたる偽SMS・メールに警戒を！」（2022-12-21）', url: 'https://www.kokusen.go.jp/news/data/n-20221221_2.html' },   // 消費者ホットライン 188
         etax: { name: 'e-Tax「不審なショートメッセージやメールにご注意ください」', url: 'https://www.e-tax.nta.go.jp/topics/2022/topics_20220815.htm' },   // 文面のリンクの表示と行き先がちがう事例
