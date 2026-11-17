@@ -161,7 +161,7 @@
       vals.push(v);
     });
     // 線（資料の値）。名前は線の右端の上。近い線の名前が重なるときは、下の線の名前を線の下に。
-    // 点の値の字に重なるときは、線の反対の側、それでも重なれば左の端（上・下）へ。どこも重なるときは、重なる値の字を点の左に（end 寄せ）
+    // 点の値の字に重なるときは、線の反対の側、それでも重なれば左の端（上・下）へ。どこも重なるときは、重なる値の字を点の左に（end 寄せ）、それでも重なれば点の反対の側に
     var placed = [], labelBoxes = [];
     lines.slice().sort(function (a, b) { return b.v - a.v; }).forEach(function (l) {
       var y = n2(Y(l.v));
@@ -187,6 +187,8 @@
         pick = cands.filter(clears)[0] || cands[0];
         var pb = box(l.short, pick[0], pick[1], pick[2]);
         vals.forEach(function (v) { if (hit(pb, v.box)) { v.x = v.cx; v.anchor = 'end'; v.box = endBox(v); } });
+        // end 寄せでも重なる値の字は、点の反対の側へ（上なら下）
+        vals.forEach(function (v) { if (hit(pb, v.box)) { var cy = pts[v.i] && Y(pts[v.i].y); v.y = n2(v.y < cy ? cy + f * 1.15 : cy - f * 0.55); v.box = box(v.txt, v.x, v.anchor, v.y); } });
       }
       if (pick[0] === R) placed.push(pick[2]);
       labelBoxes.push(box(l.short, pick[0], pick[1], pick[2]));

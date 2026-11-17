@@ -208,6 +208,50 @@ test('グラフ: 点の値の字は縦軸の目盛りの字と重ならない（
   }
 });
 
+test('グラフ: 点の値の字は資料の線の名前と重ならない（1・3・10 回 × 全項目 × 画面と紙、Q-394）', () => {
+  // 例の 6 行（app.js の「例」と同じ値）を回して 10 回分。1・3 回は後ろから
+  const ROWS = [
+    [154.2, 52.1, 78.0, 124, 76, 92, 5.5, 128, 66, 98, 21, 17, 24, 72.4, 4.6],
+    [154.0, 53.0, 79.5, 128, 78, 95, 5.6, 134, 64, 112, 22, 19, 26, 70.8, 4.8],
+    [153.8, 54.2, 81.0, 131, 80, 98, 5.7, 141, 61, 126, 24, 22, 29, 69.5, 5.0],
+    [153.7, 54.8, 82.5, 136, 83, 101, 5.8, 146, 60, 138, 25, 24, 31, 67.9, 5.1],
+    [153.5, 55.6, 83.0, 138, 84, 104, 5.9, 139, 62, 131, 23, 21, 30, 66.2, 5.2],
+    [153.4, 55.1, 82.0, 133, 82, 99, 5.8, 132, 63, 120, 22, 20, 28, 65.0, 5.0],
+  ];
+  const keys = V.ITEMS.filter((i) => !i.calc).map((i) => i.key);
+  // 字の箱（基線から 1.15 字上・0.35 字下。数字・記号 1 字 0.6 字幅、全角 1 字幅。ブラウザの getBoundingClientRect で見た箱に合わせた見積もり）
+  const boxOf = (x, a, y, t, f) => {
+    let tw = 0;
+    for (const ch of t) tw += ch.charCodeAt(0) > 0xff ? f : f * 0.6;
+    const l = a === 'start' ? x : a === 'end' ? x - tw : x - tw / 2;
+    return { l, r: l + tw, t: y - f * 1.15, b: y + f * 0.35 };
+  };
+  let n0 = 0;
+  for (const n of [1, 3, 10]) {
+    const recs = [];
+    for (let i = 10 - n; i < 10; i++) {
+      const v = {};
+      keys.forEach((k, j) => { v[k] = ROWS[i % 6][j]; });
+      recs.push({ when: (2015 + i) + '-06', random: i === 2, v });
+    }
+    const p = C.normKenshin({ people: [{ name: '', sex: 'f', records: recs }], cur: 0 }).people[0];
+    for (const it of V.ITEMS) {
+      const pts = K.series(p, it.key);
+      for (const o of [{ w: 320, h: 150, font: 13, labels: 'last' }, { w: 300, h: 250, font: 15, labels: 'all' }]) {
+        const svg = K.chartSVG(Object.assign({ item: it, points: pts, lines: K.linesFor(it, p, pts), years: K.yearRange(p) }, o));
+        const vals = [...svg.matchAll(/<text x="([\d.]+)" text-anchor="(start|middle|end)" y="([\d.]+)" class="k-val">([^<]+)<\/text>/g)].map((m) => boxOf(+m[1], m[2], +m[3], m[4], o.font));
+        const labels = [...svg.matchAll(/<text x="([\d.]+)" y="([\d.]+)" text-anchor="(start|end)" class="k-linelabel">([^<]+)<\/text>/g)].map((m) => [m[4], boxOf(+m[1], m[3], +m[2], m[4], o.font)]);
+        n0 += labels.length;
+        for (const a of vals) for (const [t, b] of labels) {
+          const ox = Math.min(a.r, b.r) - Math.max(a.l, b.l), oy = Math.min(a.b, b.b) - Math.max(a.t, b.t);
+          assert.ok(!(ox > 1 && oy > 1), n + ' 回 ' + it.key + ' ' + o.w + ': 値の字と線の名前 ' + t + ' が重なる');
+        }
+      }
+    }
+  }
+  assert.ok(n0 > 0);
+});
+
 test('画面と紙に「異常」「正常」・医療の NG 語・判定の文を出さない', () => {
   const NG = /異常|正常|診断|改善|予防|効果|治る|若返/;
   for (const f of ['kenshin/index.html', 'kenshin/guide.html', 'kenshin/app.js', 'kenshin/kenshin-calc.js', 'kenshin/kenshin-values.js']) {
