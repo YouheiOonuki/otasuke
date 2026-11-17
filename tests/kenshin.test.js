@@ -186,6 +186,28 @@ test('グラフ: 線・点・値の字があり、目盛りの字が切れない
   assert.equal(K.fmt(it, 130), '130');
 });
 
+test('グラフ: 点の値の字は縦軸の目盛りの字と重ならない（1・3・10 回、最初の回が 1 月）', () => {
+  for (const n of [1, 3, 10]) {
+    const recs = [];
+    for (let i = 0; i < n; i++) recs.push({ when: (2025 - n + 1 + i) + (i === 0 ? '-01' : '-06'), v: { height: 154.2 + i / 10, waist: 78, sbp: 130 + i } });
+    const p = C.normKenshin({ people: [{ name: '', sex: 'f', records: recs }], cur: 0 }).people[0];
+    for (const key of ['height', 'waist', 'sbp']) {
+      const it = K.itemOf(key), pts = K.series(p, key);
+      for (const o of [{ w: 320, h: 150, font: 13, labels: 'last' }, { w: 300, h: 250, font: 15, labels: 'all' }]) {
+        const svg = K.chartSVG(Object.assign({ item: it, points: pts, lines: K.linesFor(it, p, pts), years: K.yearRange(p) }, o));
+        const tickRight = Math.max(...[...svg.matchAll(/<text x="([\d.]+)" y="[\d.]+" text-anchor="end" class="k-muted">/g)].map((m) => Number(m[1])));
+        const vals = [...svg.matchAll(/<text x="([\d.]+)" text-anchor="(start|middle)" y="[\d.]+" class="k-val">([^<]+)<\/text>/g)];
+        assert.ok(vals.length >= 1, n + ' 回 ' + key);
+        for (const [, x, a, t] of vals) {
+          // 数字 1 字 ＝ 0.6 字幅で見た字の左端
+          const left = a === 'start' ? Number(x) : Number(x) - t.length * o.font * 0.6 / 2;
+          assert.ok(left > tickRight, n + ' 回 ' + key + ' ' + t + ': 字の左端 ' + left + ' ＞ 目盛りの右端 ' + tickRight);
+        }
+      }
+    }
+  }
+});
+
 test('画面と紙に「異常」「正常」・医療の NG 語・判定の文を出さない', () => {
   const NG = /異常|正常|診断|改善|予防|効果|治る|若返/;
   for (const f of ['kenshin/index.html', 'kenshin/guide.html', 'kenshin/app.js', 'kenshin/kenshin-calc.js', 'kenshin/kenshin-values.js']) {
