@@ -138,33 +138,69 @@
       if ((X1 - 1 - yr) % every === 0) s += '<text x="' + x + '" y="' + (h - f * 0.45) + '" text-anchor="middle" class="k-muted">' + yr + '</text>';
     }
     s += '<rect x="' + padL + '" y="' + padT + '" width="' + pw + '" height="' + ph + '" class="k-frame"/>';
-    // 線（資料の値）。値の字は線の右端の上。近い線の字が重なるときは、下の線の字を線の下に
-    var placed = [];
+    // 字の箱の見積もり（x は左端、y は基線）。数字・記号は 1 字 0.62 字幅、全角は 1 字幅。高さは基線の 1.15 字上から 0.35 字下（字の箱は行の高さぶんある）
+    function box(txt, x, anchor, y) {
+      var tw = 0;
+      for (var k = 0; k < txt.length; k++) tw += txt.charCodeAt(k) > 0xff ? f : f * 0.62;
+      var left = anchor === 'start' ? x : anchor === 'end' ? x - tw : x - tw / 2;
+      return { l: left, r: left + tw, t: y - f * 1.15, b: y + f * 0.35 };
+    }
+    function hit(a, b) { return Math.min(a.r, b.r) - Math.max(a.l, b.l) > 0 && Math.min(a.b, b.b) - Math.max(a.t, b.t) > 0; }
+    // 点の値の字（線の名前より先に場所を決め、線の名前がそれを避ける）
+    var vals = [];
+    pts.forEach(function (p, i) {
+      var show = o.labels === 'all' ? pts.length <= 6 || i === 0 || i === pts.length - 1 : i === pts.length - 1;
+      if (!show) return;
+      var cx = n2(X(p.t)), cy = n2(Y(p.y));
+      // 点の上に値。上が詰まるときは下に
+      var above = cy - f * 0.6 > padT + f * 0.4;
+      // 左端に近い点は、字の左端を枠の内に寄せる（縦軸の目盛りの字と重ねない）。字の幅は太字の数字で 1 字 0.62 字幅と見積もる
+      var txt = fmt(item, p.y), half = txt.length * f * 0.62 / 2;
+      var v = { i: i, txt: txt, cx: cx, x: cx - half < padL + 2 ? padL + 2 : cx, anchor: cx - half < padL + 2 ? 'start' : 'middle', y: n2(above ? cy - f * 0.55 : cy + f * 1.15) };
+      v.box = box(txt, v.x, v.anchor, v.y);
+      vals.push(v);
+    });
+    // 線（資料の値）。名前は線の右端の上。近い線の名前が重なるときは、下の線の名前を線の下に。
+    // 点の値の字に重なるときは、線の反対の側、それでも重なれば左の端（上・下）へ。どこも重なるときは、重なる値の字を点の左に（end 寄せ）
+    var placed = [], labelBoxes = [];
     lines.slice().sort(function (a, b) { return b.v - a.v; }).forEach(function (l) {
       var y = n2(Y(l.v));
       s += '<line x1="' + padL + '" x2="' + (w - padR) + '" y1="' + y + '" y2="' + y + '" class="k-line k-' + l.kind + '"' +
         (l.kind === 'guide' ? ' stroke-dasharray="' + n2(f * 0.55) + ' ' + n2(f * 0.35) + '"' : l.kind === 'strat' ? ' stroke-dasharray="' + n2(f * 0.18) + ' ' + n2(f * 0.3) + '"' : '') + '/>';
-      var ty = n2(y - f * 0.25);
-      if (placed.some(function (q) { return Math.abs(q - ty) < f * 1.05; })) ty = n2(y + f * 0.95);
-      placed.push(ty);
-      s += '<text x="' + (w - padR - 2) + '" y="' + ty + '" text-anchor="end" class="k-linelabel">' + esc(l.short) + '</text>';
+      var up = n2(y - f * 0.25), down = n2(y + f * 0.95);
+      var ty = placed.some(function (q) { return Math.abs(q - up) < f * 1.05; }) ? down : up;
+      var R = w - padR - 2, L = padL + 2;
+      var cands = [[R, 'end', ty], [R, 'end', ty === up ? down : up], [L, 'start', up], [L, 'start', down]];
+      var free = function (c) {
+        var b = box(l.short, c[0], c[1], c[2]);
+        return !vals.some(function (v) { return hit(b, v.box); }) && !labelBoxes.some(function (q) { return hit(b, q); });
+      };
+      var pick = cands.filter(free)[0];
+      if (!pick) {
+        // 重なる値の字を end 寄せにすれば空く場所を、上の順に探す。無ければ最初の場所のまま end 寄せに
+        var endBox = function (v) { return box(v.txt, v.cx, 'end', v.y); };
+        var clears = function (c) {
+          var b = box(l.short, c[0], c[1], c[2]);
+          return !labelBoxes.some(function (q) { return hit(b, q); }) &&
+            vals.every(function (v) { return !hit(b, v.box) || (endBox(v).l >= padL + 2 && !hit(b, endBox(v))); });
+        };
+        pick = cands.filter(clears)[0] || cands[0];
+        var pb = box(l.short, pick[0], pick[1], pick[2]);
+        vals.forEach(function (v) { if (hit(pb, v.box)) { v.x = v.cx; v.anchor = 'end'; v.box = endBox(v); } });
+      }
+      if (pick[0] === R) placed.push(pick[2]);
+      labelBoxes.push(box(l.short, pick[0], pick[1], pick[2]));
+      s += '<text x="' + pick[0] + '" y="' + pick[2] + '" text-anchor="' + pick[1] + '" class="k-linelabel">' + esc(l.short) + '</text>';
     });
     // 点と折れ線
     if (pts.length > 1) {
       s += '<polyline class="k-data" points="' + pts.map(function (p) { return n2(X(p.t)) + ',' + n2(Y(p.y)); }).join(' ') + '"/>';
     }
     pts.forEach(function (p, i) {
-      var cx = n2(X(p.t)), cy = n2(Y(p.y));
-      s += '<circle cx="' + cx + '" cy="' + cy + '" r="' + n2(f * 0.32) + '" class="k-pt' + (p.random ? ' k-random' : '') + '"/>';
-      var show = o.labels === 'all' ? pts.length <= 6 || i === 0 || i === pts.length - 1 : i === pts.length - 1;
-      if (show) {
-        // 点の上に値。上が詰まるときは下に
-        var above = cy - f * 0.6 > padT + f * 0.4;
-        // 左端に近い点は、字の左端を枠の内に寄せる（縦軸の目盛りの字と重ねない）。字の幅は太字の数字で 1 字 0.62 字幅と見積もる
-        var txt = fmt(item, p.y), half = txt.length * f * 0.62 / 2;
-        var at = cx - half < padL + 2 ? 'x="' + (padL + 2) + '" text-anchor="start"' : 'x="' + cx + '" text-anchor="middle"';
-        s += '<text ' + at + ' y="' + n2(above ? cy - f * 0.55 : cy + f * 1.15) + '" class="k-val">' + txt + '</text>';
-      }
+      s += '<circle cx="' + n2(X(p.t)) + '" cy="' + n2(Y(p.y)) + '" r="' + n2(f * 0.32) + '" class="k-pt' + (p.random ? ' k-random' : '') + '"/>';
+      vals.filter(function (v) { return v.i === i; }).forEach(function (v) {
+        s += '<text x="' + v.x + '" text-anchor="' + v.anchor + '" y="' + v.y + '" class="k-val">' + v.txt + '</text>';
+      });
     });
     return s + '</svg>';
   }
