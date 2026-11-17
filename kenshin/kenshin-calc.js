@@ -160,7 +160,10 @@
       if (show) {
         // 点の上に値。上が詰まるときは下に
         var above = cy - f * 0.6 > padT + f * 0.4;
-        s += '<text x="' + cx + '" y="' + n2(above ? cy - f * 0.55 : cy + f * 1.15) + '" text-anchor="middle" class="k-val">' + fmt(item, p.y) + '</text>';
+        // 左端に近い点は、字の左端を枠の内に寄せる（縦軸の目盛りの字と重ねない）。字の幅は太字の数字で 1 字 0.62 字幅と見積もる
+        var txt = fmt(item, p.y), half = txt.length * f * 0.62 / 2;
+        var at = cx - half < padL + 2 ? 'x="' + (padL + 2) + '" text-anchor="start"' : 'x="' + cx + '" text-anchor="middle"';
+        s += '<text ' + at + ' y="' + n2(above ? cy - f * 0.55 : cy + f * 1.15) + '" class="k-val">' + txt + '</text>';
       }
     });
     return s + '</svg>';
