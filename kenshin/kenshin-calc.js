@@ -133,9 +133,11 @@
     var years = X1 - X0, maxLabels = Math.max(1, Math.floor(pw / (f * 2.6)));
     var every = Math.ceil(years / maxLabels);
     for (var yr = X0; yr < X1; yr++) {
-      var x = n2(X(yr + 0.5));
+      // 年の字は年の幅のまん中。年の幅が字より狭い（年が多い）とき、右端の年は字の右端を枠の右端にそろえる（図の箱の外へ出さない）
+      var x = n2(X(yr + 0.5)), yAnchor = x + String(yr).length * f * 0.62 / 2 > w - padR ? 'end' : 'middle';
+      if (yAnchor === 'end') x = w - padR;
       s += '<line x1="' + n2(X(yr)) + '" x2="' + n2(X(yr)) + '" y1="' + padT + '" y2="' + (padT + ph) + '" class="k-grid"/>';
-      if ((X1 - 1 - yr) % every === 0) s += '<text x="' + x + '" y="' + (h - f * 0.45) + '" text-anchor="middle" class="k-muted">' + yr + '</text>';
+      if ((X1 - 1 - yr) % every === 0) s += '<text x="' + x + '" y="' + (h - f * 0.45) + '" text-anchor="' + yAnchor + '" class="k-muted">' + yr + '</text>';
     }
     s += '<rect x="' + padL + '" y="' + padT + '" width="' + pw + '" height="' + ph + '" class="k-frame"/>';
     // 字の箱の見積もり（x は左端、y は基線）。数字・記号は 1 字 0.62 字幅、全角は 1 字幅。高さは基線の 1.15 字上から 0.35 字下（字の箱は行の高さぶんある）
@@ -154,9 +156,12 @@
       var cx = n2(X(p.t)), cy = n2(Y(p.y));
       // 点の上に値。上が詰まるときは下に
       var above = cy - f * 0.6 > padT + f * 0.4;
-      // 左端に近い点は、字の左端を枠の内に寄せる（縦軸の目盛りの字と重ねない）。字の幅は太字の数字で 1 字 0.62 字幅と見積もる
+      // 左端に近い点は、字の左端を枠の内に寄せる（縦軸の目盛りの字と重ねない）。右端に近い点は、字の右端を枠の内に寄せる（図の箱の外へ出さない）。
+      // 字の幅は太字の数字で 1 字 0.62 字幅と見積もる
       var txt = fmt(item, p.y), half = txt.length * f * 0.62 / 2;
-      var v = { i: i, txt: txt, cx: cx, x: cx - half < padL + 2 ? padL + 2 : cx, anchor: cx - half < padL + 2 ? 'start' : 'middle', y: n2(above ? cy - f * 0.55 : cy + f * 1.15) };
+      var inL = padL + 2, inR = w - padR - 2;
+      var vx = cx - half < inL ? inL : cx + half > inR ? inR : cx, va = cx - half < inL ? 'start' : cx + half > inR ? 'end' : 'middle';
+      var v = { i: i, txt: txt, cx: cx, x: vx, anchor: va, y: n2(above ? cy - f * 0.55 : cy + f * 1.15) };
       v.box = box(txt, v.x, v.anchor, v.y);
       vals.push(v);
     });

@@ -195,17 +195,55 @@ test('グラフ: 点の値の字は縦軸の目盛りの字と重ならない（
       const it = K.itemOf(key), pts = K.series(p, key);
       for (const o of [{ w: 320, h: 150, font: 13, labels: 'last' }, { w: 300, h: 250, font: 15, labels: 'all' }]) {
         const svg = K.chartSVG(Object.assign({ item: it, points: pts, lines: K.linesFor(it, p, pts), years: K.yearRange(p) }, o));
-        const tickRight = Math.max(...[...svg.matchAll(/<text x="([\d.]+)" y="[\d.]+" text-anchor="end" class="k-muted">/g)].map((m) => Number(m[1])));
-        const vals = [...svg.matchAll(/<text x="([\d.]+)" text-anchor="(start|middle)" y="[\d.]+" class="k-val">([^<]+)<\/text>/g)];
+        // 縦軸の目盛りの字（右寄せ。x はどれも同じ）。右端の年の字も右寄せになることがある（Q-490）ので、いちばん左のものを取る
+        const tickRight = Math.min(...[...svg.matchAll(/<text x="([\d.]+)" y="[\d.]+" text-anchor="end" class="k-muted">/g)].map((m) => Number(m[1])));
+        const vals = [...svg.matchAll(/<text x="([\d.]+)" text-anchor="(start|middle|end)" y="[\d.]+" class="k-val">([^<]+)<\/text>/g)];
         assert.ok(vals.length >= 1, n + ' 回 ' + key);
         for (const [, x, a, t] of vals) {
           // 数字 1 字 ＝ 0.6 字幅で見た字の左端
-          const left = a === 'start' ? Number(x) : Number(x) - t.length * o.font * 0.6 / 2;
+          const left = a === 'start' ? Number(x) : Number(x) - t.length * o.font * 0.6 / (a === 'end' ? 1 : 2);
           assert.ok(left > tickRight, n + ' 回 ' + key + ' ' + t + ': 字の左端 ' + left + ' ＞ 目盛りの右端 ' + tickRight);
         }
       }
     }
   }
+});
+
+test('グラフ: 字は図の箱の左右を超えない（10・30・60 回 × 全項目 × 画面と紙、Q-490）', () => {
+  // 年が多いと年の幅が字より狭くなり、右端の年の字と最後の点の値の字が図の右へ出ていた（紙の 30 回で 21・60 回で 24）
+  const ROWS = [
+    [154.2, 52.1, 78.0, 124, 76, 92, 5.5, 128, 66, 98, 21, 17, 24, 72.4, 4.6],
+    [153.8, 54.2, 81.0, 131, 80, 98, 5.7, 141, 61, 126, 24, 22, 29, 69.5, 5.0],
+    [153.4, 55.1, 82.0, 133, 82, 99, 5.8, 132, 63, 120, 22, 20, 28, 65.0, 5.0],
+  ];
+  const keys = V.ITEMS.filter((i) => !i.calc).map((i) => i.key);
+  let checked = 0;
+  for (const n of [10, 30, 60]) {
+    const recs = [];
+    for (let i = 0; i < n; i++) {
+      const v = {};
+      keys.forEach((k, j) => { v[k] = ROWS[i % 3][j]; });
+      recs.push({ when: (2025 - n + 1 + i) + '-06', v });
+    }
+    const p = C.normKenshin({ people: [{ name: '', sex: 'f', records: recs }], cur: 0 }).people[0];
+    assert.equal(p.records.length, n);
+    for (const it of V.ITEMS) {
+      const pts = K.series(p, it.key);
+      assert.equal(pts.length, n, n + ' 回 ' + it.key + ' の点の数');
+      for (const o of [{ w: 320, h: 150, font: 13, labels: 'last' }, { w: 300, h: 250, font: 15, labels: 'all' }]) {
+        const svg = K.chartSVG(Object.assign({ item: it, points: pts, lines: K.linesFor(it, p, pts), years: K.yearRange(p) }, o));
+        assert.equal((svg.match(/<circle /g) || []).length, n, n + ' 回 ' + it.key + ' の点の数（図）');
+        for (const m of svg.matchAll(/<text x="([\d.]+)"(?: y="[\d.]+")? text-anchor="(start|middle|end)"[^>]*>([^<]+)<\/text>/g)) {
+          let tw = 0;
+          for (const ch of m[3]) tw += ch.charCodeAt(0) > 0xff ? o.font : o.font * 0.6;
+          const x = Number(m[1]), l = m[2] === 'start' ? x : m[2] === 'end' ? x - tw : x - tw / 2;
+          assert.ok(l >= 0 && l + tw <= o.w, n + ' 回 ' + it.key + ' ' + o.w + ': 「' + m[3] + '」が ' + l.toFixed(1) + '〜' + (l + tw).toFixed(1) + '（箱 0〜' + o.w + '）');
+          checked++;
+        }
+      }
+    }
+  }
+  assert.ok(checked > 0);
 });
 
 test('グラフ: 点の値の字は資料の線の名前と重ならない（1・3・10 回 × 全項目 × 画面と紙、Q-394）', () => {
