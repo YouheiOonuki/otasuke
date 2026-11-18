@@ -14,8 +14,9 @@
   function save(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) { /* 保存できなくても動く */ } }
 
   var opt = load();
-  var firstVisit = true;
-  try { firstVisit = localStorage.getItem(KEY) === null; } catch (e) { /* はじめて扱い */ }
+  // 画面を消さない設定は、一度「時計をスタート」か「画面いっぱいにする」を押した（設定が保存された）端末でだけ、開いた時に取りにいく
+  var keepAwake = false;
+  try { keepAwake = localStorage.getItem(KEY) !== null; } catch (e) { /* 保存が無い扱い */ }
 
   // --- 設定の画面 ---
   function toForm() {
@@ -39,7 +40,8 @@
     $('open-setup').hidden = show;
   }
   $('open-setup').addEventListener('click', function () { showSetup(true); });
-  $('start').addEventListener('click', function () { save(opt); showSetup(false); requestWakeLock(); fit(); });
+  // 「時計をスタート」: 設定の箱を閉じて時計に戻り、画面を消さない設定を取る（時計は開いた時から動いている）
+  $('start').addEventListener('click', function () { save(opt); keepAwake = true; showSetup(false); requestWakeLock(); fit(); });
 
   // --- 全画面 ---
   $('fs').addEventListener('click', function () {
@@ -47,7 +49,7 @@
     var req = el.requestFullscreen || el.webkitRequestFullscreen;
     if (req) { try { var p = req.call(el); if (p && p.catch) p.catch(function () {}); } catch (e) { /* 使えない端末 */ } }
     else $('wl-status').textContent = 'この端末は画面いっぱいにできません。「ホーム画面に追加」すると、上下の枠が消えることがあります。';
-    showSetup(false); requestWakeLock(); setTimeout(fit, 300);
+    keepAwake = true; showSetup(false); requestWakeLock(); setTimeout(fit, 300);
   });
 
   // --- 画面を消さない（Screen Wake Lock API）。ページが隠れると外れるので、見えたときに取り直す ---
@@ -69,7 +71,7 @@
     } catch (e) { status('画面を消さない設定ができませんでした。端末の設定で自動ロックを「なし」にしてください。'); }
   }
   document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState === 'visible') { last = ''; tick(); if (!lock && $('setup').hidden) requestWakeLock(); }
+    if (document.visibilityState === 'visible') { last = ''; tick(); if (!lock && keepAwake && $('setup').hidden) requestWakeLock(); }
   });
 
   // --- 時計 ---
@@ -113,9 +115,9 @@
 
   toForm();
   document.body.className = opt.theme;
-  showSetup(firstVisit);
+  showSetup(false);   // 開いた時から時計を出す（Q-415）。設定の箱は右下の「設定」で開く
   loop();
-  if (!firstVisit) requestWakeLock();
+  if (keepAwake) requestWakeLock();
 
   // オフラインで開けるように（README 13: 登録は sw.js の場所だけ。scope を指定しない）
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {

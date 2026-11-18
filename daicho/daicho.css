@@ -17,3 +17,11 @@
 .bcard { width: 91mm; height: 55mm; border: 0.3mm dashed #000; padding: 3mm 4mm; font-size: 11pt; line-height: 1.5; position: relative; }
 .bcard .box { position: absolute; left: 4mm; right: 4mm; bottom: 5mm; height: 16mm; border: 0.5mm solid #000; }
 .bcard .box span { position: absolute; left: 1.5mm; top: -5.5mm; font-size: 9pt; }
+/* 画面: 幅のある画面では「台帳」の 2 つの欄を横に並べ、見本の紙の頭を最初の画面に入れる（Q-415。1,280×800 で 126 → 200 px 以上） */
+@media screen and (min-width: 640px) {
+  #form > fieldset.req { display: flex; flex-wrap: wrap; align-items: flex-start; column-gap: var(--sp-6); }
+  #form > fieldset.req > legend { flex: 0 0 100%; }
+  #form > fieldset.req > .field { flex: 1 1 12rem; }
+  #form > fieldset.req > .field:has(.choices) { flex: 0 0 auto; }
+  #form > fieldset.req > .btn-row { flex: 0 0 100%; }
+}
