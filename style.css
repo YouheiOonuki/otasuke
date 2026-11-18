@@ -116,6 +116,7 @@ textarea { min-height: 5.5rem; max-width: 100%; padding-block: var(--sp-2); }
 .choices input { width: 1.3rem; height: 1.3rem; accent-color: var(--accent); }
 .choices label:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); font-weight: 700; }
 .check { display: flex; align-items: center; gap: var(--sp-2); min-height: 48px; cursor: pointer; }
+.check + .check { margin-top: var(--sp-2); }   /* 続けて並ぶチェックの行どうしの間（押す所の間。Q-475） */
 .check input { width: 1.4rem; height: 1.4rem; accent-color: var(--accent); flex: none; }
 
 /* ボタン（主の操作は 1 ページ 1 つだけ .btn-primary で大きく、ほかは .btn。色と線は皮が持つ） */
@@ -162,7 +163,7 @@ textarea { min-height: 5.5rem; max-width: 100%; padding-block: var(--sp-2); }
   border-top: 1px solid var(--border);
   margin-top: var(--sp-2);
 }
-.footer-nav ul { list-style: none; display: flex; justify-content: center; flex-wrap: wrap; gap: 0 var(--sp-4); margin-bottom: var(--sp-2); }
+.footer-nav ul { list-style: none; display: flex; justify-content: center; flex-wrap: wrap; gap: var(--sp-2) var(--sp-4); margin-bottom: var(--sp-2); }   /* 折り返した段どうしも 8 px あける（押す所の間。Q-475） */
 .footer-nav a { display: inline-flex; align-items: center; min-height: 48px; color: var(--muted); text-decoration: none; }
 .footer-nav a:hover, .footer-nav a[aria-current="page"] { color: var(--accent); }
 
@@ -208,6 +209,7 @@ details.card.opt[open] > summary { border-bottom: 1px solid var(--border); margi
    =========================== */
 .preview-cap { font-size: 0.95rem; font-weight: normal; color: var(--muted); margin: var(--sp-1) 0; }  /* 見出し（h2）。段 3 で p から変えた */
 .sheets-wrap { overflow: hidden; margin-bottom: var(--sp-4); }
+.print-host > p.no-print { margin-bottom: var(--sp-4); }   /* 「すべての見本を見る」と下の「くわしい設定」の間（押す所の間。Q-475） */
 .sheets { transform-origin: 0 0; width: max-content; }
 .sheet {
   position: relative; width: 210mm; height: 297mm; overflow: hidden;
