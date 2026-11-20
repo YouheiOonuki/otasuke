@@ -96,6 +96,7 @@
   /**
    * 1 項目のグラフ（SVG の文字列）。色は class で決める（画面は style.css のトークン、印刷は白黒）
    * o: { item, points, lines, years:[y0,y1], w, h, font, labels:'all'|'last' }
+   * o.pick（画面だけ。紙は渡さない）: 選んだ回の when。縦の線を 1 本引き、その回の値だけを点のそばに出す。図の箱は Tab で止まり、押した位置を回に直す目盛りを data に持つ
    */
   /** 値の字（小数の項目は 5.0 のように 1 桁を残す） */
   function fmt(item, v) { return item.step < 1 ? Number(v).toFixed(1) : String(v); }
@@ -106,9 +107,9 @@
     var title = item.name + '（' + item.unit + '）';
     var label = title + 'の推移。' + (pts.length ? pts.map(function (p) { return whenLabel(p.when) + ' ' + fmt(item, p.y); }).join('、') : '記録なし') +
       (lines.length ? '。線: ' + lines.map(function (l) { return l.full; }).join('、') : '');
-    var s = '<svg class="kchart" viewBox="0 0 ' + w + ' ' + h + '" width="' + w + '" height="' + h + '" role="img" aria-label="' + esc(label) + '" font-size="' + f + '">';
+    var s = '<svg class="kchart" viewBox="0 0 ' + w + ' ' + h + '" width="' + w + '" height="' + h + '" role="img" aria-label="' + esc(label) + '" font-size="' + f + '"';
     if (!o.years) {
-      return s + '<text x="' + w / 2 + '" y="' + h / 2 + '" text-anchor="middle" class="k-muted">記録なし</text></svg>';
+      return s + '><text x="' + w / 2 + '" y="' + h / 2 + '" text-anchor="middle" class="k-muted">記録なし</text></svg>';
     }
     // 縦の範囲: 点と線がすべて入るように
     var vals = pts.map(function (p) { return p.y; }).concat(lines.map(function (l) { return l.v; }));
@@ -121,6 +122,7 @@
     var padL = Math.round(f * (0.6 * longest + 0.6)), padR = Math.round(f * 0.6), padT = Math.round(f * 0.9), padB = Math.round(f * 1.7);
     var pw = w - padL - padR, ph = h - padT - padB;
     var X0 = o.years[0], X1 = o.years[1] + 1;
+    s += (o.pick ? ' tabindex="0" data-k="' + item.key + '" data-w="' + w + '" data-pl="' + padL + '" data-pw="' + pw + '" data-x0="' + X0 + '" data-x1="' + X1 + '"' : '') + '>';
     function X(t) { return padL + (t - X0) / (X1 - X0) * pw; }
     function Y(v) { return padT + (nt.hi - v) / (nt.hi - nt.lo) * ph; }
     function n2(v) { return Math.round(v * 10) / 10; }
@@ -151,7 +153,7 @@
     // 点の値の字（線の名前より先に場所を決め、線の名前がそれを避ける）
     var vals = [];
     pts.forEach(function (p, i) {
-      var show = o.labels === 'all' ? pts.length <= 6 || i === 0 || i === pts.length - 1 : i === pts.length - 1;
+      var show = o.pick ? p.when === o.pick : o.labels === 'all' ? pts.length <= 6 || i === 0 || i === pts.length - 1 : i === pts.length - 1;
       if (!show) return;
       var cx = n2(X(p.t)), cy = n2(Y(p.y));
       // 点の上に値。上が詰まるときは下に
@@ -199,6 +201,8 @@
       labelBoxes.push(box(l.short, pick[0], pick[1], pick[2]));
       s += '<text x="' + pick[0] + '" y="' + pick[2] + '" text-anchor="' + pick[1] + '" class="k-linelabel">' + esc(l.short) + '</text>';
     });
+    // 選んだ回の縦の線（点と折れ線の下）
+    if (o.pick) { var sx = n2(X(whenT(o.pick))); s += '<line x1="' + sx + '" x2="' + sx + '" y1="' + padT + '" y2="' + (padT + ph) + '" class="k-sel"/>'; }
     // 点と折れ線
     if (pts.length > 1) {
       s += '<polyline class="k-data" points="' + pts.map(function (p) { return n2(X(p.t)) + ',' + n2(Y(p.y)); }).join(' ') + '"/>';
@@ -210,6 +214,13 @@
       });
     });
     return s + '</svg>';
+  }
+
+  /** 押した横の位置（年の目盛りの t）にいちばん近い回の when。同じ近さなら古いほう。記録が無ければ '' */
+  function nearestWhen(records, t) {
+    var best = '', bd = Infinity;
+    records.forEach(function (r) { var d = Math.abs(whenT(r.when) - t); if (d < bd) { bd = d; best = r.when; } });
+    return best;
   }
 
   // --- CSV（表計算ソフトで開ける。1 行 ＝ 1 人の 1 回） ---
@@ -339,7 +350,7 @@
 
   var api = {
     bmi: bmi, whenT: whenT, whenLabel: whenLabel, series: series, lineText: lineText, linesFor: linesFor, yearRange: yearRange, niceTicks: niceTicks,
-    chartSVG: chartSVG, fmt: fmt, buildCSV: buildCSV, parseCSV: parseCSV, parseCSVRows: parseCSVRows, parseWhen: parseWhen, mergeImport: mergeImport,
+    chartSVG: chartSVG, nearestWhen: nearestWhen, fmt: fmt, buildCSV: buildCSV, parseCSV: parseCSV, parseCSVRows: parseCSVRows, parseWhen: parseWhen, mergeImport: mergeImport,
     CSV_HEAD: CSV_HEAD, CSV_KEYS: CSV_KEYS, itemOf: itemOf, esc: esc,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

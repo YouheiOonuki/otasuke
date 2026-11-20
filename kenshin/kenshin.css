@@ -11,6 +11,7 @@
 .person .field { margin-top: 0.6rem; }
 
 .result-sum { font-weight: 700; font-size: 1.05rem; }
+.pick-when { font-weight: 700; margin: 0.2rem 0 0; }
 .charts { display: grid; grid-template-columns: 1fr; gap: 0.9rem; margin: 0.6rem 0; }
 @media (min-width: 640px) { .charts { grid-template-columns: 1fr 1fr; } }
 .kfig { margin: 0; padding: 0.4rem 0 0.2rem; border-top: 1px solid var(--border); min-width: 0; }
@@ -34,6 +35,8 @@
 .k-pt { fill: var(--accent); }
 .k-pt.k-random { fill: var(--card); stroke: var(--accent); stroke-width: 2; }
 .k-val { fill: var(--text); font-weight: 700; }
+.k-sel { stroke: var(--text); stroke-width: 1.4; }
+.charts .k-val { paint-order: stroke; stroke: var(--card); stroke-width: 3px; stroke-linejoin: round; }   /* 縦の線が値の字を横切るところで、字を読めるように（画面だけ。紙は別） */
 
 /* 線の見本（凡例） */
 .sw { display: inline-block; width: 1.8em; height: 0; vertical-align: middle; margin-right: 0.3em; border-top: 2px dashed var(--muted); }
