@@ -111,7 +111,7 @@
         var r = Calc.parseBackup(text, TOOL, []);
         if (!r.ok) { msg.textContent = r.error; return; }
         var keys = KEYS.filter(function (k) { return r.data[k] && typeof r.data[k] === 'object'; });
-        if (!keys.length) { msg.textContent = 'ファイルの中身が足りないため読み込めません。'; return; }
+        if (!keys.length) { msg.textContent = 'ファイルの中身が足りないため読み込めません。この道具の「ファイルに書き出す」で保存したファイルを選んでください。'; return; }
         if (!window.confirm('ファイルの内容で、この端末に保存している入力を置き換えます。よろしいですか？')) return;
         keys.forEach(function (k) { store.set(k, NORM[k](r.data[k])); });
         if (o.afterImport) o.afterImport();
