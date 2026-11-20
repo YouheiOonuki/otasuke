@@ -234,5 +234,9 @@ details.card.opt[open] > summary { border-bottom: 1px solid var(--border); margi
   /* 横長の用紙（写経の標準）は、縦の A4 に 90 度回して刷る（ブラウザの用紙の向きの設定に左右されない） */
   .sheet.land { width: 210mm; height: 297mm; }
   .sheet.land > .rot { left: 210mm; top: 0; width: 297mm; height: 210mm; transform: rotate(90deg); transform-origin: 0 0; }
+  /* 字の量で長さが変わる用紙（救急情報シート）は、下端で切らずに次の枚へ流す。1 枚に収まる時は A4 1 枚のまま。
+     余白は箱の padding で持ち、枚が替わった先にも同じ余白を付ける（QUEUE 2026-11-19 朝 (2) の条件 31、Q-597）。
+     下だけ 8mm: 見本の値でも中身が上下 12mm の内側を 5px 超えていて（前は下の余白に描いていた）、12mm だと 1 枚に収まらない。作成元（.credit、下 4mm）とは重ならない */
+  .sheet.flow { height: auto; min-height: 297mm; overflow: visible; padding: 12mm 12mm 8mm; box-sizing: border-box; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
