@@ -13,6 +13,10 @@
 .kq th { text-align: left; font-size: 11pt; line-height: 1.25; background: #eeeeee; font-weight: 700; vertical-align: middle; }
 .kq td { font-size: 14pt; height: 9.2mm; vertical-align: middle; word-break: break-all; }
 .kq td.tall { height: 17mm; vertical-align: top; white-space: pre-wrap; }
+@media print {
+  .sheet.flow > .pz { position: static; }      /* 余白は .sheet.flow の padding（style.css）。中身の長さで枚が増える */
+  .kq tr, .kq-agree, .pz .foot { break-inside: avoid; }   /* 欄と、署名の文・下の注意の途中で枚を替えない（1 欄は 300 字でも 1 枚に収まる） */
+}
 .kq .sec th { background: #000; color: #fff; font-size: 12pt; text-align: left; height: auto; padding: 0.8mm 2mm; }
 .kq .sub { font-size: 9pt; font-weight: normal; }
 .kq-dates { display: flex; justify-content: flex-end; gap: 6mm; font-size: 11pt; margin: 0 0 2mm; }

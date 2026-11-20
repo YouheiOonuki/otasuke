@@ -79,7 +79,7 @@
       '<p class="kq-agree">救急隊と運ばれた先の医療機関が、この紙の情報を救急のときに使うことに同意します。　本人の署名（代筆可）＿＿＿＿＿＿＿＿</p>' +
       '<p class="foot">保険証・診察券・お薬手帳のコピーも一緒に。中身が見えないよう二つ折りにして冷蔵庫へ。変わったら書き直し、年に 1 度は見直す。</p>' +
       '</div>';
-    var out = sheet(html, d);
+    var out = sheet(html, d, 'flow');
     if (d.signCard) {
       out += sheet('<div class="pz"><div class="sign">' +
         '<div><strong>救急情報は<br>冷蔵庫に<br>あります</strong><span>（玄関ドアの内側に貼る）</span></div>' +
@@ -160,7 +160,7 @@
       '</div><p class="qr-foot">冷蔵庫や電話のそばに貼っておくと便利です</p></div>', d);
   }
 
-  function sheet(inner, d) { return '<div class="sheet">' + inner + (d.credit ? O.credit() : '') + '</div>'; }
+  function sheet(inner, d, cls) { return '<div class="sheet' + (cls ? ' ' + cls : '') + '">' + inner + (d.credit ? O.credit() : '') + '</div>'; }
 
   function render(d) {
     var html = d.kind === 'kyukyu' ? kyukyuSheet(d) : d.kind === 'fukuyaku' ? fukuyakuSheet(d) : d.kind === 'qr' ? qrSheet(d) : ketsuatsuSheet(d);
