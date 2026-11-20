@@ -9,6 +9,7 @@
   var KEY = 'kenshin';
   var data = Calc.normKenshin(O.store.get(KEY) || {});
   var INPUT_ITEMS = V.ITEMS.filter(function (i) { return !i.calc; });
+  var selWhen = null;   // 図の上で選んだ回（保存しない。null ＝ いちばん新しい回）
 
   function person() { return data.people[data.cur]; }
   function personName(p, i) { return p.name || (i + 1) + '人目'; }
@@ -167,19 +168,25 @@
     if (!lines.length) return 'この資料に判定値はありません';
     return lines.map(function (l) { return lineSwatch(l.kind) + esc(l.full); }).join('<br>');
   }
+  function pickedWhen(p) {
+    var rs = p.records;
+    if (!rs.length) return '';
+    return rs.some(function (r) { return r.when === selWhen; }) ? selWhen : rs[rs.length - 1].when;
+  }
   function renderCharts() {
     var p = person(), years = K.yearRange(p);
-    var html = '', empty = [];
+    var html = '', empty = [], pick = pickedWhen(p);
     V.ITEMS.forEach(function (it) {
       var c = chartData(p, it);
       if (!c.pts.length) { empty.push(it.name); return; }
       var last = c.pts[c.pts.length - 1];
       html += '<figure class="kfig"><figcaption class="ktitle">' + esc(it.name) + ' <span class="unit">' + esc(it.unit) + '</span>' +
         '<span class="klast">' + esc(K.whenLabel(last.when)) + ' <b>' + K.fmt(it, last.y) + '</b></span></figcaption>' +
-        K.chartSVG({ item: it, points: c.pts, lines: c.lines, years: years, w: 320, h: 150, font: 13, labels: 'last' }) +
+        K.chartSVG({ item: it, points: c.pts, lines: c.lines, years: years, w: 320, h: 150, font: 13, labels: 'last', pick: pick }) +
         '<p class="kcap">' + caption(it, c.lines) + '</p></figure>';
     });
     $('charts').innerHTML = html;
+    $('pick-when').textContent = pick ? K.whenLabel(pick) : '';
     var n = p.records.length;
     $('result-sum').textContent = n ? personName(p, data.cur) + ': ' + n + ' 回分（' + years[0] + '〜' + years[1] + '年）' :
       'まだ記録がありません。「結果を入れる」を押して、結果票の数字を入れてください。';
@@ -190,6 +197,35 @@
     $('sample').hidden = data.people.some(function (q) { return q.records.length; });
     renderSheet();
   }
+
+  // 図を押す・← → Home End で回を選ぶ。選んだら 15 の図を描き直し、図の箱の止まりは同じ項目に戻す
+  function pickWhen(when, key) {
+    selWhen = when;
+    renderCharts();
+    var el = key && $('charts').querySelector('svg[data-k="' + key + '"]');
+    if (el) el.focus({ preventScroll: true });
+  }
+  $('charts').addEventListener('click', function (e) {
+    var sv = e.target.closest('svg.kchart[data-k]');
+    if (!sv) return;
+    var r = sv.getBoundingClientRect();
+    if (!r.width) return;
+    var x = (e.clientX - r.left) * Number(sv.getAttribute('data-w')) / r.width;
+    var x0 = Number(sv.getAttribute('data-x0')), x1 = Number(sv.getAttribute('data-x1'));
+    var t = x0 + (x - Number(sv.getAttribute('data-pl'))) / Number(sv.getAttribute('data-pw')) * (x1 - x0);
+    var w = K.nearestWhen(person().records, t);
+    if (w) pickWhen(w, sv.getAttribute('data-k'));
+  });
+  $('charts').addEventListener('keydown', function (e) {
+    var sv = e.target.closest && e.target.closest('svg.kchart[data-k]');
+    if (!sv || e.altKey || e.ctrlKey || e.metaKey) return;
+    var rs = person().records, cur = pickedWhen(person()), i = -1;
+    rs.forEach(function (r, j) { if (r.when === cur) i = j; });
+    var to = e.key === 'ArrowLeft' ? i - 1 : e.key === 'ArrowRight' ? i + 1 : e.key === 'Home' ? 0 : e.key === 'End' ? rs.length - 1 : null;
+    if (to === null || !rs.length) return;
+    e.preventDefault();
+    pickWhen(rs[Math.max(0, Math.min(rs.length - 1, to))].when, sv.getAttribute('data-k'));
+  });
 
   // --- 印刷する紙（A4 縦 1 枚に 16 のグラフ。4 列 × 4 段） ---
   function renderSheet() {
@@ -217,6 +253,7 @@
 
   function renderAll(resetForm) {
     if (data.cur >= data.people.length) data.cur = 0;
+    if (resetForm) selWhen = null;
     renderPeople();
     renderCharts();
     renderList();

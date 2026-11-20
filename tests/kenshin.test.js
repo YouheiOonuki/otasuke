@@ -323,3 +323,108 @@ test('保存のキーは otasuke_kenshin。バックアップ（common.js）に�
   for (const f of ['kenshin/app.js', 'kenshin/kenshin-calc.js']) assert.doesNotMatch(read(f), /fetch\(|XMLHttpRequest|sendBeacon|WebSocket|import\(/, f);
   assert.doesNotMatch(read('kenshin/index.html'), /<script[^>]+src="https?:\/\/(?!static\.cloudflareinsights\.com)/);
 });
+
+// --- 図の上で回を選ぶ（Q-580）。画面だけ。紙は pick を渡さないので、縦の線も選んだ値も出ない ---
+const pickKeys = V.ITEMS.filter((i) => !i.calc).map((i) => i.key);
+function pickPerson(whens, valueOf) {
+  const recs = whens.map((when, i) => {
+    const v = {};
+    pickKeys.forEach((k, j) => { const x = valueOf(i, k, j); if (x !== undefined) v[k] = x; });
+    return { when, v };
+  });
+  return C.normKenshin({ people: [{ name: '', sex: 'f', records: recs }], cur: 0 }).people[0];
+}
+const pickSvg = (p, it, pick, o) => {
+  const pts = K.series(p, it.key);
+  return K.chartSVG(Object.assign({ item: it, points: pts, lines: K.linesFor(it, p, pts), years: K.yearRange(p), w: 320, h: 150, font: 13, labels: 'last', pick }, o));
+};
+const attrOf = (svg, name) => Number(new RegExp(' data-' + name + '="([0-9.]+)"').exec(svg)[1]);
+
+test('回を選ぶ: 押した横の位置 → いちばん近い回（回 10 の記録で 5 通り。同じ近さなら古いほう）', () => {
+  const whens = [];
+  for (let y = 2015; y <= 2024; y++) whens.push(y + '-06');
+  const p = pickPerson(whens, () => 1);
+  const t = (y, m) => y + (m - 0.5) / 12;   // 年の目盛りの上の位置
+  assert.equal(K.nearestWhen(p.records, t(2015, 1)), '2015-06');
+  assert.equal(K.nearestWhen(p.records, t(2018, 6)), '2018-06');
+  assert.equal(K.nearestWhen(p.records, 2019.2), '2019-06');   // 2019 年の 1 月ごろ → 2019-06 の方が 2018-06 より近い
+  assert.equal(K.nearestWhen(p.records, 2022.55), '2022-06');
+  assert.equal(K.nearestWhen(p.records, 2030), '2024-06');
+  // 同じ近さ（2 回のまんなか）は古いほう
+  assert.equal(K.nearestWhen(p.records.slice(0, 2), (K.whenT('2015-06') + K.whenT('2016-06')) / 2), '2015-06');
+  assert.equal(K.nearestWhen([], 2020), '');
+});
+
+test('回を選ぶ: 全項目の縦の線の横の位置 ＝ その回の X(t)（点の横と同じ）。図の箱は Tab で 1 つ止まる', () => {
+  const p = pickPerson(['2016-03', '2019-10', '2022-06'], (i, k, j) => 50 + i * 7 + j);
+  for (const pick of ['2016-03', '2019-10', '2022-06']) {
+    for (const it of V.ITEMS) {
+      const svg = pickSvg(p, it, pick);
+      const lines = [...svg.matchAll(/<line x1="([\d.]+)" x2="([\d.]+)" y1="[\d.]+" y2="[\d.]+" class="k-sel"\/>/g)];
+      assert.equal(lines.length, 1, it.key + ' ' + pick + ': 縦の線は 1 本');
+      assert.equal(lines[0][1], lines[0][2]);
+      const x = attrOf(svg, 'pl') + (K.whenT(pick) - attrOf(svg, 'x0')) / (attrOf(svg, 'x1') - attrOf(svg, 'x0')) * attrOf(svg, 'pw');
+      assert.ok(Math.abs(Number(lines[0][1]) - x) <= 0.1, it.key + ' ' + pick + ': ' + lines[0][1] + ' ≒ ' + x);
+      // 点があれば、点の横と同じ
+      const k = K.series(p, it.key).findIndex((q) => q.when === pick);
+      const cx = [...svg.matchAll(/<circle cx="([\d.]+)"/g)].map((m) => m[1]);
+      if (k >= 0) assert.equal(cx[k], lines[0][1], it.key);
+      assert.equal((svg.match(/tabindex="0"/g) || []).length, 1, it.key + ': Tab の止まりは図ごとに 1 つ');
+    }
+  }
+});
+
+test('回を選ぶ: 出る値 ＝ series のその回の値（15 項目 × 3 回。無い項目は値なし。判定の言葉なし）', () => {
+  // 3 回目の身長と 2 回目の腹囲は無い
+  const p = pickPerson(['2018-06', '2020-06', '2023-06'], (i, k, j) => (k === 'height' && i === 2) || (k === 'waist' && i === 1) ? undefined : 80 + i * 3 + j / 2);
+  for (const pick of ['2018-06', '2020-06', '2023-06']) {
+    for (const it of V.ITEMS) {
+      const svg = pickSvg(p, it, pick);
+      const shown = [...svg.matchAll(/class="k-val">([^<]+)<\/text>/g)].map((m) => m[1]);
+      const pt = K.series(p, it.key).find((q) => q.when === pick);
+      assert.deepEqual(shown, pt ? [K.fmt(it, pt.y)] : [], it.key + ' ' + pick);
+    }
+  }
+  assert.equal(V.ITEMS.length, 16);   // 身長・体重・BMI ほか。BMI は身長と体重が揃う回だけ
+});
+
+test('回を選ぶ: 紙（pick なし）は縦の線も Tab の止まりも data も出さず、前と同じ字', () => {
+  const p = pickPerson(['2018-06', '2020-06'], (i, k, j) => 60 + i + j);
+  for (const it of V.ITEMS) {
+    const svg = pickSvg(p, it, undefined, { w: 300, h: 250, font: 15, labels: 'all' });
+    assert.doesNotMatch(svg, /k-sel|tabindex|data-/, it.key);
+  }
+  // 画面と紙で図の組み立ては同じ関数。紙は app.js の renderSheet が pick を渡さない
+  const app = read('kenshin/app.js');
+  assert.match(app, /labels: 'all' \}\)/);
+  assert.doesNotMatch(app.slice(app.indexOf('function renderSheet')), /pick/);
+});
+
+test('回を選ぶ: 記録が 0・1 回でも落ちない。60 回でも値の字は図の外へ出ない（画面・390 と 1,280 の図の幅）', () => {
+  assert.doesNotThrow(() => K.chartSVG({ item: K.itemOf('sbp'), points: [], lines: [], years: null, w: 320, h: 150, font: 13, pick: '' }));
+  const one = pickPerson(['2024-06'], () => 120);
+  assert.doesNotThrow(() => V.ITEMS.forEach((it) => pickSvg(one, it, '2024-06')));
+  const whens = [];
+  for (let i = 0; i < 60; i++) whens.push((2018 + Math.floor(i / 12)) + '-' + String(i % 12 + 1).padStart(2, '0'));
+  const p = pickPerson(whens, (i, k, j) => 90 + (i * (j + 3)) % 40);
+  for (const w of [320, 300]) for (const it of V.ITEMS) for (const pick of [whens[0], whens[30], whens[59]]) {
+    const svg = pickSvg(p, it, pick, { w, font: w === 320 ? 13 : 15, h: w === 320 ? 150 : 250 });
+    for (const m of svg.matchAll(/<text x="([\d.]+)" text-anchor="(start|middle|end)" y="([\d.]+)" class="k-val">([^<]+)<\/text>/g)) {
+      const f = w === 320 ? 13 : 15, tw = m[4].length * f * 0.62;
+      const l = m[2] === 'start' ? +m[1] : m[2] === 'end' ? +m[1] - tw : +m[1] - tw / 2;
+      assert.ok(l >= 0 && l + tw <= w, it.key + ' ' + pick + ' ' + m[4] + ': ' + l + '〜' + (l + tw));
+    }
+  }
+});
+
+test('回を選ぶ: 選んだ年月は図の上に 1 か所（whenLabel の形）、保存しない。使い方に 1 文、更新履歴に 1 行', () => {
+  const app = read('kenshin/app.js');
+  assert.match(app, /\$\('pick-when'\)\.textContent = pick \? K\.whenLabel\(pick\)/);
+  assert.equal((read('kenshin/index.html').match(/id="pick-when"/g) || []).length, 1);
+  assert.ok(read('kenshin/index.html').indexOf('id="pick-when"') < read('kenshin/index.html').indexOf('id="charts"'));
+  assert.doesNotMatch(app, /store\.set\([^)]*selWhen|selWhen[^;\n]*save\(/);
+  const g = read('kenshin/guide.html');
+  assert.ok(g.indexOf('<p>図を押すと、その回の値がすべての図に出ます。</p>') > g.indexOf('</ol>'));
+  assert.ok(g.indexOf('<p>図を押すと、その回の値がすべての図に出ます。</p>') < g.indexOf('グラフの線（保健指導判定値'));
+  assert.match(g, /<time datetime="2026-11-21">2026-11-21<\/time> 図の上で回を選べるようにした/);
+});
