@@ -11,7 +11,7 @@
 
 /* 救急情報シート */
 .kq th { text-align: left; font-size: 11pt; line-height: 1.25; background: #eeeeee; font-weight: 700; vertical-align: middle; }
-.kq td { font-size: 14pt; height: 9.2mm; vertical-align: middle; word-break: break-all; }
+.kq td { font-size: 14pt; height: 8.8mm; vertical-align: middle; word-break: break-all; }
 .kq td.tall { height: 17mm; vertical-align: top; white-space: pre-wrap; }
 @media print {
   .sheet.flow > .pz { position: static; }      /* 余白は .sheet.flow の padding（style.css）。中身の長さで枚が増える */
