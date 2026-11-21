@@ -114,3 +114,13 @@ test('Service Worker: キャッシュ名は otasuke-、先読みするファイ�
   assert.equal(mf.id, '/otasuke/');
   assert.equal(mf.start_url, './tokei/');
 });
+
+test('出典のリンクは上下に 4 px ずつあけ、幅を 44 px 以上に。共通の枠の外に書く（押す所の間 8 px。Q-762）', () => {
+  const css = fs.readFileSync(path.join(ROOT, 'style.css'), 'utf8');
+  const end = css.indexOf('/* yorozu-common:end */');
+  assert.ok(end > 0, '共通の枠の終わりが無い');
+  const rule = css.slice(end).match(/^\.src a \{ margin-block: var\(--sp-1\); min-width: var\(--tap\); justify-content: center; \}$/m);
+  assert.ok(rule, '.src a の間の規則が無い');
+  const guides = FILES.map(rel).filter((f) => /\/guide\.html$/.test(f) && fs.readFileSync(path.join(ROOT, f), 'utf8').includes('<ul class="src">'));
+  assert.equal(guides.length, 9, guides.join(', '));
+});

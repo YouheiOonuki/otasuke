@@ -146,6 +146,9 @@ textarea { min-height: 5.5rem; max-width: 100%; padding-block: var(--sp-2); }
 
 /* 行に 1 つだけのリンク（使い方への行・出典の一覧）も押せる高さに */
 .app-main > p.no-print > a, .app-main > p.small > a:only-child, .content li > a:only-child, .src a { display: inline-flex; align-items: center; min-height: 48px; }
+/* 出典のリンクの上下に 4 px ずつ: 開いた summary・前の行・折り返した前の段のリンクとの間を 8 px 以上に（押す所の間。Q-762）。
+   前のリンクと離れて 1 つになる短いリンク（notore の「PDF」）も、幅を 44 px に */
+.src a { margin-block: var(--sp-1); min-width: var(--tap); justify-content: center; }
 
 /* ハブ（トップ）のカード */
 .tools { list-style: none; display: grid; gap: var(--sp-3); }
