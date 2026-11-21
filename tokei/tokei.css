@@ -110,7 +110,7 @@ body.light .c-week { color: #7a1f00; }
   background: var(--bg); color: var(--text); font-size: 18px; line-height: 1.7;
 }
 .setup-in { max-width: 640px; margin: 0 auto; padding: 16px; box-sizing: border-box; }
-.setup h1 { font-size: 28px; margin: 8px 0; }
+.setup h1 { margin: 8px 0; }
 .setup .notice { font-weight: 700; margin: 0 0 12px; }
 .setup fieldset { border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 14px 14px; margin: 12px 0; background: var(--card); }
 .setup legend { font-weight: 700; padding: 0 4px; }
