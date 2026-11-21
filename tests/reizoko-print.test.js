@@ -47,3 +47,13 @@ test('紙の版の救急情報シート: 中身は箱の流れに乗り、欄の
   assert.match(rule(p, '.sheet.flow > .pz'), /position: static/);
   assert.match(rule(p, '.kq tr, .kq-agree, .pz .foot'), /break-inside: avoid/);
 });
+
+// Q-695: 見本の値（何も入れない時）で 1 枚目の余りが約 10px（2.7mm）しかなく、端末の字の幅で見出しの折り返しが 1 つ増えると 2 枚目が出た。
+// 1 行の欄を 9.2mm → 8.8mm にして余りを 8.7mm に（Noto Sans JP・Meiryo・Yu Gothic で同じ）。字の大きさと背の高い欄は変えない
+test('救急情報シートの 1 行の欄は 8.8mm。字は 14pt、背の高い欄は 17mm のまま', () => {
+  const css = read('reizoko/reizoko.css');
+  const td = rule(css, '.kq td');
+  assert.match(td, /height: 8\.8mm/);
+  assert.match(td, /font-size: 14pt/);
+  assert.match(rule(css, '.kq td.tall'), /height: 17mm/);
+});
