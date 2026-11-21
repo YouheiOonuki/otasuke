@@ -16,7 +16,16 @@
 @media print {
   .sheet.flow > .pz { position: static; }      /* 余白は .sheet.flow の padding（style.css）。中身の長さで枚が増える */
   .kq tr, .kq-agree, .pz .foot { break-inside: avoid; }   /* 欄と、署名の文・下の注意の途中で枚を替えない（1 欄は 300 字でも 1 枚に収まる） */
+  .kq-last { break-inside: avoid; }   /* 表の最後の行・署名の文・下の注意を同じ枚に（最後の枚に注意だけが残らない。Q-709） */
+  /* 紙: 上の表の下の線と下の表の上の線を 1 px 重ねて 1 本に（線 0.35mm は Chromium で 1 px に丸まる）。片方を消すと、
+     箱が次の枚へ行った時に、前の枚の終わりか次の枚の頭で表の線が欠ける。枚の頭では負の余白が切り捨てられ、線は両方の枚に出る */
+  .kq-last { margin-top: -1px; }
 }
+@media screen {
+  .pz > .kq tr:last-child > * { border-bottom: 0; }   /* 画面: 枚を替えないので、上の表の下の線を消して下の表の上の線 1 本に（重ねると縮めた見本で線が濃く見える） */
+}
+/* 最後の箱（表の最後の行・署名の文・下の注意）は縦に並べ、段落の間は .pz の中と同じ（余白を重ねてつぶさない） */
+.kq-last { display: flex; flex-direction: column; }
 .kq .sec th { background: #000; color: #fff; font-size: 12pt; text-align: left; height: auto; padding: 0.8mm 2mm; }
 .kq .sub { font-size: 9pt; font-weight: normal; }
 .kq-dates { display: flex; justify-content: flex-end; gap: 6mm; font-size: 11pt; margin: 0 0 2mm; }
