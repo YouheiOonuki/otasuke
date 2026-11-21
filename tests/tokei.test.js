@@ -113,3 +113,15 @@ test('画面を消さない設定: 保存の無い端末は押した時だけ、
   const b = open(new Date(2026, 10, 18, 9, 0, 0), store);
   assert.equal(b.locks.length, 1);
 });
+
+// Q-726・D583: 目立たせない作りの「設定」も、字と地の比は 4.5 以上。0.35 は黒い地で #595959（2.99）だった。
+// 0.6 で黒い地 #999（7.4）・白い地 #666（5.7）。押した時・当てた時の 1 は残す
+test('「設定」のボタン（.gear）の薄さは 0.6 以上（字と地の比 4.5 以上。D583）', () => {
+  const css = fs.readFileSync(path.join(__dirname, '../tokei/tokei.css'), 'utf8');
+  const rule = css.match(/\.gear\s*\{([^}]*)\}/);
+  assert.ok(rule, '.gear の規則が無い');
+  const m = rule[1].match(/opacity:\s*([\d.]+)/);
+  assert.ok(m, '.gear に opacity が無い');
+  assert.ok(Number(m[1]) >= 0.6, `.gear の opacity が ${m[1]}`);
+  assert.match(css, /\.gear:focus,\s*\.gear:hover\s*\{\s*opacity:\s*1;\s*\}/);
+});
