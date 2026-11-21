@@ -123,12 +123,21 @@ test('AI の枠切れ（D298）: サーバーの文（error quota の message）
 
 // 使い方ページの「1 日の上限」の数は yorozu-ai の wrangler.jsonc の vars が正本（DAILY_LIMIT・PHOTO_DAILY_LIMIT）。
 // 2 か所に持つので突き合わせる（yorozu-plans CLAUDE.md「値を 2 箇所に持ってよいのは機械が突き合わせられるときだけ」）。
-// PC で隣に yorozu-ai があるときだけ見る（無ければ飛ばす）
+// 隣の yorozu-ai の場所は git の共通の .git の親から取る（worktree でも主の作業コピーの隣を見る。yorozu-plans D707）。
+// git が無い所（git archive で取り出した木）や隣が無い所では、理由を 1 行出して飛ばす
+function siblingPath(repo, file) {
+  let common;
+  try {
+    common = require('node:child_process').execFileSync('git', ['rev-parse', '--path-format=absolute', '--git-common-dir'], { cwd: path.join(__dirname, '..'), encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+  } catch { return { skip: `${repo} を探せない（git の作業コピーの外）` }; }
+  const p = path.join(path.dirname(path.dirname(common)), repo, file);
+  return fs.existsSync(p) ? { p } : { skip: `${repo} が隣に無い（${p}）` };
+}
 test('使い方の 1 日の上限の数が yorozu-ai の設定と同じ。プライバシーポリシーの 7.7 へのリンク', (t) => {
   const guide = read('yasashii/guide.html');
   assert.match(guide, /privacy-policy\.html#yasashii/);
-  const wf = path.join(__dirname, '..', '..', 'yorozu-ai', 'wrangler.jsonc');
-  if (!fs.existsSync(wf)) return t.skip('yorozu-ai が隣に無い');
+  const { p: wf, skip } = siblingPath('yorozu-ai', 'wrangler.jsonc');
+  if (skip) return t.skip(skip);
   const w = fs.readFileSync(wf, 'utf8');
   const v = (k) => Number((w.match(new RegExp(`"${k}":\\s*"(\\d+)"`)) || [])[1]);
   assert.ok(guide.includes(`合わせて 1 日 ${v('DAILY_LIMIT')} 回`), `DAILY_LIMIT ${v('DAILY_LIMIT')}`);
