@@ -9,9 +9,7 @@
   var V = typeof module !== 'undefined' && module.exports ? require('./kenshin-values.js') : root.KenshinValues;
 
   function round1(n) { return Math.round(n * 10) / 10; }
-  function esc(s) {
-    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
+  var esc = Calc.esc;
   function itemOf(key) { for (var i = 0; i < V.ITEMS.length; i++) if (V.ITEMS[i].key === key) return V.ITEMS[i]; return null; }
 
   /** BMI ＝ 体重（kg）÷ 身長（m）の 2 乗。小数 1 桁。どちらかが無ければ null */

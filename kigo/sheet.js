@@ -5,13 +5,14 @@
 (function (root) {
   'use strict';
   var Sekki = (typeof module !== 'undefined' && module.exports) ? require('./sekki.js') : root.Sekki;
+  var Calc = (typeof module !== 'undefined' && module.exports) ? require('../calc.js') : root.Calc;
 
   var SEASONS = ['春', '夏', '秋', '冬', '新年'];
   var START = { 春: '立春', 夏: '立夏', 秋: '立秋', 冬: '立冬' };
   var NEXT = { 春: '立夏', 夏: '立秋', 秋: '立冬', 冬: '立春' };
   var WEEK = ['日', '月', '火', '水', '木', '金', '土'];
 
-  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  var esc = Calc.esc;
   function md(iso) { return Number(iso.slice(5, 7)) + '月' + Number(iso.slice(8, 10)) + '日'; }
   function ymd(iso) { return Number(iso.slice(0, 4)) + '年' + md(iso); }
   function prevDay(iso) {

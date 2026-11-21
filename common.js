@@ -25,9 +25,7 @@
   };
 
   function $(id) { return document.getElementById(id); }
-  function esc(s) {
-    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
+  var esc = Calc.esc;
 
   // --- 見本の縮小: 用紙（mm）を画面の幅に合わせる。印刷では縮小を外す（style.css） ---
   function fitPreview(wrap) {

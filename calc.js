@@ -8,6 +8,9 @@
 
   var WEEK = ['日', '月', '火', '水', '木', '金', '土'];
 
+  /** HTML に入れる字を逃がす（& < > "。null・undefined は ''）。紙と画面の組み立てはこれを使う */
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
   function pad2(n) { return (n < 10 ? '0' : '') + n; }
 
   // --- 日付 ---
@@ -376,7 +379,7 @@
   }
 
   var api = {
-    WEEK: WEEK, pad2: pad2, parseISO: parseISO, toISO: toISO, addDays: addDays, dayRows: dayRows, reiwaYear: reiwaYear,
+    WEEK: WEEK, pad2: pad2, esc: esc, parseISO: parseISO, toISO: toISO, addDays: addDays, dayRows: dayRows, reiwaYear: reiwaYear,
     kanjiNum: kanjiNum, shakyoDate: shakyoDate, clockParts: clockParts, SHAKYO_SIZES: SHAKYO_SIZES, shakyoLayout: shakyoLayout, looksLikePassword: looksLikePassword,
     encodeShare: encodeShare, decodeShare: decodeShare,
     normShakyo: normShakyo, normReizoko: normReizoko, normDaicho: normDaicho, normTejun: normTejun, normTokei: normTokei, normNotore: normNotore, normKigo: normKigo,
