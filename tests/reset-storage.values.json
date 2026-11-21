@@ -1,0 +1,36 @@
+{
+  "src": "reset-storage.js",
+  "prefixes": [
+    "otasuke_"
+  ],
+  "legacy": [],
+  "pagePrefixes": {
+    "daicho/index.html": [
+      "otasuke_daicho"
+    ],
+    "kigo/index.html": [
+      "otasuke_kigo"
+    ],
+    "kenshin/index.html": [
+      "otasuke_kenshin"
+    ],
+    "notore/index.html": [
+      "otasuke_notore"
+    ],
+    "reizoko/index.html": [
+      "otasuke_reizoko"
+    ],
+    "shakyo/index.html": [
+      "otasuke_shakyo"
+    ],
+    "tejun/index.html": [
+      "otasuke_tejun"
+    ],
+    "tokei/index.html": [
+      "otasuke_tokei"
+    ]
+  },
+  "pageLegacy": {},
+  "inline": [],
+  "skipDirs": []
+}
