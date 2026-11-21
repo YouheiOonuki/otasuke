@@ -13,8 +13,8 @@
 .kq th { text-align: left; font-size: 11pt; line-height: 1.25; background: #eeeeee; font-weight: 700; vertical-align: middle; }
 .kq td { font-size: 14pt; height: 8.8mm; vertical-align: middle; word-break: break-all; }
 .kq td.tall { height: 17mm; vertical-align: top; white-space: pre-wrap; }
+.sheet.flow > .pz { position: static; }      /* 余白は .sheet.flow の padding（style.css）。中身の長さで枚が増える（画面の見本も同じ。Q-696） */
 @media print {
-  .sheet.flow > .pz { position: static; }      /* 余白は .sheet.flow の padding（style.css）。中身の長さで枚が増える */
   .kq tr, .kq-agree, .pz .foot { break-inside: avoid; }   /* 欄と、署名の文・下の注意の途中で枚を替えない（1 欄は 300 字でも 1 枚に収まる） */
   .kq-last { break-inside: avoid; }   /* 表の最後の行・署名の文・下の注意を同じ枚に（最後の枚に注意だけが残らない。Q-709） */
   /* 紙: 上の表の下の線と下の表の上の線を 1 px 重ねて 1 本に（線 0.35mm は Chromium で 1 px に丸まる）。片方を消すと、

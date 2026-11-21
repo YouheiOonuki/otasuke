@@ -1,6 +1,6 @@
 // 救急情報シートの紙は、字が多くても下端で切らず、次の枚へ流す（yorozu-plans QUEUE 2026-11-19 朝 (2) の条件 31・Q-597）。
 // 前は .sheet の height: 297mm と overflow: hidden で、4 欄 × 300 字の中身が紙の下端を 1,010px 超えて切れていた（print-measure の clippedBottom）。
-// 紙の版（@media print）だけを替える。画面の見本は A4 1 枚の大きさのまま
+// 画面の見本も同じ形で中身の長さまで伸ばし、「A4 縦 n 枚」は紙の枚数を出す（D569・Q-696）
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -21,6 +21,19 @@ function printBlocks(css) {
   }
   return out.join('\n');
 }
+// @media の外（画面でも紙でも効く規則）
+function outside(css) {
+  let out = '', i = 0;
+  const re = /@media[^{]*\{/g;
+  let m;
+  while ((m = re.exec(css))) {
+    out += css.slice(i, m.index);
+    let depth = 1, j = re.lastIndex;
+    for (; j < css.length && depth; j++) { if (css[j] === '{') depth++; else if (css[j] === '}') depth--; }
+    i = j; re.lastIndex = j;
+  }
+  return out + css.slice(i);
+}
 function rule(css, selector) {
   const i = css.indexOf(selector + ' {');
   assert.ok(i >= 0, selector + ' の規則が無い');
@@ -30,21 +43,26 @@ function rule(css, selector) {
 test('救急情報シートの用紙だけが flow（服薬・血圧・QR・貼り紙は A4 1 枚に固定のまま）', () => {
   const js = read('reizoko/app.js');
   assert.match(js, /var out = sheet\(html, d, 'flow'\);/);
-  assert.equal((js.match(/'flow'/g) || []).length, 1);
+  assert.equal((js.match(/sheet\([^)]*'flow'\)/g) || []).length, 1);
 });
 
-test('紙の版の .sheet.flow は、高さを固定せず切らない。枚が替わった先にも余白', () => {
-  const p = printBlocks(read('style.css'));
-  const r = rule(p, '.sheet.flow');
+// Q-696: 前は .sheet.flow が紙の版だけで、画面の見本は 297mm で切れていた（4 欄 300 字で最後の欄が見本の下端の外）。
+// 画面と紙で同じ規則を 1 つだけ持つ（@media の外。紙の版に写しを置かない）
+test('.sheet.flow は画面でも紙でも、高さを固定せず切らない。枚が替わった先にも余白', () => {
+  const css = read('style.css');
+  assert.ok(!printBlocks(css).includes('.sheet.flow {'), '紙の版に .sheet.flow の写しが在る');
+  const r = rule(outside(css), '.sheet.flow');
   assert.match(r, /height: auto/);
   assert.match(r, /min-height: 297mm/);
   assert.match(r, /overflow: visible/);
   assert.match(r, /(^|[^-])box-decoration-break: clone/);
 });
 
-test('紙の版の救急情報シート: 中身は箱の流れに乗り、欄の途中で枚を替えない', () => {
-  const p = printBlocks(read('reizoko/reizoko.css'));
-  assert.match(rule(p, '.sheet.flow > .pz'), /position: static/);
+test('救急情報シート: 中身は箱の流れに乗り（画面でも紙でも）、紙では欄の途中で枚を替えない', () => {
+  const css = read('reizoko/reizoko.css');
+  const p = printBlocks(css);
+  assert.ok(!p.includes('.sheet.flow > .pz {'), '紙の版に .sheet.flow > .pz の写しが在る');
+  assert.match(rule(outside(css), '.sheet.flow > .pz'), /position: static/);
   assert.match(rule(p, '.kq tr, .kq-agree, .pz .foot'), /break-inside: avoid/);
 });
 
@@ -84,4 +102,25 @@ test('紙の版: 最後の箱は途中で枚を替えず、上の表と線を 1 
   assert.match(p, /\.kq-last \{ margin-top: -1px; \}/);
   assert.match(css, /@media screen \{\s*\.pz > \.kq tr:last-child > \* \{ border-bottom: 0; \}/);
   assert.match(rule(css, '\n.kq-last'), /display: flex; flex-direction: column/);
+});
+
+// Q-696: 「A4 縦 n 枚」は用紙の箱を数えていて、流れる紙が 3〜5 枚に刷られても 1 と数えていた（4 欄 300 字で画面 2 枚・紙 4 枚）。
+// 流れる紙は、枚を替えない塊（表の行と最後の箱）の高さを上から 1 枚の使える高さに詰めて数える（D569）
+const { flowPages } = require('../reizoko/app.js');
+test('流れる紙の枚数: 塊を上から詰め、入らない塊は次の枚の頭へ', () => {
+  assert.equal(flowPages([], 100), 1);
+  assert.equal(flowPages([40, 60], 100), 1);            // ちょうど 1 枚
+  assert.equal(flowPages([40, 61], 100), 2);            // 1 px でも超えれば、塊ごと次の枚へ
+  assert.equal(flowPages([90, 20, 85, 20], 100), 4);    // 90 | 20 | 85 | 20（前の枚の余りに入らない塊は、余りを残して次の枚へ）
+  assert.equal(flowPages([50, 50, 50, 50, 50], 100), 3);
+});
+test('流れる紙の枚数: 1 枚より高い塊は、紙でも枚をまたいで切られるので、その分も数える', () => {
+  assert.equal(flowPages([250], 100), 3);
+  assert.equal(flowPages([30, 150, 30], 100), 3);       // 30 | 150 は次の枚から 1.5 枚 | 残り 50 + 30
+});
+test('流れる紙の枚数を画面の「A4 縦 n 枚」に使い、ほかの用紙は 1 枚ずつ', () => {
+  const js = read('reizoko/app.js');
+  assert.match(js, /classList\.contains\('flow'\) \? flowPages\(flowHeights\(e\), flowPageHeight\(e\)\) : 1/);
+  assert.match(js, /'A4 縦 ' \+ paperCount\(boxes\) \+ ' 枚'/);
+  assert.match(js, /querySelectorAll\('\.pz > table tr, \.pz > \.kq-last'\)/);
 });

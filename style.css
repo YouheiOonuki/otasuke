@@ -219,6 +219,11 @@ details.card.opt[open] > summary { border-bottom: 1px solid var(--border); margi
   line-height: 1.4;
 }
 .sheet.land { width: 297mm; height: 210mm; }
+/* 字の量で長さが変わる用紙（救急情報シート）は、下端で切らずに次の枚へ流す。1 枚に収まる時は A4 1 枚のまま。
+   余白は箱の padding で持ち、枚が替わった先にも同じ余白を付ける（QUEUE 2026-11-19 朝 (2) の条件 31、Q-597）。
+   画面の見本も同じ形で、中身の長さまで伸ばして切らない（見本は紙の写し。D569・Q-696）。
+   下だけ 8mm: 1 行の欄 8.8mm（reizoko.css）で、見本の値の 1 枚目の余りは 8.69mm。下を 12mm にすると余りは約 4.7mm（17.8px）に減るので 8mm のまま（Q-695・Q-709）。作成元（.credit、下 4mm）とは重ならない */
+.sheet.flow { height: auto; min-height: 297mm; overflow: visible; padding: 12mm 12mm 8mm; box-sizing: border-box; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 .rot { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
 .sheet .credit { position: absolute; right: 8mm; bottom: 4mm; font-size: 9pt; color: #444; }
 
@@ -234,9 +239,5 @@ details.card.opt[open] > summary { border-bottom: 1px solid var(--border); margi
   /* 横長の用紙（写経の標準）は、縦の A4 に 90 度回して刷る（ブラウザの用紙の向きの設定に左右されない） */
   .sheet.land { width: 210mm; height: 297mm; }
   .sheet.land > .rot { left: 210mm; top: 0; width: 297mm; height: 210mm; transform: rotate(90deg); transform-origin: 0 0; }
-  /* 字の量で長さが変わる用紙（救急情報シート）は、下端で切らずに次の枚へ流す。1 枚に収まる時は A4 1 枚のまま。
-     余白は箱の padding で持ち、枚が替わった先にも同じ余白を付ける（QUEUE 2026-11-19 朝 (2) の条件 31、Q-597）。
-     下だけ 8mm: 1 行の欄 8.8mm（reizoko.css）で、見本の値の 1 枚目の余りは 8.69mm。下を 12mm にすると余りは約 4.7mm（17.8px）に減るので 8mm のまま（Q-695・Q-709）。作成元（.credit、下 4mm）とは重ならない */
-  .sheet.flow { height: auto; min-height: 297mm; overflow: visible; padding: 12mm 12mm 8mm; box-sizing: border-box; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
