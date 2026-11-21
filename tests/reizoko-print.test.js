@@ -57,3 +57,31 @@ test('救急情報シートの 1 行の欄は 8.8mm。字は 14pt、背の高い
   assert.match(td, /font-size: 14pt/);
   assert.match(rule(css, '.kq td.tall'), /height: 17mm/);
 });
+
+// Q-709: 4 欄 300 字で、最後の枚が「下の注意と作成元だけ」になっていた（break-before／break-after: avoid は Chromium の紙で効かない。Q-695）。
+// 表の最後の行（救急隊に伝えたいこと）を、同じ列の幅の 1 行だけの表にして、署名の文・下の注意と 1 つの箱に入れ、箱の途中で枚を替えない。
+// これで最後の枚には必ず表の行が 1 つ在る。線は、画面では上の表の下の線を消して 1 本、紙では 1 px 重ねて 1 本（箱が次の枚へ行っても両方の枚に線が出る）
+test('救急情報シート: 表の最後の行・署名の文・下の注意は 1 つの箱（div.kq-last）で、列の幅は上の表と同じ', () => {
+  const js = read('reizoko/app.js');
+  const cols = '<colgroup><col style="width:46mm"><col></colgroup>';
+  const i = js.indexOf('<div class="kq-last">');
+  assert.ok(i >= 0, 'div.kq-last が無い');
+  assert.equal((js.match(/<table class="kq">/g) || []).length, 2);
+  assert.equal(js.split(cols).length - 1, 2, '2 つの表が同じ colgroup を持つ');
+  const box = js.slice(i, js.indexOf("'</div></div>'", i));
+  assert.match(box, /^<div class="kq-last"><table class="kq"><colgroup>/);
+  assert.match(box, /row\('救急隊に伝えたいこと', k\.message, 'tall'\)/);
+  assert.match(box, /class="kq-agree"/);
+  assert.match(box, /class="foot"/);
+  assert.equal((box.match(/row\(/g) || []).length, 1, '箱の表は 1 行だけ');
+  assert.equal((js.match(/row\('救急隊に伝えたいこと'/g) || []).length, 1);
+});
+
+test('紙の版: 最後の箱は途中で枚を替えず、上の表と線を 1 px 重ねる。画面では上の表の下の線を消す', () => {
+  const css = read('reizoko/reizoko.css');
+  const p = printBlocks(css);
+  assert.match(rule(p, '.kq-last'), /break-inside: avoid/);
+  assert.match(p, /\.kq-last \{ margin-top: -1px; \}/);
+  assert.match(css, /@media screen \{\s*\.pz > \.kq tr:last-child > \* \{ border-bottom: 0; \}/);
+  assert.match(rule(css, '\n.kq-last'), /display: flex; flex-direction: column/);
+});

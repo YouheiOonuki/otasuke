@@ -74,11 +74,15 @@
       row('② 名前・科', [k.h2name, k.h2dept].filter(Boolean).join('　')) + row('② 電話', k.h2tel) +
       sec('からだのこと') +
       row('持病・これまでの病気', k.illness, 'tall') + row('アレルギー', k.allergy) + row('飲んでいる薬', k.medicine, 'tall') +
-      row('透析・ペースメーカー・酸素・インスリンなど<span class="sub"></span>', k.special) + row('救急隊に伝えたいこと', k.message, 'tall') +
+      row('透析・ペースメーカー・酸素・インスリンなど<span class="sub"></span>', k.special) +
+      '</tbody></table>' +
+      // 表の最後の行・署名の文・下の注意は 1 つの箱にして、紙で枚を替えない（最後の枚に注意だけが残らない。yorozu-plans QUEUE Q-709）
+      '<div class="kq-last"><table class="kq"><colgroup><col style="width:46mm"><col></colgroup><tbody>' +
+      row('救急隊に伝えたいこと', k.message, 'tall') +
       '</tbody></table>' +
       '<p class="kq-agree">救急隊と運ばれた先の医療機関が、この紙の情報を救急のときに使うことに同意します。　本人の署名（代筆可）＿＿＿＿＿＿＿＿</p>' +
       '<p class="foot">保険証・診察券・お薬手帳のコピーも一緒に。中身が見えないよう二つ折りにして冷蔵庫へ。変わったら書き直し、年に 1 度は見直す。</p>' +
-      '</div>';
+      '</div></div>';
     var out = sheet(html, d, 'flow');
     if (d.signCard) {
       out += sheet('<div class="pz"><div class="sign">' +
