@@ -4,6 +4,18 @@
 // ===========================
 (function () {
   'use strict';
+  // 流れる紙（.sheet.flow）の枚数: 枚を替えない塊（表の行・最後の箱）の高さを、上から 1 枚の使える高さに詰めて数える。
+  // DOM を触らない（高さの並びと 1 枚の高さを受けて枚数を返す）。1 枚より高い塊は、紙でも枚をまたいで切られるので、その分を足す（D569・Q-696）
+  function flowPages(heights, pageH) {
+    var pages = 1, used = 0;
+    heights.forEach(function (h) {
+      if (used > 0 && used + h > pageH) { pages++; used = 0; }
+      used += h;
+      while (used > pageH) { pages++; used -= pageH; }
+    });
+    return pages;
+  }
+  if (typeof window === 'undefined') { module.exports = { flowPages: flowPages }; return; }   // tests（node）から flowPages だけを読む
   var C = window.Constants, Calc = window.Calc, O = window.Otasuke, $ = O.$, esc = O.esc;
   var KEY = 'reizoko';
   var form = $('form');
@@ -166,13 +178,35 @@
 
   function sheet(inner, d, cls) { return '<div class="sheet' + (cls ? ' ' + cls : '') + '">' + inner + (d.credit ? O.credit() : '') + '</div>'; }
 
+  // 流れる紙の塊の高さ（px）。塊どうしの間と見出しは、その下の塊に入れる（紙でも塊と一緒に動く）
+  function flowHeights(el) {
+    var pz = el.querySelector('.pz'), top = pz.getBoundingClientRect().top;
+    return Array.prototype.map.call(el.querySelectorAll('.pz > table tr, .pz > .kq-last'), function (b) {
+      var bottom = b.getBoundingClientRect().bottom, h = bottom - top;
+      top = bottom;
+      return h;
+    });
+  }
+  // 1 枚の使える高さ（px）: 用紙の高さ（min-height）から上下の余白を引いた分。紙の CSS（style.css の .sheet.flow）から読む
+  function flowPageHeight(el) {
+    var cs = getComputedStyle(el);
+    return parseFloat(cs.minHeight) - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+  }
+  // 紙の枚数: 流れる紙は塊を詰めて数え、ほかの用紙は 1 枚ずつ（D569）
+  function paperCount(boxes) {
+    $('sheets').style.transform = 'none';   // 縮めた見本の大きさでなく、紙の大きさで測る（このあと fitPreview が縮め直す）
+    var n = 0;
+    Array.prototype.forEach.call(boxes, function (e) { n += e.classList.contains('flow') ? flowPages(flowHeights(e), flowPageHeight(e)) : 1; });
+    return n;
+  }
+
   function render(d) {
     var html = d.kind === 'kyukyu' ? kyukyuSheet(d) : d.kind === 'fukuyaku' ? fukuyakuSheet(d) : d.kind === 'qr' ? qrSheet(d) : ketsuatsuSheet(d);
     $('sheets').innerHTML = html;
-    var n = $('sheets').children.length;
-    Array.prototype.forEach.call($('sheets').children, function (e, i) { if (i > 0) e.classList.add('rz-more'); });
-    $('show-all').hidden = n < 2;
-    $('pages-note').textContent = 'A4 縦 ' + n + ' 枚';
+    var boxes = $('sheets').children;
+    Array.prototype.forEach.call(boxes, function (e, i) { if (i > 0) e.classList.add('rz-more'); });
+    $('show-all').hidden = boxes.length < 2;
+    $('pages-note').textContent = 'A4 縦 ' + paperCount(boxes) + ' 枚';
     O.fitPreview($('wrap'));
     var filled = C && d.kyukyu ? Calc.KYUKYU_FIELDS.filter(function (f) { return d.kyukyu[f]; }).length : 0;
     window.YorozuScreen.detailsSummary({
