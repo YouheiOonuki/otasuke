@@ -65,6 +65,7 @@ const PRECACHE_URLS = [
   './kenshin/app.js',
 ];
 
+/* yorozu-common:begin sw — Service Worker の取り方。正本は youheioonuki.github.io の tools/common/sw-frame.js。この begin〜end の間は手で直さない（tools/sync-common.mjs で配る。名前と一覧は枠の外） */
 /** この時間ネットワークが応答しなければ、キャッシュがあればそちらを返す */
 const NETWORK_TIMEOUT_MS = 4000;
 
@@ -126,3 +127,4 @@ async function networkFirst(request, fromNetwork) {
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms, null));
 }
+/* yorozu-common:end */
