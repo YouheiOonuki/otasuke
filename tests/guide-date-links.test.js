@@ -1,3 +1,4 @@
+// 名前を guide-date.test.js から変えた（2026-11-27）: 共通の本体（root の tools/common/guide-date.test.js）は「ページ → 値 1 つ」で比べるが、otasuke は「guide に並ぶ外のリンクを出典に持つ値ファイルの CHECKED の古いほう」で比べるので、repo だけの型として残す。
 // guide の「最終確認日」が、その道具の値ファイルの CHECKED と同じか（Q-231、yorozu-plans ROADMAP 7.219 の所見 4）。
 // guide.html は静的な HTML なので日付は guide に持ったまま。ずれたらここで落とす。
 // 対応に入れてよいのは、guide に並ぶ外の出どころ（yorozu-craft.com 以外のリンク）が、値ファイルの出典に全部入っている guide だけ。
