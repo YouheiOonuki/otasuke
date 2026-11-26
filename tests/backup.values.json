@@ -1,0 +1,12 @@
+{
+  "module": "calc.js",
+  "tool": "otasuke",
+  "data": {
+    "draft": {
+      "name": "山田 花子"
+    }
+  },
+  "required": [
+    "draft"
+  ]
+}
